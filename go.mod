@@ -3,8 +3,8 @@ module github/bestnite/go-igdb
 go 1.24.1
 
 require (
-	git.nite07.com/nite/flaresolverr v0.0.0-20250227023456-fd3b5ce79e71
 	github.com/PuerkitoBio/goquery v1.10.2
+	github.com/bestnite/go-flaresolverr v0.0.0-20250404141941-4644c2e66727
 	github.com/go-resty/resty/v2 v2.16.5
 	google.golang.org/protobuf v1.36.6
 )

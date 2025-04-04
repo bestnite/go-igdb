@@ -12,8 +12,8 @@ import (
 
 	pb "github/bestnite/go-igdb/proto"
 
-	"git.nite07.com/nite/flaresolverr"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/bestnite/go-flaresolverr"
 	"google.golang.org/protobuf/proto"
 )
 

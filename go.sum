@@ -7,8 +7,6 @@ dmitri.shuralyov.com/html/belt v0.0.0-20180602232347-f7d459c86be0/go.mod h1:JLBr
 dmitri.shuralyov.com/service/change v0.0.0-20181023043359-a85b471d5412/go.mod h1:a1inKt/atXimZ4Mv927x+r7UpyzRUf4emIoiiSC2TN4=
 dmitri.shuralyov.com/state v0.0.0-20180228185332-28bcc343414c/go.mod h1:0PRwlb0D6DFvNNtx+9ybjezNCa8XF0xaYcETyp6rHWU=
 git.apache.org/thrift.git v0.0.0-20180902110319-2566ecd5d999/go.mod h1:fPE2ZNJGynbRyZ4dJvy6G277gSllfV2HJqblrnkyeyg=
-git.nite07.com/nite/flaresolverr v0.0.0-20250227023456-fd3b5ce79e71 h1:4ZzG8XRZoXYSQ74lt8U3Pp15DwM6jEt6zk/UyRn48j0=
-git.nite07.com/nite/flaresolverr v0.0.0-20250227023456-fd3b5ce79e71/go.mod h1:wwYYMzRwWc92OanTg1UBPLiddFZjGHJWXDTvDkW9N8Q=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Danny-Dasilva/CycleTLS/cycletls v1.0.26 h1:6fexoGmvzoXMSk14BZ0AirapVm5c3KUsEjE0jLlVKi8=
 github.com/Danny-Dasilva/CycleTLS/cycletls v1.0.26/go.mod h1:QFi/EVO7qqru3Ftxz1LR+96jIc91Tifv0DnskF/gWQ8=
@@ -23,6 +21,8 @@ github.com/andybalholm/cascadia v1.3.3 h1:AG2YHrzJIm4BZ19iwJ/DAua6Btl3IwJX+VI4kk
 github.com/andybalholm/cascadia v1.3.3/go.mod h1:xNd9bqTn98Ln4DwST8/nG+H0yuB8Hmgu1YHNnWw0GeA=
 github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239/go.mod h1:2FmKhYUyUczH0OGQWaF5ceTx0UBShxjsH6f8oGKYe2c=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
+github.com/bestnite/go-flaresolverr v0.0.0-20250404141941-4644c2e66727 h1:F1fNb9j7wgPXa54SWAIYn1l8NJTg74Qx3EJ8qmys6FY=
+github.com/bestnite/go-flaresolverr v0.0.0-20250404141941-4644c2e66727/go.mod h1:LX2oPIfG4LnUtQ7FAWV727IXuODZVbzRwG/7t2KdMNo=
 github.com/bradfitz/go-smtpd v0.0.0-20170404230938-deb6d6237625/go.mod h1:HYsPBTaaSFSlLx/70C2HPIMNZpVV8+vt/A+FMnYP11g=
 github.com/buger/jsonparser v0.0.0-20181115193947-bf1c66bbce23/go.mod h1:bbYlZJ7hK1yFx9hf58LP0zeX7UjIGs20ufpu3evjr+s=
 github.com/bwesterb/go-ristretto v1.2.3/go.mod h1:fUIoIZaG73pV5biE2Blr2xEzDoMj7NFEuV9ekS419A0=

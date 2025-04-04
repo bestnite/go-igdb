@@ -3,7 +3,7 @@ package igdb
 import (
 	"fmt"
 
-	"git.nite07.com/nite/flaresolverr"
+	"github.com/bestnite/go-flaresolverr"
 	"github.com/go-resty/resty/v2"
 )
 
