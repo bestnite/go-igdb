@@ -13,15 +13,17 @@ type igdb struct {
 	flaresolverr *flaresolverr.Flaresolverr
 }
 
-func NewIGDB(clientID, clientSecret string) *igdb {
+func New(clientID, clientSecret string) *igdb {
 	return &igdb{
+		clientID:     clientID,
 		token:        NewTwitchToken(clientID, clientSecret),
 		flaresolverr: nil,
 	}
 }
 
-func NewIGDBWithFlaresolverr(clientID, clientSecret string, f *flaresolverr.Flaresolverr) *igdb {
+func NewWithFlaresolverr(clientID, clientSecret string, f *flaresolverr.Flaresolverr) *igdb {
 	return &igdb{
+		clientID:     clientID,
 		token:        NewTwitchToken(clientID, clientSecret),
 		flaresolverr: f,
 	}
