@@ -3,7 +3,6 @@ package igdb
 import (
 	"encoding/json"
 	"fmt"
-	"github/bestnite/go-igdb/constant"
 	"net/url"
 	"time"
 )
@@ -36,7 +35,7 @@ func (t *twitchToken) getToken() (string, error) {
 }
 
 func (t *twitchToken) loginTwitch() (string, time.Duration, error) {
-	baseURL, _ := url.Parse(constant.TwitchAuthURL)
+	baseURL, _ := url.Parse("https://id.twitch.tv/oauth2/token")
 	params := url.Values{}
 	params.Add("client_id", t.clientID)
 	params.Add("client_secret", t.clientSecret)

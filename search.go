@@ -3,7 +3,6 @@ package igdb
 import (
 	"encoding/json"
 	"fmt"
-	"github/bestnite/go-igdb/constant"
 	"io"
 	"net/http"
 	"net/url"
@@ -17,34 +16,34 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) SearchGame(query string) ([]*pb.Game, error) {
-	resp, err := g.Request(constant.IGDBGameURL, query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to search: %s: %w", query, err)
-	}
-
-	data := pb.GameResult{}
-	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, fmt.Errorf("failed to parse IGDB search response: %w", err)
-	}
-
-	if len(data.Games) != 0 && data.Games[0].Name == "" {
-		return g.WebSearchGame(query)
-	}
-
-	return data.Games, nil
-}
-
 var webSearchCFCookies struct {
 	cookies []*http.Cookie
 	expires time.Time
 }
 
-func (g *igdb) WebSearchGame(name string) ([]*pb.Game, error) {
+func (g *igdb) Search(query string) ([]*pb.Search, error) {
+	resp, err := g.Request("https://api.igdb.com/v4/search.pb", query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to request: %w", err)
+	}
+
+	data := pb.SearchResult{}
+	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal: %w", err)
+	}
+
+	if len(data.Searches) == 0 {
+		return nil, fmt.Errorf("no results: %s", query)
+	}
+
+	return data.Searches, nil
+}
+
+func (g *igdb) WebSearchGames(name string) ([]*pb.Game, error) {
 	params := url.Values{}
 	params.Add("q", name)
 	params.Add("utf8", "✓")
-	Url := fmt.Sprintf("%s?%s", constant.IGDBWebSearchURL, params.Encode())
+	Url := fmt.Sprintf("%s?%s", "https://www.igdb.com/search", params.Encode())
 
 	f, err := g.getFlaresolverr()
 	if err != nil {
@@ -94,5 +93,5 @@ func (g *igdb) WebSearchGame(name string) ([]*pb.Game, error) {
 		ids[i] = game.Id
 	}
 
-	return g.GetGames(ids)
+	return g.GetGameByIDs(ids)
 }

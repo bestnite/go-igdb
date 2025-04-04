@@ -1,0 +1,47 @@
+package igdb
+
+import (
+	"fmt"
+	pb "github/bestnite/go-igdb/proto"
+	"strings"
+
+	"google.golang.org/protobuf/proto"
+)
+
+func (g *igdb) GetCharacterGenders(query string) ([]*pb.CharacterGender, error) {
+	resp, err := g.Request("https://api.igdb.com/v4/character_genders.pb", query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to request: %w", err)
+	}
+
+	data := pb.CharacterGenderResult{}
+	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal: %w", err)
+	}
+
+	if len(data.Charactergenders) == 0 {
+		return nil, fmt.Errorf("no results: %s", query)
+	}
+
+	return data.Charactergenders, nil
+}
+
+func (g *igdb) GetCharacterGenderByID(id uint64) (*pb.CharacterGender, error) {
+	query := fmt.Sprintf(`where id=%d; fields *;`, id)
+	characterGenders, err := g.GetCharacterGenders(query)
+	if err != nil {
+		return nil, err
+	}
+	return characterGenders[0], nil
+}
+
+func (g *igdb) GetCharacterGendersByIDs(ids []uint64) ([]*pb.CharacterGender, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCharacterGenders(idStr)
+}

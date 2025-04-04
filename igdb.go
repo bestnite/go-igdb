@@ -32,7 +32,7 @@ func NewWithFlaresolverr(clientID, clientSecret string, f *flaresolverr.Flaresol
 func (g *igdb) Request(URL string, dataBody any) (*resty.Response, error) {
 	t, err := g.token.getToken()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get Twitch token: %w", err)
+		return nil, fmt.Errorf("failed to get twitch token: %w", err)
 	}
 
 	resp, err := request().SetBody(dataBody).SetHeaders(map[string]string{
@@ -43,7 +43,7 @@ func (g *igdb) Request(URL string, dataBody any) (*resty.Response, error) {
 	}).Post(URL)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to make request: %s: %w", URL, err)
+		return nil, fmt.Errorf("failed to request: %s: %w", URL, err)
 	}
 	return resp, nil
 }
