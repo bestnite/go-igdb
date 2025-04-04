@@ -45,3 +45,12 @@ func (g *igdb) GetCompanyStatusesByIDs(ids []uint64) ([]*pb.CompanyStatus, error
 
 	return g.GetCompanyStatuses(idStr)
 }
+
+func (g *igdb) GetCompanyStatusesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	companyStatuses, err := g.GetCompanyStatuses(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(companyStatuses[0].Id), nil
+}

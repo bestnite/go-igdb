@@ -77,3 +77,12 @@ func (g *igdb) GetEventNetworksByNetworkTypeIDs(ids []uint64) ([]*pb.EventNetwor
 
 	return g.GetEventNetworks(idStr)
 }
+
+func (g *igdb) GetEventNetworksLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	eventNetworks, err := g.GetEventNetworks(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(eventNetworks[0].Id), nil
+}

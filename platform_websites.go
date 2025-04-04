@@ -45,3 +45,12 @@ func (g *igdb) GetPlatformWebsitesByIDs(ids []uint64) ([]*pb.PlatformWebsite, er
 
 	return g.GetPlatformWebsites(idStr)
 }
+
+func (g *igdb) GetPlatformWebsitesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	platformWebsites, err := g.GetPlatformWebsites(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(platformWebsites[0].Id), nil
+}

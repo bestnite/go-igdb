@@ -117,3 +117,12 @@ func (g *igdb) GetExternalGamesByPlatformVersionIDs(ids []uint64) ([]*pb.Externa
 
 	return g.GetExternalGames(idStr)
 }
+
+func (g *igdb) GetExternalGamesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	externalGames, err := g.GetExternalGames(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(externalGames[0].Id), nil
+}

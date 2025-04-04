@@ -45,3 +45,12 @@ func (g *igdb) GetCompanyLogosByIDs(ids []uint64) ([]*pb.CompanyLogo, error) {
 
 	return g.GetCompanyLogos(idStr)
 }
+
+func (g *igdb) GetCompanyLogosLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	companyLogos, err := g.GetCompanyLogos(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(companyLogos[0].Id), nil
+}

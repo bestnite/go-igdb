@@ -45,3 +45,12 @@ func (g *igdb) GetCharacterGendersByIDs(ids []uint64) ([]*pb.CharacterGender, er
 
 	return g.GetCharacterGenders(idStr)
 }
+
+func (g *igdb) GetCharacterGendersLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	characterGenders, err := g.GetCharacterGenders(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(characterGenders[0].Id), nil
+}

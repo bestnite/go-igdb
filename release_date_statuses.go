@@ -45,3 +45,12 @@ func (g *igdb) GetReleaseDateStatusesByIDs(ids []uint64) ([]*pb.ReleaseDateStatu
 
 	return g.GetReleaseDateStatuses(idStr)
 }
+
+func (g *igdb) GetReleaseDateStatusesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	releaseDateStatuses, err := g.GetReleaseDateStatuses(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(releaseDateStatuses[0].Id), nil
+}

@@ -45,3 +45,28 @@ func (g *igdb) GetGameTimeToBeatsByIDs(ids []uint64) ([]*pb.GameTimeToBeat, erro
 
 	return g.GetGameTimeToBeats(idStr)
 }
+
+func (g *igdb) GetGameTimeToBeatsByGameID(id uint64) ([]*pb.GameTimeToBeat, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetGameTimeToBeats(query)
+}
+
+func (g *igdb) GetGameTimeToBeatsByGameIDs(ids []uint64) ([]*pb.GameTimeToBeat, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGameTimeToBeats(idStr)
+}
+
+func (g *igdb) GetGameTimeToBeatsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	gameTimeToBeats, err := g.GetGameTimeToBeats(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(gameTimeToBeats[0].Id), nil
+}

@@ -46,3 +46,12 @@ func (g *igdb) GetFranchisesByIDs(ids []uint64) ([]*pb.Franchise, error) {
 
 	return g.GetFranchises(idStr)
 }
+
+func (g *igdb) GetFranchisesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	franchises, err := g.GetFranchises(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(franchises[0].Id), nil
+}

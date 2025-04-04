@@ -62,3 +62,12 @@ func (g *igdb) GetArtworksByGameIDs(ids []uint64) ([]*pb.Artwork, error) {
 
 	return g.GetArtworks(idStr)
 }
+
+func (g *igdb) GetArtworksLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	artworks, err := g.GetArtworks(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(artworks[0].Id), nil
+}

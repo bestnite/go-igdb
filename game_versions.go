@@ -61,3 +61,12 @@ func (g *igdb) GetGameVersionsByGameIDs(ids []uint64) ([]*pb.GameVersion, error)
 
 	return g.GetGameVersions(idStr)
 }
+
+func (g *igdb) GetGameVersionsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	gameVersions, err := g.GetGameVersions(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(gameVersions[0].Id), nil
+}

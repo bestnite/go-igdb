@@ -45,3 +45,12 @@ func (g *igdb) GetKeywordsByIDs(ids []uint64) ([]*pb.Keyword, error) {
 
 	return g.GetKeywords(idStr)
 }
+
+func (g *igdb) GetKeywordsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	keywords, err := g.GetKeywords(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(keywords[0].Id), nil
+}

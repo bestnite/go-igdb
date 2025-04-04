@@ -45,3 +45,12 @@ func (g *igdb) GetAgeRatingContentDescriptionsByIDs(ids []uint64) ([]*pb.AgeRati
 
 	return g.GetAgeRatingContentDescriptions(idStr)
 }
+
+func (g *igdb) GetAgeRatingContentDescriptionsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	ageRatingContentDescriptions, err := g.GetAgeRatingContentDescriptions(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(ageRatingContentDescriptions[0].Id), nil
+}

@@ -45,3 +45,12 @@ func (g *igdb) GetCharacterSpeciesByIDs(ids []uint64) ([]*pb.CharacterSpecie, er
 
 	return g.GetCharacterSpecies(idStr)
 }
+
+func (g *igdb) GetCharacterSpeciesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	characterSpecies, err := g.GetCharacterSpecies(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(characterSpecies[0].Id), nil
+}

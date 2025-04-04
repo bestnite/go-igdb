@@ -45,3 +45,12 @@ func (g *igdb) GetNetworkTypesByIDs(ids []uint64) ([]*pb.NetworkType, error) {
 
 	return g.GetNetworkTypes(idStr)
 }
+
+func (g *igdb) GetNetworkTypesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	networkTypes, err := g.GetNetworkTypes(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(networkTypes[0].Id), nil
+}

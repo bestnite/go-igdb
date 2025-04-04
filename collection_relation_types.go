@@ -77,3 +77,12 @@ func (g *igdb) GetCollectionRelationTypesByAllowedParentTypeIDs(ids []uint64) ([
 
 	return g.GetCollectionRelationTypes(idStr)
 }
+
+func (g *igdb) GetCollectionRelationTypesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	collectionRelationTypes, err := g.GetCollectionRelationTypes(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(collectionRelationTypes[0].Id), nil
+}

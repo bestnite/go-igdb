@@ -45,3 +45,12 @@ func (g *igdb) GetPlatformLogosByIDs(ids []uint64) ([]*pb.PlatformLogo, error) {
 
 	return g.GetPlatformLogos(idStr)
 }
+
+func (g *igdb) GetPlatformLogosLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	platformLogos, err := g.GetPlatformLogos(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(platformLogos[0].Id), nil
+}

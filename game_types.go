@@ -45,3 +45,12 @@ func (g *igdb) GetGameTypesByIDs(ids []uint64) ([]*pb.GameType, error) {
 
 	return g.GetGameTypes(idStr)
 }
+
+func (g *igdb) GetGameTypesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	gameTypes, err := g.GetGameTypes(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(gameTypes[0].Id), nil
+}

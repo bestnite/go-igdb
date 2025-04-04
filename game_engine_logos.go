@@ -45,3 +45,12 @@ func (g *igdb) GetGameEngineLogosByIDs(ids []uint64) ([]*pb.GameEngineLogo, erro
 
 	return g.GetGameEngineLogos(idStr)
 }
+
+func (g *igdb) GetGameEngineLogosLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	gameEngineLogos, err := g.GetGameEngineLogos(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(gameEngineLogos[0].Id), nil
+}

@@ -45,3 +45,12 @@ func (g *igdb) GetExternalGameSourcesByIDs(ids []uint64) ([]*pb.ExternalGameSour
 
 	return g.GetExternalGameSources(idStr)
 }
+
+func (g *igdb) GetExternalGameSourcesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	externalGameSources, err := g.GetExternalGameSources(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(externalGameSources[0].Id), nil
+}

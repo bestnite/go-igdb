@@ -61,3 +61,12 @@ func (g *igdb) GetEventLogosByEventIDs(ids []uint64) ([]*pb.EventLogo, error) {
 
 	return g.GetEventLogos(idStr)
 }
+
+func (g *igdb) GetEventLogosLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	eventLogos, err := g.GetEventLogos(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(eventLogos[0].Id), nil
+}

@@ -61,3 +61,12 @@ func (g *igdb) GetCompanyWebsitesByTypeIDs(ids []uint64) ([]*pb.CompanyWebsite, 
 
 	return g.GetCompanyWebsites(idStr)
 }
+
+func (g *igdb) GetCompanyWebsitesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	companyWebsites, err := g.GetCompanyWebsites(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(companyWebsites[0].Id), nil
+}

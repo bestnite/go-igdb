@@ -45,3 +45,12 @@ func (g *igdb) GetGameStatusesByIDs(ids []uint64) ([]*pb.GameStatus, error) {
 
 	return g.GetGameStatuses(idStr)
 }
+
+func (g *igdb) GetGameStatusesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	gameStatuses, err := g.GetGameStatuses(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(gameStatuses[0].Id), nil
+}

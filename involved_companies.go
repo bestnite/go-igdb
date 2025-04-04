@@ -77,3 +77,12 @@ func (g *igdb) GetInvolvedCompaniesByCompanyIDs(ids []uint64) ([]*pb.InvolvedCom
 
 	return g.GetInvolvedCompanies(idStr)
 }
+
+func (g *igdb) GetInvolvedCompaniesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	involvedCompanies, err := g.GetInvolvedCompanies(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(involvedCompanies[0].Id), nil
+}

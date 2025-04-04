@@ -61,3 +61,12 @@ func (g *igdb) GetAlternativeNamesByGameIDs(ids []uint64) ([]*pb.AlternativeName
 
 	return g.GetAlternativeNames(idStr)
 }
+
+func (g *igdb) GetAlternativeNamesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	alternativeNames, err := g.GetAlternativeNames(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(alternativeNames[0].Id), nil
+}

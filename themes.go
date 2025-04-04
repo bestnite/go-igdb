@@ -45,3 +45,12 @@ func (g *igdb) GetThemesByIDs(ids []uint64) ([]*pb.Theme, error) {
 
 	return g.GetThemes(idStr)
 }
+
+func (g *igdb) GetThemesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	themes, err := g.GetThemes(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(themes[0].Id), nil
+}

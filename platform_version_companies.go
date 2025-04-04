@@ -61,3 +61,12 @@ func (g *igdb) GetPlatformVersionCompaniesByCompanyIDs(ids []uint64) ([]*pb.Plat
 
 	return g.GetPlatformVersionCompanies(idStr)
 }
+
+func (g *igdb) GetPlatformVersionCompaniesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	platformVersionCompanies, err := g.GetPlatformVersionCompanies(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(platformVersionCompanies[0].Id), nil
+}

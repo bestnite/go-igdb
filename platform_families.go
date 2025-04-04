@@ -45,3 +45,12 @@ func (g *igdb) GetPlatformFamiliesByIDs(ids []uint64) ([]*pb.PlatformFamily, err
 
 	return g.GetPlatformFamilies(idStr)
 }
+
+func (g *igdb) GetPlatformFamiliesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	platformFamilies, err := g.GetPlatformFamilies(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(platformFamilies[0].Id), nil
+}

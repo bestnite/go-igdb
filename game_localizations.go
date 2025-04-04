@@ -93,3 +93,12 @@ func (g *igdb) GetGameLocalizationsByRegionIDs(ids []uint64) ([]*pb.GameLocaliza
 
 	return g.GetGameLocalizations(idStr)
 }
+
+func (g *igdb) GetGameLocalizationsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	gameLocalizations, err := g.GetGameLocalizations(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(gameLocalizations[0].Id), nil
+}

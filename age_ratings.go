@@ -77,3 +77,12 @@ func (g *igdb) GetAgeRatingsByAgeRatingCategoryIDs(ids []uint64) ([]*pb.AgeRatin
 
 	return g.GetAgeRatings(idStr)
 }
+
+func (g *igdb) GetAgeRatingsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	ageRatings, err := g.GetAgeRatings(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(ageRatings[0].Id), nil
+}

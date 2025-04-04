@@ -45,3 +45,12 @@ func (g *igdb) GetLanguagesByIDs(ids []uint64) ([]*pb.Language, error) {
 
 	return g.GetLanguages(idStr)
 }
+
+func (g *igdb) GetLanguagesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	languages, err := g.GetLanguages(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(languages[0].Id), nil
+}

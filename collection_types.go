@@ -45,3 +45,12 @@ func (g *igdb) GetCollectionTypesByIDs(ids []uint64) ([]*pb.CollectionType, erro
 
 	return g.GetCollectionTypes(idStr)
 }
+
+func (g *igdb) GetCollectionTypesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	collectionTypes, err := g.GetCollectionTypes(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(collectionTypes[0].Id), nil
+}

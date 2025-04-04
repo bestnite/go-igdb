@@ -45,3 +45,12 @@ func (g *igdb) GetPlayerPerspectivesByIDs(ids []uint64) ([]*pb.PlayerPerspective
 
 	return g.GetPlayerPerspectives(idStr)
 }
+
+func (g *igdb) GetPlayerPerspectivesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	playerPerspectives, err := g.GetPlayerPerspectives(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(playerPerspectives[0].Id), nil
+}

@@ -61,3 +61,12 @@ func (g *igdb) GetCollectionMembershipTypesByAllowedCollectionTypeIDs(ids []uint
 
 	return g.GetCollectionMembershipTypes(idStr)
 }
+
+func (g *igdb) GetCollectionMembershipTypesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	collectionMembershipTypes, err := g.GetCollectionMembershipTypes(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(collectionMembershipTypes[0].Id), nil
+}

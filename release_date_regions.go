@@ -45,3 +45,12 @@ func (g *igdb) GetReleaseDateRegionsByIDs(ids []uint64) ([]*pb.ReleaseDateRegion
 
 	return g.GetReleaseDateRegions(idStr)
 }
+
+func (g *igdb) GetReleaseDateRegionsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	releaseDateRegions, err := g.GetReleaseDateRegions(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(releaseDateRegions[0].Id), nil
+}

@@ -61,3 +61,12 @@ func (g *igdb) GetScreenshotsByGameIDs(ids []uint64) ([]*pb.Screenshot, error) {
 
 	return g.GetScreenshots(idStr)
 }
+
+func (g *igdb) GetScreenshotsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	screenshots, err := g.GetScreenshots(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(screenshots[0].Id), nil
+}

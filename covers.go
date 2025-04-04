@@ -77,3 +77,12 @@ func (g *igdb) GetCoversByGameLocalizationIDs(ids []uint64) ([]*pb.Cover, error)
 
 	return g.GetCovers(idStr)
 }
+
+func (g *igdb) GetCoversLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	covers, err := g.GetCovers(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(covers[0].Id), nil
+}

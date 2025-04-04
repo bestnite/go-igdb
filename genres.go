@@ -45,3 +45,12 @@ func (g *igdb) GetGenresByIDs(ids []uint64) ([]*pb.Genre, error) {
 
 	return g.GetGenres(idStr)
 }
+
+func (g *igdb) GetGenresLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	genres, err := g.GetGenres(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(genres[0].Id), nil
+}

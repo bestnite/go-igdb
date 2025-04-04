@@ -45,3 +45,12 @@ func (g *igdb) GetGameReleaseFormatsByIDs(ids []uint64) ([]*pb.GameReleaseFormat
 
 	return g.GetGameReleaseFormats(idStr)
 }
+
+func (g *igdb) GetGameReleaseFormatsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	gameReleaseFormats, err := g.GetGameReleaseFormats(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(gameReleaseFormats[0].Id), nil
+}

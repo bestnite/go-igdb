@@ -45,3 +45,12 @@ func (g *igdb) GetCharacterMugShotsByIDs(ids []uint64) ([]*pb.CharacterMugShot, 
 
 	return g.GetCharacterMugShots(idStr)
 }
+
+func (g *igdb) GetCharacterMugShotsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	characterMugShots, err := g.GetCharacterMugShots(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(characterMugShots[0].Id), nil
+}

@@ -45,3 +45,12 @@ func (g *igdb) GetGameModesByIDs(ids []uint64) ([]*pb.GameMode, error) {
 
 	return g.GetGameModes(idStr)
 }
+
+func (g *igdb) GetGameModesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	gameModes, err := g.GetGameModes(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(gameModes[0].Id), nil
+}

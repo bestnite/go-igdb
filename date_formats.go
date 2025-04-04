@@ -45,3 +45,12 @@ func (g *igdb) GetDateFormatsByIDs(ids []uint64) ([]*pb.DateFormat, error) {
 
 	return g.GetDateFormats(idStr)
 }
+
+func (g *igdb) GetDateFormatsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	dateFormats, err := g.GetDateFormats(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(dateFormats[0].Id), nil
+}

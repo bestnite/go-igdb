@@ -61,3 +61,12 @@ func (g *igdb) GetGameVideosByGameIDs(ids []uint64) ([]*pb.GameVideo, error) {
 
 	return g.GetGameVideos(idStr)
 }
+
+func (g *igdb) GetGameVideosLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	gameVideos, err := g.GetGameVideos(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(gameVideos[0].Id), nil
+}

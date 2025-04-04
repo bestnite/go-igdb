@@ -46,3 +46,12 @@ func (g *igdb) GetPlatformTypesByIDs(ids []uint64) ([]*pb.PlatformType, error) {
 
 	return g.GetPlatformTypes(idStr)
 }
+
+func (g *igdb) GetPlatformTypesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	platformTypes, err := g.GetPlatformTypes(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(platformTypes[0].Id), nil
+}

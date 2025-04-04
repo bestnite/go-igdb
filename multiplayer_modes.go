@@ -77,3 +77,12 @@ func (g *igdb) GetMultiplayerModesByPlatformIDs(ids []uint64) ([]*pb.Multiplayer
 
 	return g.GetMultiplayerModes(idStr)
 }
+
+func (g *igdb) GetMultiplayerModesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	multiplayerModes, err := g.GetMultiplayerModes(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(multiplayerModes[0].Id), nil
+}

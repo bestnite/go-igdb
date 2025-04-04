@@ -45,3 +45,12 @@ func (g *igdb) GetRegionsByIDs(ids []uint64) ([]*pb.Region, error) {
 
 	return g.GetRegions(idStr)
 }
+
+func (g *igdb) GetRegionsLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	regions, err := g.GetRegions(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(regions[0].Id), nil
+}

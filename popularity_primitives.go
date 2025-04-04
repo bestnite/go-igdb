@@ -71,3 +71,12 @@ func (g *igdb) GetPopularityPrimitivesByExternalPopularitySourceIDs(ids []uint64
 
 	return g.GetPopularityPrimitives(idStr)
 }
+
+func (g *igdb) GetPopularityPrimitivesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	popularityPrimitives, err := g.GetPopularityPrimitives(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(popularityPrimitives[0].Id), nil
+}

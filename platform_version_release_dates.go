@@ -93,3 +93,12 @@ func (g *igdb) GetPlatformVersionReleaseDatesByDateFormatIDs(ids []uint64) ([]*p
 
 	return g.GetPlatformVersionReleaseDates(idStr)
 }
+
+func (g *igdb) GetPlatformVersionReleaseDatesLength() (int, error) {
+	query := `fields *; sort id desc; limit 1;`
+	platformVersionReleaseDates, err := g.GetPlatformVersionReleaseDates(query)
+	if err != nil {
+		return 0, err
+	}
+	return int(platformVersionReleaseDates[0].Id), nil
+}
