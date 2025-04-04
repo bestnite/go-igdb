@@ -45,3 +45,35 @@ func (g *igdb) GetCollectionRelationTypesByIDs(ids []uint64) ([]*pb.CollectionRe
 
 	return g.GetCollectionRelationTypes(idStr)
 }
+
+func (g *igdb) GetCollectionRelationTypesByAllowedChildTypeID(id uint64) ([]*pb.CollectionRelationType, error) {
+	query := fmt.Sprintf(`where allowed_child_type = %d; fields *;`, id)
+	return g.GetCollectionRelationTypes(query)
+}
+
+func (g *igdb) GetCollectionRelationTypesByAllowedChildTypeIDs(ids []uint64) ([]*pb.CollectionRelationType, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where allowed_child_type = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCollectionRelationTypes(idStr)
+}
+
+func (g *igdb) GetCollectionRelationTypesByAllowedParentTypeID(id uint64) ([]*pb.CollectionRelationType, error) {
+	query := fmt.Sprintf(`where allowed_parent_type = %d; fields *;`, id)
+	return g.GetCollectionRelationTypes(query)
+}
+
+func (g *igdb) GetCollectionRelationTypesByAllowedParentTypeIDs(ids []uint64) ([]*pb.CollectionRelationType, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where allowed_parent_type = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCollectionRelationTypes(idStr)
+}

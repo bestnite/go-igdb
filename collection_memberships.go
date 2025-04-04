@@ -45,3 +45,40 @@ func (g *igdb) GetCollectionMembershipsByIDs(ids []uint64) ([]*pb.CollectionMemb
 
 	return g.GetCollectionMemberships(idStr)
 }
+
+func (g *igdb) GetCollectionMembershipsByGameID(id uint64) ([]*pb.CollectionMembership, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetCollectionMemberships(query)
+}
+
+func (g *igdb) GetCollectionMembershipsByGameIDs(ids []uint64) ([]*pb.CollectionMembership, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCollectionMemberships(idStr)
+}
+
+func (g *igdb) GetCollectionMembershipsByCollectionID(id uint64) ([]*pb.CollectionMembership, error) {
+	query := fmt.Sprintf(`where collection = %d; fields *;`, id)
+	return g.GetCollectionMemberships(query)
+}
+
+func (g *igdb) GetCollectionMembershipsByCollectionMembershipTypeID(id uint64) ([]*pb.CollectionMembership, error) {
+	query := fmt.Sprintf(`where type = %d; fields *;`, id)
+	return g.GetCollectionMemberships(query)
+}
+
+func (g *igdb) GetCollectionMembershipsByCollectionMembershipTypeIDs(ids []uint64) ([]*pb.CollectionMembership, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where type = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCollectionMemberships(idStr)
+}

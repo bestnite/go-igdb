@@ -45,3 +45,19 @@ func (g *igdb) GetScreenshotsByIDs(ids []uint64) ([]*pb.Screenshot, error) {
 
 	return g.GetScreenshots(idStr)
 }
+
+func (g *igdb) GetScreenshotsByGameID(id uint64) ([]*pb.Screenshot, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetScreenshots(query)
+}
+
+func (g *igdb) GetScreenshotsByGameIDs(ids []uint64) ([]*pb.Screenshot, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetScreenshots(idStr)
+}

@@ -46,3 +46,35 @@ func (g *igdb) GetGameEnginesByIDs(ids []uint64) ([]*pb.GameEngine, error) {
 
 	return g.GetGameEngines(idStr)
 }
+
+func (g *igdb) GetGameEnginesByGameID(id uint64) ([]*pb.GameEngine, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetGameEngines(query)
+}
+
+func (g *igdb) GetGameEnginesByGameIDs(ids []uint64) ([]*pb.GameEngine, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGameEngines(idStr)
+}
+
+func (g *igdb) GetGameEnginesByLogoID(id uint64) ([]*pb.GameEngine, error) {
+	query := fmt.Sprintf(`where logo = %d; fields *;`, id)
+	return g.GetGameEngines(query)
+}
+
+func (g *igdb) GetGameEnginesByLogoIDs(ids []uint64) ([]*pb.GameEngine, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where logo = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGameEngines(idStr)
+}

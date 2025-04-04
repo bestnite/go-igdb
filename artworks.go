@@ -46,3 +46,19 @@ func (g *igdb) GetArtworksByIDs(ids []uint64) ([]*pb.Artwork, error) {
 
 	return g.GetArtworks(idStr)
 }
+
+func (g *igdb) GetArtworksByGameID(id uint64) ([]*pb.Artwork, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetArtworks(query)
+}
+
+func (g *igdb) GetArtworksByGameIDs(ids []uint64) ([]*pb.Artwork, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetArtworks(idStr)
+}

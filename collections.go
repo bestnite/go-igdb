@@ -46,3 +46,19 @@ func (g *igdb) GetCollectionsByIDs(ids []uint64) ([]*pb.Collection, error) {
 
 	return g.GetCollections(idStr)
 }
+
+func (g *igdb) GetCollectionsByCollectionTypeID(id uint64) ([]*pb.Collection, error) {
+	query := fmt.Sprintf(`where collection_type = %d; fields *;`, id)
+	return g.GetCollections(query)
+}
+
+func (g *igdb) GetCollectionsByCollectionTypeIDs(ids []uint64) ([]*pb.Collection, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where collection_type = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCollections(idStr)
+}

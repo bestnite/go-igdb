@@ -45,3 +45,35 @@ func (g *igdb) GetCoversByIDs(ids []uint64) ([]*pb.Cover, error) {
 
 	return g.GetCovers(idStr)
 }
+
+func (g *igdb) GetCoversByGameID(id uint64) ([]*pb.Cover, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetCovers(query)
+}
+
+func (g *igdb) GetCoversByGameIDs(ids []uint64) ([]*pb.Cover, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCovers(idStr)
+}
+
+func (g *igdb) GetCoversByGameLocalizationID(id uint64) ([]*pb.Cover, error) {
+	query := fmt.Sprintf(`where game_localization = %d; fields *;`, id)
+	return g.GetCovers(query)
+}
+
+func (g *igdb) GetCoversByGameLocalizationIDs(ids []uint64) ([]*pb.Cover, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game_localization = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCovers(idStr)
+}

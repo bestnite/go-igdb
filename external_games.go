@@ -64,3 +64,56 @@ func (g *igdb) GetSteamIDByGameID(id uint64) (uint64, error) {
 	}
 	return strconv.ParseUint(externalGames[0].Uid, 10, 64)
 }
+
+func (g *igdb) GetExternalGamesByGameID(id uint64) ([]*pb.ExternalGame, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetExternalGames(query)
+}
+
+func (g *igdb) GetExternalGamesByExternalGameSourceID(id uint64) ([]*pb.ExternalGame, error) {
+	query := fmt.Sprintf(`where external_game_source = %d; fields *;`, id)
+	return g.GetExternalGames(query)
+}
+
+func (g *igdb) GetExternalGamesByExternalGameSourceIDs(ids []uint64) ([]*pb.ExternalGame, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where external_game_source = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetExternalGames(idStr)
+}
+
+func (g *igdb) GetExternalGamesByGameReleaseFormatID(id uint64) ([]*pb.ExternalGame, error) {
+	query := fmt.Sprintf(`where game_release_format = %d; fields *;`, id)
+	return g.GetExternalGames(query)
+}
+
+func (g *igdb) GetExternalGamesByGameReleaseFormatIDs(ids []uint64) ([]*pb.ExternalGame, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game_release_format = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetExternalGames(idStr)
+}
+
+func (g *igdb) GetExternalGamesByPlatformVersionID(id uint64) ([]*pb.ExternalGame, error) {
+	query := fmt.Sprintf(`where platform_version = %d; fields *;`, id)
+	return g.GetExternalGames(query)
+}
+
+func (g *igdb) GetExternalGamesByPlatformVersionIDs(ids []uint64) ([]*pb.ExternalGame, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where platform_version = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetExternalGames(idStr)
+}

@@ -45,3 +45,35 @@ func (g *igdb) GetGameVersionFeatureValuesByIDs(ids []uint64) ([]*pb.GameVersion
 
 	return g.GetGameVersionFeatureValues(idStr)
 }
+
+func (g *igdb) GetGameVersionFeatureValuesByGameID(id uint64) ([]*pb.GameVersionFeatureValue, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetGameVersionFeatureValues(query)
+}
+
+func (g *igdb) GetGameVersionFeatureValuesByGameIDs(ids []uint64) ([]*pb.GameVersionFeatureValue, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGameVersionFeatureValues(idStr)
+}
+
+func (g *igdb) GetGameVersionFeatureValuesByGameVersionFeatureID(id uint64) ([]*pb.GameVersionFeatureValue, error) {
+	query := fmt.Sprintf(`where game_version_feature = %d; fields *;`, id)
+	return g.GetGameVersionFeatureValues(query)
+}
+
+func (g *igdb) GetGameVersionFeatureValuesByGameVersionFeatureIDs(ids []uint64) ([]*pb.GameVersionFeatureValue, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game_version_feature = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGameVersionFeatureValues(idStr)
+}

@@ -45,3 +45,51 @@ func (g *igdb) GetLanguageSupportsByIDs(ids []uint64) ([]*pb.LanguageSupport, er
 
 	return g.GetLanguageSupports(idStr)
 }
+
+func (g *igdb) GetLanguageSupportsByGameID(id uint64) ([]*pb.LanguageSupport, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetLanguageSupports(query)
+}
+
+func (g *igdb) GetLanguageSupportsByGameIDs(ids []uint64) ([]*pb.LanguageSupport, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetLanguageSupports(idStr)
+}
+
+func (g *igdb) GetLanguageSupportsByLanguageID(id uint64) ([]*pb.LanguageSupport, error) {
+	query := fmt.Sprintf(`where language = %d; fields *;`, id)
+	return g.GetLanguageSupports(query)
+}
+
+func (g *igdb) GetLanguageSupportsByLanguageIDs(ids []uint64) ([]*pb.LanguageSupport, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where language = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetLanguageSupports(idStr)
+}
+
+func (g *igdb) GetLanguageSupportsByLanguageSupportTypeID(id uint64) ([]*pb.LanguageSupport, error) {
+	query := fmt.Sprintf(`where language_support_type = %d; fields *;`, id)
+	return g.GetLanguageSupports(query)
+}
+
+func (g *igdb) GetLanguageSupportsByLanguageSupportTypeIDs(ids []uint64) ([]*pb.LanguageSupport, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where language_support_type = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetLanguageSupports(idStr)
+}

@@ -45,3 +45,19 @@ func (g *igdb) GetAlternativeNamesByIDs(ids []uint64) ([]*pb.AlternativeName, er
 
 	return g.GetAlternativeNames(idStr)
 }
+
+func (g *igdb) GetAlternativeNamesByGameID(id uint64) ([]*pb.AlternativeName, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetAlternativeNames(query)
+}
+
+func (g *igdb) GetAlternativeNamesByGameIDs(ids []uint64) ([]*pb.AlternativeName, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetAlternativeNames(idStr)
+}

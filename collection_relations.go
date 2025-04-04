@@ -45,3 +45,51 @@ func (g *igdb) GetCollectionRelationsByIDs(ids []uint64) ([]*pb.CollectionRelati
 
 	return g.GetCollectionRelations(idStr)
 }
+
+func (g *igdb) GetCollectionRelationsByChildCollectionID(id uint64) ([]*pb.CollectionRelation, error) {
+	query := fmt.Sprintf(`where child_collection = %d; fields *;`, id)
+	return g.GetCollectionRelations(query)
+}
+
+func (g *igdb) GetCollectionRelationsByChildCollectionIDs(ids []uint64) ([]*pb.CollectionRelation, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where child_collection = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCollectionRelations(idStr)
+}
+
+func (g *igdb) GetCollectionRelationsByParentCollectionID(id uint64) ([]*pb.CollectionRelation, error) {
+	query := fmt.Sprintf(`where parent_collection = %d; fields *;`, id)
+	return g.GetCollectionRelations(query)
+}
+
+func (g *igdb) GetCollectionRelationsByParentCollectionIDs(ids []uint64) ([]*pb.CollectionRelation, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where parent_collection = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCollectionRelations(idStr)
+}
+
+func (g *igdb) GetCollectionRelationsByCollectionRelationTypeID(id uint64) ([]*pb.CollectionRelation, error) {
+	query := fmt.Sprintf(`where type = %d; fields *;`, id)
+	return g.GetCollectionRelations(query)
+}
+
+func (g *igdb) GetCollectionRelationsByCollectionRelationTypeIDs(ids []uint64) ([]*pb.CollectionRelation, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where type = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCollectionRelations(idStr)
+}

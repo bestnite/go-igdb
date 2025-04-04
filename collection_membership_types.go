@@ -45,3 +45,19 @@ func (g *igdb) GetCollectionMembershipTypesByIDs(ids []uint64) ([]*pb.Collection
 
 	return g.GetCollectionMembershipTypes(idStr)
 }
+
+func (g *igdb) GetCollectionMembershipTypesByAllowedCollectionTypeID(id uint64) ([]*pb.CollectionMembershipType, error) {
+	query := fmt.Sprintf(`where allowed_collection_type = %d; fields *;`, id)
+	return g.GetCollectionMembershipTypes(query)
+}
+
+func (g *igdb) GetCollectionMembershipTypesByAllowedCollectionTypeIDs(ids []uint64) ([]*pb.CollectionMembershipType, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where allowed_collection_type = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCollectionMembershipTypes(idStr)
+}

@@ -45,3 +45,19 @@ func (g *igdb) GetGameVideosByIDs(ids []uint64) ([]*pb.GameVideo, error) {
 
 	return g.GetGameVideos(idStr)
 }
+
+func (g *igdb) GetGameVideosByGameID(id uint64) ([]*pb.GameVideo, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetGameVideos(query)
+}
+
+func (g *igdb) GetGameVideosByGameIDs(ids []uint64) ([]*pb.GameVideo, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGameVideos(idStr)
+}

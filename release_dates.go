@@ -45,3 +45,67 @@ func (g *igdb) GetReleaseDatesByIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
 
 	return g.GetReleaseDates(idStr)
 }
+
+func (g *igdb) GetReleaseDatesByGameID(id uint64) ([]*pb.ReleaseDate, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetReleaseDates(query)
+}
+
+func (g *igdb) GetReleaseDatesByGameIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetReleaseDates(idStr)
+}
+
+func (g *igdb) GetReleaseDatesByPlatformID(id uint64) ([]*pb.ReleaseDate, error) {
+	query := fmt.Sprintf(`where platform = %d; fields *;`, id)
+	return g.GetReleaseDates(query)
+}
+
+func (g *igdb) GetReleaseDatesByPlatformIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where platform = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetReleaseDates(idStr)
+}
+
+func (g *igdb) GetReleaseDatesByReleaseRegionID(id uint64) ([]*pb.ReleaseDate, error) {
+	query := fmt.Sprintf(`where release_region = %d; fields *;`, id)
+	return g.GetReleaseDates(query)
+}
+
+func (g *igdb) GetReleaseDatesByReleaseRegionIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where release_region = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetReleaseDates(idStr)
+}
+
+func (g *igdb) GetReleaseDatesByStatusID(id uint64) ([]*pb.ReleaseDate, error) {
+	query := fmt.Sprintf(`where status = %d; fields *;`, id)
+	return g.GetReleaseDates(query)
+}
+
+func (g *igdb) GetReleaseDatesByStatusIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where status = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetReleaseDates(idStr)
+}

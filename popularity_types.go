@@ -45,3 +45,19 @@ func (g *igdb) GetPopularityTypesByIDs(ids []uint64) ([]*pb.PopularityType, erro
 
 	return g.GetPopularityTypes(idStr)
 }
+
+func (g *igdb) GetPopularityTypesByExternalPopularitySourceID(id uint64) ([]*pb.PopularityType, error) {
+	query := fmt.Sprintf(`where external_popularity_source = %d; fields *;`, id)
+	return g.GetPopularityTypes(query)
+}
+
+func (g *igdb) GetPopularityTypesByExternalPopularitySourceIDs(ids []uint64) ([]*pb.PopularityType, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where external_popularity_source = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetPopularityTypes(idStr)
+}

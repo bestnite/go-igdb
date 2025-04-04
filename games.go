@@ -46,3 +46,115 @@ func (g *igdb) GetGameByIDs(ids []uint64) ([]*pb.Game, error) {
 
 	return g.GetGames(idStr)
 }
+
+func (g *igdb) GetGameByCollectionID(id uint64) ([]*pb.Game, error) {
+	query := fmt.Sprintf(`where collection = %d; fields *;`, id)
+	return g.GetGames(query)
+}
+
+func (g *igdb) GetGamesByCollectionIDs(ids []uint64) ([]*pb.Game, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where collection = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGames(idStr)
+}
+
+func (g *igdb) GetGameByCoverID(id uint64) ([]*pb.Game, error) {
+	query := fmt.Sprintf(`where cover = %d; fields *;`, id)
+	return g.GetGames(query)
+}
+
+func (g *igdb) GetGamesByCoverIDs(ids []uint64) ([]*pb.Game, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where cover = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGames(idStr)
+}
+
+func (g *igdb) GetGameByFranchiseID(id uint64) ([]*pb.Game, error) {
+	query := fmt.Sprintf(`where franchise = %d; fields *;`, id)
+	return g.GetGames(query)
+}
+
+func (g *igdb) GetGamesByFranchiseIDs(ids []uint64) ([]*pb.Game, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where franchise = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGames(idStr)
+}
+
+func (g *igdb) GetGameByGameStatusID(id uint64) ([]*pb.Game, error) {
+	query := fmt.Sprintf(`where game_status = %d; fields *;`, id)
+	return g.GetGames(query)
+}
+
+func (g *igdb) GetGamesByGameStatusIDs(ids []uint64) ([]*pb.Game, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game_status = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGames(idStr)
+}
+
+func (g *igdb) GetGameByGameTypeID(id uint64) ([]*pb.Game, error) {
+	query := fmt.Sprintf(`where game_type = %d; fields *;`, id)
+	return g.GetGames(query)
+}
+
+func (g *igdb) GetGamesByGameTypeIDs(ids []uint64) ([]*pb.Game, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game_type = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGames(idStr)
+}
+
+func (g *igdb) GetGameByParentGameID(id uint64) ([]*pb.Game, error) {
+	query := fmt.Sprintf(`where parent_game = %d; fields *;`, id)
+	return g.GetGames(query)
+}
+
+func (g *igdb) GetGamesByParentGameIDs(ids []uint64) ([]*pb.Game, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where parent_game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGames(idStr)
+}
+
+func (g *igdb) GetGameByVersionParentGameID(id uint64) ([]*pb.Game, error) {
+	query := fmt.Sprintf(`where version_parent = %d; fields *;`, id)
+	return g.GetGames(query)
+}
+
+func (g *igdb) GetGamesByVersionParentGameIDs(ids []uint64) ([]*pb.Game, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where version_parent = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGames(idStr)
+}

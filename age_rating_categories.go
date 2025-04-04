@@ -45,3 +45,19 @@ func (g *igdb) GetAgeRatingCategoriesByIDs(ids []uint64) ([]*pb.AgeRatingCategor
 
 	return g.GetAgeRatingCategories(idStr)
 }
+
+func (g *igdb) GetAgeRatingCategoriesByOrganizationID(id uint64) ([]*pb.AgeRatingCategory, error) {
+	query := fmt.Sprintf(`where organization = %d; fields *;`, id)
+	return g.GetAgeRatingCategories(query)
+}
+
+func (g *igdb) GetAgeRatingCategoriesByOrganizationIDs(ids []uint64) ([]*pb.AgeRatingCategory, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where organization = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetAgeRatingCategories(idStr)
+}

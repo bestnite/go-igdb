@@ -45,3 +45,19 @@ func (g *igdb) GetGameVersionsByIDs(ids []uint64) ([]*pb.GameVersion, error) {
 
 	return g.GetGameVersions(idStr)
 }
+
+func (g *igdb) GetGameVersionsByGameID(id uint64) ([]*pb.GameVersion, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetGameVersions(query)
+}
+
+func (g *igdb) GetGameVersionsByGameIDs(ids []uint64) ([]*pb.GameVersion, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGameVersions(idStr)
+}

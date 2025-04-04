@@ -45,3 +45,19 @@ func (g *igdb) GetEventLogosByIDs(ids []uint64) ([]*pb.EventLogo, error) {
 
 	return g.GetEventLogos(idStr)
 }
+
+func (g *igdb) GetEventLogosByEventID(id uint64) ([]*pb.EventLogo, error) {
+	query := fmt.Sprintf(`where event = %d; fields *;`, id)
+	return g.GetEventLogos(query)
+}
+
+func (g *igdb) GetEventLogosByEventIDs(ids []uint64) ([]*pb.EventLogo, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where event = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetEventLogos(idStr)
+}

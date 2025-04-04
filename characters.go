@@ -46,3 +46,51 @@ func (g *igdb) GetCharactersByIDs(ids []uint64) ([]*pb.Character, error) {
 
 	return g.GetCharacters(idStr)
 }
+
+func (g *igdb) GetCharactersByCharacterGenderID(id uint64) ([]*pb.Character, error) {
+	query := fmt.Sprintf(`where character_gender = %d; fields *;`, id)
+	return g.GetCharacters(query)
+}
+
+func (g *igdb) GetCharactersByCharacterGenderIDs(ids []uint64) ([]*pb.Character, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where character_gender = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCharacters(idStr)
+}
+
+func (g *igdb) GetCharactersByCharacterSpecieID(id uint64) ([]*pb.Character, error) {
+	query := fmt.Sprintf(`where character_species = %d; fields *;`, id)
+	return g.GetCharacters(query)
+}
+
+func (g *igdb) GetCharactersByCharacterSpecieIDs(ids []uint64) ([]*pb.Character, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where character_species = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCharacters(idStr)
+}
+
+func (g *igdb) GetCharactersByMugShotID(id uint64) ([]*pb.Character, error) {
+	query := fmt.Sprintf(`where mug_shot = %d; fields *;`, id)
+	return g.GetCharacters(query)
+}
+
+func (g *igdb) GetCharactersByMugShotIDs(ids []uint64) ([]*pb.Character, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where mug_shot = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCharacters(idStr)
+}

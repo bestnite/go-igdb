@@ -45,3 +45,35 @@ func (g *igdb) GetAgeRatingsByIDs(ids []uint64) ([]*pb.AgeRating, error) {
 
 	return g.GetAgeRatings(idStr)
 }
+
+func (g *igdb) GetAgeRatingsByOrganizationID(id uint64) ([]*pb.AgeRating, error) {
+	query := fmt.Sprintf(`where organization = %d; fields *;`, id)
+	return g.GetAgeRatings(query)
+}
+
+func (g *igdb) GetAgeRatingsByOrganizationIDs(ids []uint64) ([]*pb.AgeRating, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where organization = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetAgeRatings(idStr)
+}
+
+func (g *igdb) GetAgeRatingsByAgeRatingCategoryID(id uint64) ([]*pb.AgeRating, error) {
+	query := fmt.Sprintf(`where rating_category = %d; fields *;`, id)
+	return g.GetAgeRatings(query)
+}
+
+func (g *igdb) GetAgeRatingsByAgeRatingCategoryIDs(ids []uint64) ([]*pb.AgeRating, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where rating_category = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetAgeRatings(idStr)
+}

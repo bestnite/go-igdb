@@ -45,3 +45,51 @@ func (g *igdb) GetPlatformVersionReleaseDatesByIDs(ids []uint64) ([]*pb.Platform
 
 	return g.GetPlatformVersionReleaseDates(idStr)
 }
+
+func (g *igdb) GetPlatformVersionReleaseDatesByPlatformVersionID(id uint64) ([]*pb.PlatformVersionReleaseDate, error) {
+	query := fmt.Sprintf(`where platform_version = %d; fields *;`, id)
+	return g.GetPlatformVersionReleaseDates(query)
+}
+
+func (g *igdb) GetPlatformVersionReleaseDatesByPlatformVersionIDs(ids []uint64) ([]*pb.PlatformVersionReleaseDate, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where platform_version = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetPlatformVersionReleaseDates(idStr)
+}
+
+func (g *igdb) GetPlatformVersionReleaseDatesByReleaseRegionID(id uint64) ([]*pb.PlatformVersionReleaseDate, error) {
+	query := fmt.Sprintf(`where release_region = %d; fields *;`, id)
+	return g.GetPlatformVersionReleaseDates(query)
+}
+
+func (g *igdb) GetPlatformVersionReleaseDatesByReleaseRegionIDs(ids []uint64) ([]*pb.PlatformVersionReleaseDate, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where release_region = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetPlatformVersionReleaseDates(idStr)
+}
+
+func (g *igdb) GetPlatformVersionReleaseDatesByDateFormatID(id uint64) ([]*pb.PlatformVersionReleaseDate, error) {
+	query := fmt.Sprintf(`where date_format = %d; fields *;`, id)
+	return g.GetPlatformVersionReleaseDates(query)
+}
+
+func (g *igdb) GetPlatformVersionReleaseDatesByDateFormatIDs(ids []uint64) ([]*pb.PlatformVersionReleaseDate, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where date_format = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetPlatformVersionReleaseDates(idStr)
+}

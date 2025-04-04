@@ -45,3 +45,35 @@ func (g *igdb) GetPlatformVersionsByIDs(ids []uint64) ([]*pb.PlatformVersion, er
 
 	return g.GetPlatformVersions(idStr)
 }
+
+func (g *igdb) GetPlatformVersionsByMainManufacturerID(id uint64) ([]*pb.PlatformVersion, error) {
+	query := fmt.Sprintf(`where main_manufacturer = %d; fields *;`, id)
+	return g.GetPlatformVersions(query)
+}
+
+func (g *igdb) GetPlatformVersionsByMainManufacturerIDs(ids []uint64) ([]*pb.PlatformVersion, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where main_manufacturer = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetPlatformVersions(idStr)
+}
+
+func (g *igdb) GetPlatformVersionsByPlatformLogoID(id uint64) ([]*pb.PlatformVersion, error) {
+	query := fmt.Sprintf(`where platform_logo = %d; fields *;`, id)
+	return g.GetPlatformVersions(query)
+}
+
+func (g *igdb) GetPlatformVersionsByPlatformLogoIDs(ids []uint64) ([]*pb.PlatformVersion, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where platform_logo = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetPlatformVersions(idStr)
+}

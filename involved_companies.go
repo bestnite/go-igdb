@@ -45,3 +45,35 @@ func (g *igdb) GetInvolvedCompaniesByIDs(ids []uint64) ([]*pb.InvolvedCompany, e
 
 	return g.GetInvolvedCompanies(idStr)
 }
+
+func (g *igdb) GetInvolvedCompaniesByGameID(id uint64) ([]*pb.InvolvedCompany, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetInvolvedCompanies(query)
+}
+
+func (g *igdb) GetInvolvedCompaniesByGameIDs(ids []uint64) ([]*pb.InvolvedCompany, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetInvolvedCompanies(idStr)
+}
+
+func (g *igdb) GetInvolvedCompaniesByCompanyID(id uint64) ([]*pb.InvolvedCompany, error) {
+	query := fmt.Sprintf(`where company = %d; fields *;`, id)
+	return g.GetInvolvedCompanies(query)
+}
+
+func (g *igdb) GetInvolvedCompaniesByCompanyIDs(ids []uint64) ([]*pb.InvolvedCompany, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where company = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetInvolvedCompanies(idStr)
+}

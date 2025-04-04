@@ -45,3 +45,35 @@ func (g *igdb) GetWebsitesByIDs(ids []uint64) ([]*pb.Website, error) {
 
 	return g.GetWebsites(idStr)
 }
+
+func (g *igdb) GetWebsitesByGameID(id uint64) ([]*pb.Website, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetWebsites(query)
+}
+
+func (g *igdb) GetWebsitesByGameIDs(ids []uint64) ([]*pb.Website, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetWebsites(idStr)
+}
+
+func (g *igdb) GetWebsitesByTypeID(id uint64) ([]*pb.Website, error) {
+	query := fmt.Sprintf(`where type = %d; fields *;`, id)
+	return g.GetWebsites(query)
+}
+
+func (g *igdb) GetWebsitesByTypeIDs(ids []uint64) ([]*pb.Website, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where type = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetWebsites(idStr)
+}

@@ -45,3 +45,51 @@ func (g *igdb) GetGameLocalizationsByIDs(ids []uint64) ([]*pb.GameLocalization, 
 
 	return g.GetGameLocalizations(idStr)
 }
+
+func (g *igdb) GetGameLocalizationsByGameID(id uint64) ([]*pb.GameLocalization, error) {
+	query := fmt.Sprintf(`where game = %d; fields *;`, id)
+	return g.GetGameLocalizations(query)
+}
+
+func (g *igdb) GetGameLocalizationsByGameIDs(ids []uint64) ([]*pb.GameLocalization, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGameLocalizations(idStr)
+}
+
+func (g *igdb) GetGameLocalizationsByCoverID(id uint64) ([]*pb.GameLocalization, error) {
+	query := fmt.Sprintf(`where cover = %d; fields *;`, id)
+	return g.GetGameLocalizations(query)
+}
+
+func (g *igdb) GetGameLocalizationsByCoverIDs(ids []uint64) ([]*pb.GameLocalization, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where cover = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGameLocalizations(idStr)
+}
+
+func (g *igdb) GetGameLocalizationsByRegionID(id uint64) ([]*pb.GameLocalization, error) {
+	query := fmt.Sprintf(`where region = %d; fields *;`, id)
+	return g.GetGameLocalizations(query)
+}
+
+func (g *igdb) GetGameLocalizationsByRegionIDs(ids []uint64) ([]*pb.GameLocalization, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where region = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetGameLocalizations(idStr)
+}

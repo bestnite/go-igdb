@@ -45,3 +45,19 @@ func (g *igdb) GetPlatformVersionCompaniesByIDs(ids []uint64) ([]*pb.PlatformVer
 
 	return g.GetPlatformVersionCompanies(idStr)
 }
+
+func (g *igdb) GetPlatformVersionCompaniesByCompanyID(id uint64) ([]*pb.PlatformVersionCompany, error) {
+	query := fmt.Sprintf(`where company = %d; fields *;`, id)
+	return g.GetPlatformVersionCompanies(query)
+}
+
+func (g *igdb) GetPlatformVersionCompaniesByCompanyIDs(ids []uint64) ([]*pb.PlatformVersionCompany, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where company = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetPlatformVersionCompanies(idStr)
+}

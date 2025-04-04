@@ -55,3 +55,19 @@ func (g *igdb) GetPopularityPrimitivesByPopularityType(popularityType, offset, l
 	query := fmt.Sprintf("fields game_id,value,popularity_type; sort value desc; limit %d; offset %d; where popularity_type = %d;", limit, offset, popularityType)
 	return g.GetPopularityPrimitives(query)
 }
+
+func (g *igdb) GetPopularityPrimitivesByExternalPopularitySourceID(id uint64) ([]*pb.PopularityPrimitive, error) {
+	query := fmt.Sprintf(`where external_popularity_source = %d; fields *;`, id)
+	return g.GetPopularityPrimitives(query)
+}
+
+func (g *igdb) GetPopularityPrimitivesByExternalPopularitySourceIDs(ids []uint64) ([]*pb.PopularityPrimitive, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where external_popularity_source = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetPopularityPrimitives(idStr)
+}

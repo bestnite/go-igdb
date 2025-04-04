@@ -45,3 +45,19 @@ func (g *igdb) GetCompanyWebsitesByIDs(ids []uint64) ([]*pb.CompanyWebsite, erro
 
 	return g.GetCompanyWebsites(idStr)
 }
+
+func (g *igdb) GetCompanyWebsitesByTypeID(id uint64) ([]*pb.CompanyWebsite, error) {
+	query := fmt.Sprintf(`where type = %d; fields *;`, id)
+	return g.GetCompanyWebsites(query)
+}
+
+func (g *igdb) GetCompanyWebsitesByTypeIDs(ids []uint64) ([]*pb.CompanyWebsite, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where type = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetCompanyWebsites(idStr)
+}

@@ -45,3 +45,35 @@ func (g *igdb) GetEventNetworksByIDs(ids []uint64) ([]*pb.EventNetwork, error) {
 
 	return g.GetEventNetworks(idStr)
 }
+
+func (g *igdb) GetEventNetworksByEventID(id uint64) ([]*pb.EventNetwork, error) {
+	query := fmt.Sprintf(`where event = %d; fields *;`, id)
+	return g.GetEventNetworks(query)
+}
+
+func (g *igdb) GetEventNetworksByEventIDs(ids []uint64) ([]*pb.EventNetwork, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where event = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetEventNetworks(idStr)
+}
+
+func (g *igdb) GetEventNetworksByNetworkTypeID(id uint64) ([]*pb.EventNetwork, error) {
+	query := fmt.Sprintf(`where network_type = %d; fields *;`, id)
+	return g.GetEventNetworks(query)
+}
+
+func (g *igdb) GetEventNetworksByNetworkTypeIDs(ids []uint64) ([]*pb.EventNetwork, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where network_type = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return g.GetEventNetworks(idStr)
+}
