@@ -11,11 +11,13 @@ type igdb struct {
 	clientID     string
 	token        *twitchToken
 	flaresolverr *flaresolverr.Flaresolverr
+	limiter      *rateLimiter
 }
 
 func New(clientID, clientSecret string) *igdb {
 	return &igdb{
 		clientID:     clientID,
+		limiter:      newRateLimiter(4),
 		token:        NewTwitchToken(clientID, clientSecret),
 		flaresolverr: nil,
 	}
@@ -24,12 +26,15 @@ func New(clientID, clientSecret string) *igdb {
 func NewWithFlaresolverr(clientID, clientSecret string, f *flaresolverr.Flaresolverr) *igdb {
 	return &igdb{
 		clientID:     clientID,
+		limiter:      newRateLimiter(4),
 		token:        NewTwitchToken(clientID, clientSecret),
 		flaresolverr: f,
 	}
 }
 
 func (g *igdb) Request(URL string, dataBody any) (*resty.Response, error) {
+	g.limiter.wait()
+
 	t, err := g.token.getToken()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get twitch token: %w", err)
