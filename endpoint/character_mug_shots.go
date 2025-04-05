@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type CharacterMugShots struct{ BaseEndpoint }
+type CharacterMugShots struct {
+	BaseEndpoint[pb.CharacterMugShot]
+}
+
+func NewCharacterMugShots(request func(URL string, dataBody any) (*resty.Response, error)) *CharacterMugShots {
+	a := &CharacterMugShots{
+		BaseEndpoint[pb.CharacterMugShot]{
+			endpointName: EPCharacterMugShots,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *CharacterMugShots) Query(query string) ([]*pb.CharacterMugShot, error) {
 	resp, err := a.request("https://api.igdb.com/v4/character_mug_shots.pb", query)

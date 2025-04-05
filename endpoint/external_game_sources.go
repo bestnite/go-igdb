@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type ExternalGameSources struct{ BaseEndpoint }
+type ExternalGameSources struct {
+	BaseEndpoint[pb.ExternalGameSource]
+}
+
+func NewExternalGameSources(request func(URL string, dataBody any) (*resty.Response, error)) *ExternalGameSources {
+	a := &ExternalGameSources{
+		BaseEndpoint[pb.ExternalGameSource]{
+			endpointName: EPExternalGameSources,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *ExternalGameSources) Query(query string) ([]*pb.ExternalGameSource, error) {
 	resp, err := a.request("https://api.igdb.com/v4/external_game_sources.pb", query)

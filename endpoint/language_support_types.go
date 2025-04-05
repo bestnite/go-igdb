@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type LanguageSupportTypes struct{ BaseEndpoint }
+type LanguageSupportTypes struct {
+	BaseEndpoint[pb.LanguageSupportType]
+}
+
+func NewLanguageSupportTypes(request func(URL string, dataBody any) (*resty.Response, error)) *LanguageSupportTypes {
+	a := &LanguageSupportTypes{
+		BaseEndpoint[pb.LanguageSupportType]{
+			endpointName: EPLanguageSupportTypes,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *LanguageSupportTypes) Query(query string) ([]*pb.LanguageSupportType, error) {
 	resp, err := a.request("https://api.igdb.com/v4/language_support_types.pb", query)

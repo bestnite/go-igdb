@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type GameLocalizations struct{ BaseEndpoint }
+type GameLocalizations struct {
+	BaseEndpoint[pb.GameLocalization]
+}
+
+func NewGameLocalizations(request func(URL string, dataBody any) (*resty.Response, error)) *GameLocalizations {
+	a := &GameLocalizations{
+		BaseEndpoint[pb.GameLocalization]{
+			endpointName: EPGameLocalizations,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *GameLocalizations) Query(query string) ([]*pb.GameLocalization, error) {
 	resp, err := a.request("https://api.igdb.com/v4/game_localizations.pb", query)

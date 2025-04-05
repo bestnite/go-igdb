@@ -29,7 +29,7 @@ import (
 )
 
 func Test1(c *igdb.Client) {
-	game, err := igdb.GetItemByID(1942, c.Games.Query)
+	game, err := c.Games.GetByID(1942)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func Test1(c *igdb.Client) {
 }
 
 func Test2(c *igdb.Client) {
-	games, err := igdb.GetItemsByIDs([]uint64{119171, 119133}, c.Games.Query)
+	games, err := c.Games.GetByIDs([]uint64{119171, 119133})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -45,7 +45,7 @@ func Test2(c *igdb.Client) {
 }
 
 func Test3(c *igdb.Client) {
-	total, err := igdb.GetItemsLength(c.Games.Query)
+	total, err := c.Games.GetLastOneId()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -53,7 +53,7 @@ func Test3(c *igdb.Client) {
 }
 
 func Test4(c *igdb.Client) {
-	games, err := igdb.GetItemsPagniated(0, 10, c.Games.Query)
+	games, err := c.Games.Paginated(0, 10)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -92,21 +92,6 @@ func main() {
 	Test6(client)
 }
 ```
-
-## Advanced Usage
-
-### Using with FlareSolverr
-
-```go
-import "github.com/bestnite/go-flaresolverr"
-
-flaresolverr := flaresolverr.New("http://localhost:8191")
-client := igdb.NewWithFlaresolverr("your-client-id", "your-client-secret", flaresolverr)
-```
-
-### Rate Limiting
-
-The client automatically handles rate limiting with a default of 4 requests per second. This helps prevent hitting IGDB's rate limits.
 
 ## Contributing
 

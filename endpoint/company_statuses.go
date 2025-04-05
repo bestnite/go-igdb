@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type CompanyStatuses struct{ BaseEndpoint }
+type CompanyStatuses struct {
+	BaseEndpoint[pb.CompanyStatus]
+}
+
+func NewCompanyStatuses(request func(URL string, dataBody any) (*resty.Response, error)) *CompanyStatuses {
+	a := &CompanyStatuses{
+		BaseEndpoint[pb.CompanyStatus]{
+			endpointName: EPCompanyStatuses,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *CompanyStatuses) Query(query string) ([]*pb.CompanyStatus, error) {
 	resp, err := a.request("https://api.igdb.com/v4/company_statuses.pb", query)

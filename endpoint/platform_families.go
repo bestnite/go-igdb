@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type PlatformFamilies struct{ BaseEndpoint }
+type PlatformFamilies struct {
+	BaseEndpoint[pb.PlatformFamily]
+}
+
+func NewPlatformFamilies(request func(URL string, dataBody any) (*resty.Response, error)) *PlatformFamilies {
+	a := &PlatformFamilies{
+		BaseEndpoint[pb.PlatformFamily]{
+			endpointName: EPPlatformFamilies,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *PlatformFamilies) Query(query string) ([]*pb.PlatformFamily, error) {
 	resp, err := a.request("https://api.igdb.com/v4/platform_families.pb", query)

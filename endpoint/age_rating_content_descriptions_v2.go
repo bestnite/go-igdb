@@ -4,12 +4,24 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
 type AgeRatingContentDescriptionsV2 struct {
-	BaseEndpoint
+	BaseEndpoint[pb.AgeRatingContentDescriptionV2]
+}
+
+func NewAgeRatingContentDescriptionsV2(request func(URL string, dataBody any) (*resty.Response, error)) *AgeRatingContentDescriptionsV2 {
+	a := &AgeRatingContentDescriptionsV2{
+		BaseEndpoint[pb.AgeRatingContentDescriptionV2]{
+			endpointName: EPAgeRatingContentDescriptionsV2,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
 }
 
 func (a *AgeRatingContentDescriptionsV2) Query(query string) ([]*pb.AgeRatingContentDescriptionV2, error) {

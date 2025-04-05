@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type GameReleaseFormats struct{ BaseEndpoint }
+type GameReleaseFormats struct {
+	BaseEndpoint[pb.GameReleaseFormat]
+}
+
+func NewGameReleaseFormats(request func(URL string, dataBody any) (*resty.Response, error)) *GameReleaseFormats {
+	a := &GameReleaseFormats{
+		BaseEndpoint[pb.GameReleaseFormat]{
+			endpointName: EPGameReleaseFormats,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *GameReleaseFormats) Query(query string) ([]*pb.GameReleaseFormat, error) {
 	resp, err := a.request("https://api.igdb.com/v4/game_release_formats.pb", query)

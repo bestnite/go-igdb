@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type PopularityTypes struct{ BaseEndpoint }
+type PopularityTypes struct {
+	BaseEndpoint[pb.PopularityType]
+}
+
+func NewPopularityTypes(request func(URL string, dataBody any) (*resty.Response, error)) *PopularityTypes {
+	a := &PopularityTypes{
+		BaseEndpoint[pb.PopularityType]{
+			endpointName: EPPopularityTypes,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *PopularityTypes) Query(query string) ([]*pb.PopularityType, error) {
 	resp, err := a.request("https://api.igdb.com/v4/popularity_types.pb", query)

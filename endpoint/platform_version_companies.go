@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type PlatformVersionCompanies struct{ BaseEndpoint }
+type PlatformVersionCompanies struct {
+	BaseEndpoint[pb.PlatformVersionCompany]
+}
+
+func NewPlatformVersionCompanies(request func(URL string, dataBody any) (*resty.Response, error)) *PlatformVersionCompanies {
+	a := &PlatformVersionCompanies{
+		BaseEndpoint[pb.PlatformVersionCompany]{
+			endpointName: EPPlatformVersionCompanies,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *PlatformVersionCompanies) Query(query string) ([]*pb.PlatformVersionCompany, error) {
 	resp, err := a.request("https://api.igdb.com/v4/platform_version_companies.pb", query)

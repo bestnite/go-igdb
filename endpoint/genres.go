@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type Genres struct{ BaseEndpoint }
+type Genres struct {
+	BaseEndpoint[pb.Genre]
+}
+
+func NewGenres(request func(URL string, dataBody any) (*resty.Response, error)) *Genres {
+	a := &Genres{
+		BaseEndpoint[pb.Genre]{
+			endpointName: EPGenres,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *Genres) Query(query string) ([]*pb.Genre, error) {
 	resp, err := a.request("https://api.igdb.com/v4/genres.pb", query)

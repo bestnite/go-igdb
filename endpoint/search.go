@@ -10,6 +10,7 @@ import (
 	"time"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bestnite/go-flaresolverr"
@@ -22,8 +23,14 @@ var webSearchCFCookies struct {
 }
 
 type Search struct {
-	BaseEndpoint
+	request      func(URL string, dataBody any) (*resty.Response, error)
 	flaresolverr *flaresolverr.Flaresolverr
+}
+
+func NewSearch(request func(URL string, dataBody any) (*resty.Response, error)) *Search {
+	return &Search{
+		request: request,
+	}
 }
 
 func (a *Search) Search(query string) ([]*pb.Search, error) {

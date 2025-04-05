@@ -4,12 +4,24 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
 type AgeRatingCategories struct {
-	BaseEndpoint
+	BaseEndpoint[pb.AgeRatingCategory]
+}
+
+func NewAgeRatingCategories(request func(URL string, dataBody any) (*resty.Response, error)) *AgeRatingCategories {
+	a := &AgeRatingCategories{
+		BaseEndpoint: BaseEndpoint[pb.AgeRatingCategory]{
+			endpointName: EPAgeRatingCategories,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
 }
 
 func (a *AgeRatingCategories) Query(query string) ([]*pb.AgeRatingCategory, error) {

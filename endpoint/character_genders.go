@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type CharacterGenders struct{ BaseEndpoint }
+type CharacterGenders struct {
+	BaseEndpoint[pb.CharacterGender]
+}
+
+func NewCharacterGenders(request func(URL string, dataBody any) (*resty.Response, error)) *CharacterGenders {
+	a := &CharacterGenders{
+		BaseEndpoint[pb.CharacterGender]{
+			endpointName: EPCharacterGenders,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *CharacterGenders) Query(query string) ([]*pb.CharacterGender, error) {
 	resp, err := a.request("https://api.igdb.com/v4/character_genders.pb", query)

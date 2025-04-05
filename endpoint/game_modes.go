@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type GameModes struct{ BaseEndpoint }
+type GameModes struct {
+	BaseEndpoint[pb.GameMode]
+}
+
+func NewGameModes(request func(URL string, dataBody any) (*resty.Response, error)) *GameModes {
+	a := &GameModes{
+		BaseEndpoint[pb.GameMode]{
+			endpointName: EPGameModes,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *GameModes) Query(query string) ([]*pb.GameMode, error) {
 	resp, err := a.request("https://api.igdb.com/v4/game_modes.pb", query)

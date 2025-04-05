@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type Covers struct{ BaseEndpoint }
+type Covers struct {
+	BaseEndpoint[pb.Cover]
+}
+
+func NewCovers(request func(URL string, dataBody any) (*resty.Response, error)) *Covers {
+	a := &Covers{
+		BaseEndpoint[pb.Cover]{
+			endpointName: EPCovers,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *Covers) Query(query string) ([]*pb.Cover, error) {
 	resp, err := a.request("https://api.igdb.com/v4/covers.pb", query)

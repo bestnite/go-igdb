@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type Artworks struct{ BaseEndpoint }
+type Artworks struct {
+	BaseEndpoint[pb.Artwork]
+}
+
+func NewArtworks(request func(URL string, dataBody any) (*resty.Response, error)) *Artworks {
+	a := &Artworks{
+		BaseEndpoint[pb.Artwork]{
+			endpointName: EPArtworks,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *Artworks) Query(query string) ([]*pb.Artwork, error) {
 	resp, err := a.request("https://api.igdb.com/v4/artworks.pb", query)

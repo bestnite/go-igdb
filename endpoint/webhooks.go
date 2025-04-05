@@ -4,9 +4,19 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+
+	"github.com/go-resty/resty/v2"
 )
 
-type Webhooks struct{ BaseEndpoint }
+type Webhooks struct {
+	request func(URL string, dataBody any) (*resty.Response, error)
+}
+
+func NewWebhooks(request func(URL string, dataBody any) (*resty.Response, error)) *Webhooks {
+	return &Webhooks{
+		request: request,
+	}
+}
 
 func (a *Webhooks) Register(endpoint EndpointName, secret, callbackUrl string) error {
 	dataBody := url.Values{}

@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type EventNetworks struct{ BaseEndpoint }
+type EventNetworks struct {
+	BaseEndpoint[pb.EventNetwork]
+}
+
+func NewEventNetworks(request func(URL string, dataBody any) (*resty.Response, error)) *EventNetworks {
+	a := &EventNetworks{
+		BaseEndpoint[pb.EventNetwork]{
+			endpointName: EPEventNetworks,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *EventNetworks) Query(query string) ([]*pb.EventNetwork, error) {
 	resp, err := a.request("https://api.igdb.com/v4/event_networks.pb", query)

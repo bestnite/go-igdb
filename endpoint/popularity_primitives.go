@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type PopularityPrimitives struct{ BaseEndpoint }
+type PopularityPrimitives struct {
+	BaseEndpoint[pb.PopularityPrimitive]
+}
+
+func NewPopularityPrimitives(request func(URL string, dataBody any) (*resty.Response, error)) *PopularityPrimitives {
+	a := &PopularityPrimitives{
+		BaseEndpoint[pb.PopularityPrimitive]{
+			endpointName: EPPopularityPrimitives,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *PopularityPrimitives) Query(query string) ([]*pb.PopularityPrimitive, error) {
 	resp, err := a.request("https://api.igdb.com/v4/popularity_primitives.pb", query)

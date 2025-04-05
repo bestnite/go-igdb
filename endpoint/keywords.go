@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type Keywords struct{ BaseEndpoint }
+type Keywords struct {
+	BaseEndpoint[pb.Keyword]
+}
+
+func NewKeywords(request func(URL string, dataBody any) (*resty.Response, error)) *Keywords {
+	a := &Keywords{
+		BaseEndpoint[pb.Keyword]{
+			endpointName: EPKeywords,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *Keywords) Query(query string) ([]*pb.Keyword, error) {
 	resp, err := a.request("https://api.igdb.com/v4/keywords.pb", query)

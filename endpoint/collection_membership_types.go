@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type CollectionMembershipTypes struct{ BaseEndpoint }
+type CollectionMembershipTypes struct {
+	BaseEndpoint[pb.CollectionMembershipType]
+}
+
+func NewCollectionMembershipTypes(request func(URL string, dataBody any) (*resty.Response, error)) *CollectionMembershipTypes {
+	a := &CollectionMembershipTypes{
+		BaseEndpoint[pb.CollectionMembershipType]{
+			endpointName: EPCollectionMembershipTypes,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *CollectionMembershipTypes) Query(query string) ([]*pb.CollectionMembershipType, error) {
 	resp, err := a.request("https://api.igdb.com/v4/collection_membership_types.pb", query)

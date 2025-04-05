@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/bestnite/go-flaresolverr"
 	"github.com/bestnite/go-igdb/endpoint"
@@ -15,8 +14,6 @@ type Client struct {
 	token        *twitchToken
 	flaresolverr *flaresolverr.Flaresolverr
 	limiter      *rateLimiter
-
-	EntityEndpoints map[endpoint.EndpointName]endpoint.EntityEndpoint
 
 	AgeRatingCategories            *endpoint.AgeRatingCategories
 	AgeRatingContentDescriptions   *endpoint.AgeRatingContentDescriptions
@@ -93,11 +90,10 @@ type Client struct {
 
 func New(clientID, clientSecret string) *Client {
 	c := &Client{
-		clientID:        clientID,
-		limiter:         newRateLimiter(4),
-		token:           NewTwitchToken(clientID, clientSecret),
-		flaresolverr:    nil,
-		EntityEndpoints: make(map[endpoint.EndpointName]endpoint.EntityEndpoint),
+		clientID:     clientID,
+		limiter:      newRateLimiter(4),
+		token:        NewTwitchToken(clientID, clientSecret),
+		flaresolverr: nil,
 	}
 
 	registerAllEndpoints(c)
@@ -130,68 +126,4 @@ func (g *Client) Request(URL string, dataBody any) (*resty.Response, error) {
 		return nil, fmt.Errorf("failed to request: %s: %w", URL, err)
 	}
 	return resp, nil
-}
-
-func GetItemsPagniated[T any](offset, limit int, f func(string) ([]*T, error)) ([]*T, error) {
-	query := fmt.Sprintf("offset %d; limit %d; f *; sort id asc;", offset, limit)
-	items, err := f(query)
-	if err != nil {
-		return nil, err
-	}
-
-	return items, nil
-}
-
-func GetItemsLength[T any](f func(string) ([]*T, error)) (uint64, error) {
-	query := "fields id; sort id desc; limit 1;"
-	items, err := f(query)
-	if err != nil {
-		return 0, err
-	}
-
-	if len(items) == 0 {
-		return 0, fmt.Errorf("no results: %s", query)
-	}
-
-	type Iid interface {
-		GetId() uint64
-	}
-
-	item, ok := any(items[0]).(Iid)
-
-	if !ok {
-		return 0, fmt.Errorf("failed to convert")
-	}
-
-	return item.GetId(), nil
-}
-
-func GetItemByID[T any](id uint64, f func(string) ([]*T, error)) (*T, error) {
-	query := fmt.Sprintf("where id = %d; fields *;", id)
-	items, err := f(query)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(items) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
-	return items[0], nil
-}
-
-func GetItemsByIDs[T any](ids []uint64, f func(string) ([]*T, error)) ([]*T, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	items, err := f(idStr)
-	if err != nil {
-		return nil, err
-	}
-
-	return items, nil
 }

@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type PlayerPerspectives struct{ BaseEndpoint }
+type PlayerPerspectives struct {
+	BaseEndpoint[pb.PlayerPerspective]
+}
+
+func NewPlayerPerspectives(request func(URL string, dataBody any) (*resty.Response, error)) *PlayerPerspectives {
+	a := &PlayerPerspectives{
+		BaseEndpoint[pb.PlayerPerspective]{
+			endpointName: EPPlayerPerspectives,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *PlayerPerspectives) Query(query string) ([]*pb.PlayerPerspective, error) {
 	resp, err := a.request("https://api.igdb.com/v4/player_perspectives.pb", query)

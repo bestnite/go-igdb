@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type Platforms struct{ BaseEndpoint }
+type Platforms struct {
+	BaseEndpoint[pb.Platform]
+}
+
+func NewPlatforms(request func(URL string, dataBody any) (*resty.Response, error)) *Platforms {
+	a := &Platforms{
+		BaseEndpoint[pb.Platform]{
+			endpointName: EPPlatforms,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *Platforms) Query(query string) ([]*pb.Platform, error) {
 	resp, err := a.request("https://api.igdb.com/v4/platforms.pb", query)

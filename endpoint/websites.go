@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type Websites struct{ BaseEndpoint }
+type Websites struct {
+	BaseEndpoint[pb.Website]
+}
+
+func NewWebsites(request func(URL string, dataBody any) (*resty.Response, error)) *Websites {
+	a := &Websites{
+		BaseEndpoint[pb.Website]{
+			endpointName: EPWebsites,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *Websites) Query(query string) ([]*pb.Website, error) {
 	resp, err := a.request("https://api.igdb.com/v4/websites.pb", query)

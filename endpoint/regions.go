@@ -4,11 +4,25 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
+	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
 
-type Regions struct{ BaseEndpoint }
+type Regions struct {
+	BaseEndpoint[pb.Region]
+}
+
+func NewRegions(request func(URL string, dataBody any) (*resty.Response, error)) *Regions {
+	a := &Regions{
+		BaseEndpoint[pb.Region]{
+			endpointName: EPRegions,
+			request:      request,
+		},
+	}
+	a.queryFunc = a.Query
+	return a
+}
 
 func (a *Regions) Query(query string) ([]*pb.Region, error) {
 	resp, err := a.request("https://api.igdb.com/v4/regions.pb", query)
