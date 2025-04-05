@@ -1,0 +1,29 @@
+package endpoint
+
+import (
+	"fmt"
+
+	pb "github.com/bestnite/go-igdb/proto"
+
+	"google.golang.org/protobuf/proto"
+)
+
+type WebsiteTypes struct{ BaseEndpoint }
+
+func (a *WebsiteTypes) Query(query string) ([]*pb.WebsiteType, error) {
+	resp, err := a.request("https://api.igdb.com/v4/website_types.pb", query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to request: %w", err)
+	}
+
+	data := pb.WebsiteTypeResult{}
+	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal: %w", err)
+	}
+
+	if len(data.Websitetypes) == 0 {
+		return nil, fmt.Errorf("no results: %s", query)
+	}
+
+	return data.Websitetypes, nil
+}
