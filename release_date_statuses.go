@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,33 +24,4 @@ func (g *Client) GetReleaseDateStatuses(query string) ([]*pb.ReleaseDateStatus, 
 	}
 
 	return data.Releasedatestatuses, nil
-}
-
-func (g *Client) GetReleaseDateStatusByID(id uint64) (*pb.ReleaseDateStatus, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	releaseDateStatuses, err := g.GetReleaseDateStatuses(query)
-	if err != nil {
-		return nil, err
-	}
-	return releaseDateStatuses[0], nil
-}
-
-func (g *Client) GetReleaseDateStatusesByIDs(ids []uint64) ([]*pb.ReleaseDateStatus, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetReleaseDateStatuses(idStr)
-}
-
-func (g *Client) GetReleaseDateStatusesLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	releaseDateStatuses, err := g.GetReleaseDateStatuses(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(releaseDateStatuses[0].Id), nil
 }

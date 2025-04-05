@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,49 +24,4 @@ func (g *Client) GetEventLogos(query string) ([]*pb.EventLogo, error) {
 	}
 
 	return data.Eventlogos, nil
-}
-
-func (g *Client) GetEventLogoByID(id uint64) (*pb.EventLogo, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	eventLogos, err := g.GetEventLogos(query)
-	if err != nil {
-		return nil, err
-	}
-	return eventLogos[0], nil
-}
-
-func (g *Client) GetEventLogosByIDs(ids []uint64) ([]*pb.EventLogo, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetEventLogos(idStr)
-}
-
-func (g *Client) GetEventLogosByEventID(id uint64) ([]*pb.EventLogo, error) {
-	query := fmt.Sprintf(`where event = %d; fields *;`, id)
-	return g.GetEventLogos(query)
-}
-
-func (g *Client) GetEventLogosByEventIDs(ids []uint64) ([]*pb.EventLogo, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where event = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetEventLogos(idStr)
-}
-
-func (g *Client) GetEventLogosLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	eventLogos, err := g.GetEventLogos(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(eventLogos[0].Id), nil
 }

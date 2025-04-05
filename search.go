@@ -93,5 +93,5 @@ func (g *Client) WebSearchGames(name string) ([]*pb.Game, error) {
 		ids[i] = game.Id
 	}
 
-	return g.GetGameByIDs(ids)
+	return GetItemsByIDs(ids, g.GetGames)
 }

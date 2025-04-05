@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,33 +24,4 @@ func (g *Client) GetPlatformLogos(query string) ([]*pb.PlatformLogo, error) {
 	}
 
 	return data.Platformlogos, nil
-}
-
-func (g *Client) GetPlatformLogoByID(id uint64) (*pb.PlatformLogo, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	platformLogos, err := g.GetPlatformLogos(query)
-	if err != nil {
-		return nil, err
-	}
-	return platformLogos[0], nil
-}
-
-func (g *Client) GetPlatformLogosByIDs(ids []uint64) ([]*pb.PlatformLogo, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetPlatformLogos(idStr)
-}
-
-func (g *Client) GetPlatformLogosLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	platformLogos, err := g.GetPlatformLogos(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(platformLogos[0].Id), nil
 }

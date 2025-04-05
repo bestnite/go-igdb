@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,97 +24,4 @@ func (g *Client) GetReleaseDates(query string) ([]*pb.ReleaseDate, error) {
 	}
 
 	return data.Releasedates, nil
-}
-
-func (g *Client) GetReleaseDateByID(id uint64) (*pb.ReleaseDate, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	releaseDates, err := g.GetReleaseDates(query)
-	if err != nil {
-		return nil, err
-	}
-	return releaseDates[0], nil
-}
-
-func (g *Client) GetReleaseDatesByIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetReleaseDates(idStr)
-}
-
-func (g *Client) GetReleaseDatesByGameID(id uint64) ([]*pb.ReleaseDate, error) {
-	query := fmt.Sprintf(`where game = %d; fields *;`, id)
-	return g.GetReleaseDates(query)
-}
-
-func (g *Client) GetReleaseDatesByGameIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetReleaseDates(idStr)
-}
-
-func (g *Client) GetReleaseDatesByPlatformID(id uint64) ([]*pb.ReleaseDate, error) {
-	query := fmt.Sprintf(`where platform = %d; fields *;`, id)
-	return g.GetReleaseDates(query)
-}
-
-func (g *Client) GetReleaseDatesByPlatformIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where platform = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetReleaseDates(idStr)
-}
-
-func (g *Client) GetReleaseDatesByReleaseRegionID(id uint64) ([]*pb.ReleaseDate, error) {
-	query := fmt.Sprintf(`where release_region = %d; fields *;`, id)
-	return g.GetReleaseDates(query)
-}
-
-func (g *Client) GetReleaseDatesByReleaseRegionIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where release_region = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetReleaseDates(idStr)
-}
-
-func (g *Client) GetReleaseDatesByStatusID(id uint64) ([]*pb.ReleaseDate, error) {
-	query := fmt.Sprintf(`where status = %d; fields *;`, id)
-	return g.GetReleaseDates(query)
-}
-
-func (g *Client) GetReleaseDatesByStatusIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where status = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetReleaseDates(idStr)
-}
-
-func (g *Client) GetReleaseDatesLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	releaseDates, err := g.GetReleaseDates(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(releaseDates[0].Id), nil
 }

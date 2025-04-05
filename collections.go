@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,49 +24,4 @@ func (g *Client) GetCollections(query string) ([]*pb.Collection, error) {
 	}
 
 	return data.Collections, nil
-}
-
-func (g *Client) GetCollectionByID(id uint64) (*pb.Collection, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	collections, err := g.GetCollections(query)
-	if err != nil {
-		return nil, err
-	}
-	return collections[0], nil
-}
-
-func (g *Client) GetCollectionsByIDs(ids []uint64) ([]*pb.Collection, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetCollections(idStr)
-}
-
-func (g *Client) GetCollectionsByCollectionTypeID(id uint64) ([]*pb.Collection, error) {
-	query := fmt.Sprintf(`where collection_type = %d; fields *;`, id)
-	return g.GetCollections(query)
-}
-
-func (g *Client) GetCollectionsByCollectionTypeIDs(ids []uint64) ([]*pb.Collection, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where collection_type = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetCollections(idStr)
-}
-
-func (g *Client) GetCollectionsLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	collections, err := g.GetCollections(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(collections[0].Id), nil
 }

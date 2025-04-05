@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,33 +24,4 @@ func (g *Client) GetGameVersionFeatures(query string) ([]*pb.GameVersionFeature,
 	}
 
 	return data.Gameversionfeatures, nil
-}
-
-func (g *Client) GetGameVersionFeatureByID(id uint64) (*pb.GameVersionFeature, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	gameVersionFeatures, err := g.GetGameVersionFeatures(query)
-	if err != nil {
-		return nil, err
-	}
-	return gameVersionFeatures[0], nil
-}
-
-func (g *Client) GetGameVersionFeaturesByIDs(ids []uint64) ([]*pb.GameVersionFeature, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetGameVersionFeatures(idStr)
-}
-
-func (g *Client) GetGameVersionFeaturesLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	gameVersionFeatures, err := g.GetGameVersionFeatures(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(gameVersionFeatures[0].Id), nil
 }

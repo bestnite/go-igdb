@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,49 +24,4 @@ func (g *Client) GetAgeRatingCategories(query string) ([]*pb.AgeRatingCategory, 
 	}
 
 	return data.Ageratingcategories, nil
-}
-
-func (g *Client) GetAgeRatingCategoryByID(id uint64) (*pb.AgeRatingCategory, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	ageRatingCategories, err := g.GetAgeRatingCategories(query)
-	if err != nil {
-		return nil, err
-	}
-	return ageRatingCategories[0], nil
-}
-
-func (g *Client) GetAgeRatingCategoriesByIDs(ids []uint64) ([]*pb.AgeRatingCategory, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetAgeRatingCategories(idStr)
-}
-
-func (g *Client) GetAgeRatingCategoriesByOrganizationID(id uint64) ([]*pb.AgeRatingCategory, error) {
-	query := fmt.Sprintf(`where organization = %d; fields *;`, id)
-	return g.GetAgeRatingCategories(query)
-}
-
-func (g *Client) GetAgeRatingCategoriesByOrganizationIDs(ids []uint64) ([]*pb.AgeRatingCategory, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where organization = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetAgeRatingCategories(idStr)
-}
-
-func (g *Client) GetAgeRatingCategoriesLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	ageRatingCategories, err := g.GetAgeRatingCategories(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(ageRatingCategories[0].Id), nil
 }

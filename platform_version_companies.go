@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,49 +24,4 @@ func (g *Client) GetPlatformVersionCompanies(query string) ([]*pb.PlatformVersio
 	}
 
 	return data.Platformversioncompanies, nil
-}
-
-func (g *Client) GetPlatformVersionCompanyByID(id uint64) (*pb.PlatformVersionCompany, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	platformVersionCompanies, err := g.GetPlatformVersionCompanies(query)
-	if err != nil {
-		return nil, err
-	}
-	return platformVersionCompanies[0], nil
-}
-
-func (g *Client) GetPlatformVersionCompaniesByIDs(ids []uint64) ([]*pb.PlatformVersionCompany, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetPlatformVersionCompanies(idStr)
-}
-
-func (g *Client) GetPlatformVersionCompaniesByCompanyID(id uint64) ([]*pb.PlatformVersionCompany, error) {
-	query := fmt.Sprintf(`where company = %d; fields *;`, id)
-	return g.GetPlatformVersionCompanies(query)
-}
-
-func (g *Client) GetPlatformVersionCompaniesByCompanyIDs(ids []uint64) ([]*pb.PlatformVersionCompany, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where company = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetPlatformVersionCompanies(idStr)
-}
-
-func (g *Client) GetPlatformVersionCompaniesLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	platformVersionCompanies, err := g.GetPlatformVersionCompanies(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(platformVersionCompanies[0].Id), nil
 }

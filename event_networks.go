@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,65 +24,4 @@ func (g *Client) GetEventNetworks(query string) ([]*pb.EventNetwork, error) {
 	}
 
 	return data.Eventnetworks, nil
-}
-
-func (g *Client) GetEventNetworkByID(id uint64) (*pb.EventNetwork, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	eventNetworks, err := g.GetEventNetworks(query)
-	if err != nil {
-		return nil, err
-	}
-	return eventNetworks[0], nil
-}
-
-func (g *Client) GetEventNetworksByIDs(ids []uint64) ([]*pb.EventNetwork, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetEventNetworks(idStr)
-}
-
-func (g *Client) GetEventNetworksByEventID(id uint64) ([]*pb.EventNetwork, error) {
-	query := fmt.Sprintf(`where event = %d; fields *;`, id)
-	return g.GetEventNetworks(query)
-}
-
-func (g *Client) GetEventNetworksByEventIDs(ids []uint64) ([]*pb.EventNetwork, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where event = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetEventNetworks(idStr)
-}
-
-func (g *Client) GetEventNetworksByNetworkTypeID(id uint64) ([]*pb.EventNetwork, error) {
-	query := fmt.Sprintf(`where network_type = %d; fields *;`, id)
-	return g.GetEventNetworks(query)
-}
-
-func (g *Client) GetEventNetworksByNetworkTypeIDs(ids []uint64) ([]*pb.EventNetwork, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where network_type = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetEventNetworks(idStr)
-}
-
-func (g *Client) GetEventNetworksLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	eventNetworks, err := g.GetEventNetworks(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(eventNetworks[0].Id), nil
 }

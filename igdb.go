@@ -2,6 +2,7 @@ package igdb
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/bestnite/go-flaresolverr"
 	"github.com/go-resty/resty/v2"
@@ -58,4 +59,38 @@ func (g *Client) getFlaresolverr() (*flaresolverr.Flaresolverr, error) {
 		return nil, fmt.Errorf("flaresolverr is not initialized")
 	}
 	return g.flaresolverr, nil
+}
+
+func GetItemByID[T any](id uint64, f func(string) ([]*T, error)) (*T, error) {
+	query := fmt.Sprintf("where id = %d; fields *;", id)
+	items, err := f(query)
+	if err != nil {
+		return nil, err
+	}
+	return items[0], nil
+}
+
+func GetItemsByIDs[T any](ids []uint64, f func(string) ([]*T, error)) ([]*T, error) {
+	idStrSlice := make([]string, len(ids))
+	for i, id := range ids {
+		idStrSlice[i] = fmt.Sprintf("%d", id)
+	}
+
+	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
+
+	return f(idStr)
+}
+
+func GetItemsPagniated[T any](offset, limit int, f func(string) ([]*T, error)) ([]*T, error) {
+	query := fmt.Sprintf("offset %d; limit %d; f *; sort id asc;", offset, limit)
+	return f(query)
+}
+
+func GetItemsLength[T any](f func(string) ([]*T, error)) (int, error) {
+	query := "fields id; sort id desc; limit 1;"
+	items, err := f(query)
+	if err != nil {
+		return 0, err
+	}
+	return len(items), nil
 }

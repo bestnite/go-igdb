@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,65 +24,4 @@ func (g *Client) GetWebsites(query string) ([]*pb.Website, error) {
 	}
 
 	return data.Websites, nil
-}
-
-func (g *Client) GetWebsiteByID(id uint64) (*pb.Website, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	websites, err := g.GetWebsites(query)
-	if err != nil {
-		return nil, err
-	}
-	return websites[0], nil
-}
-
-func (g *Client) GetWebsitesByIDs(ids []uint64) ([]*pb.Website, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetWebsites(idStr)
-}
-
-func (g *Client) GetWebsitesByGameID(id uint64) ([]*pb.Website, error) {
-	query := fmt.Sprintf(`where game = %d; fields *;`, id)
-	return g.GetWebsites(query)
-}
-
-func (g *Client) GetWebsitesByGameIDs(ids []uint64) ([]*pb.Website, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where game = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetWebsites(idStr)
-}
-
-func (g *Client) GetWebsitesByTypeID(id uint64) ([]*pb.Website, error) {
-	query := fmt.Sprintf(`where type = %d; fields *;`, id)
-	return g.GetWebsites(query)
-}
-
-func (g *Client) GetWebsitesByTypeIDs(ids []uint64) ([]*pb.Website, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where type = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetWebsites(idStr)
-}
-
-func (g *Client) GetWebsitesLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	websites, err := g.GetWebsites(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(websites[0].Id), nil
 }

@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,49 +24,4 @@ func (g *Client) GetAgeRatingContentDescriptionsV2(query string) ([]*pb.AgeRatin
 	}
 
 	return data.Ageratingcontentdescriptionsv2, nil
-}
-
-func (g *Client) GetAgeRatingContentDescriptionV2ByID(id uint64) (*pb.AgeRatingContentDescriptionV2, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	ageRatingContentDescriptions, err := g.GetAgeRatingContentDescriptionsV2(query)
-	if err != nil {
-		return nil, err
-	}
-	return ageRatingContentDescriptions[0], nil
-}
-
-func (g *Client) GetAgeRatingContentDescriptionsV2ByIDs(ids []uint64) ([]*pb.AgeRatingContentDescriptionV2, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetAgeRatingContentDescriptionsV2(idStr)
-}
-
-func (g *Client) GetAgeRatingContentDescriptionsV2ByOrganizationID(id uint64) ([]*pb.AgeRatingContentDescriptionV2, error) {
-	query := fmt.Sprintf(`where organization = %d; fields *;`, id)
-	return g.GetAgeRatingContentDescriptionsV2(query)
-}
-
-func (g *Client) GetAgeRatingContentDescriptionsV2ByOrganizationIDs(ids []uint64) ([]*pb.AgeRatingContentDescriptionV2, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where organization = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetAgeRatingContentDescriptionsV2(idStr)
-}
-
-func (g *Client) GetAgeRatingContentDescriptionsV2Length() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	ageRatingContentDescriptions, err := g.GetAgeRatingContentDescriptionsV2(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(ageRatingContentDescriptions[0].Id), nil
 }

@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,33 +24,4 @@ func (g *Client) GetGenres(query string) ([]*pb.Genre, error) {
 	}
 
 	return data.Genres, nil
-}
-
-func (g *Client) GetGenreByID(id uint64) (*pb.Genre, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	genres, err := g.GetGenres(query)
-	if err != nil {
-		return nil, err
-	}
-	return genres[0], nil
-}
-
-func (g *Client) GetGenresByIDs(ids []uint64) ([]*pb.Genre, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetGenres(idStr)
-}
-
-func (g *Client) GetGenresLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	genres, err := g.GetGenres(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(genres[0].Id), nil
 }

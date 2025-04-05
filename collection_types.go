@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,33 +24,4 @@ func (g *Client) GetCollectionTypes(query string) ([]*pb.CollectionType, error) 
 	}
 
 	return data.Collectiontypes, nil
-}
-
-func (g *Client) GetCollectionTypeByID(id uint64) (*pb.CollectionType, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	collectionTypes, err := g.GetCollectionTypes(query)
-	if err != nil {
-		return nil, err
-	}
-	return collectionTypes[0], nil
-}
-
-func (g *Client) GetCollectionTypesByIDs(ids []uint64) ([]*pb.CollectionType, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetCollectionTypes(idStr)
-}
-
-func (g *Client) GetCollectionTypesLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	collectionTypes, err := g.GetCollectionTypes(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(collectionTypes[0].Id), nil
 }

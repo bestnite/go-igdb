@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,65 +24,4 @@ func (g *Client) GetAgeRatings(query string) ([]*pb.AgeRating, error) {
 	}
 
 	return data.Ageratings, nil
-}
-
-func (g *Client) GetAgeRatingByID(id uint64) (*pb.AgeRating, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	ageRatings, err := g.GetAgeRatings(query)
-	if err != nil {
-		return nil, err
-	}
-	return ageRatings[0], nil
-}
-
-func (g *Client) GetAgeRatingsByIDs(ids []uint64) ([]*pb.AgeRating, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetAgeRatings(idStr)
-}
-
-func (g *Client) GetAgeRatingsByOrganizationID(id uint64) ([]*pb.AgeRating, error) {
-	query := fmt.Sprintf(`where organization = %d; fields *;`, id)
-	return g.GetAgeRatings(query)
-}
-
-func (g *Client) GetAgeRatingsByOrganizationIDs(ids []uint64) ([]*pb.AgeRating, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where organization = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetAgeRatings(idStr)
-}
-
-func (g *Client) GetAgeRatingsByAgeRatingCategoryID(id uint64) ([]*pb.AgeRating, error) {
-	query := fmt.Sprintf(`where rating_category = %d; fields *;`, id)
-	return g.GetAgeRatings(query)
-}
-
-func (g *Client) GetAgeRatingsByAgeRatingCategoryIDs(ids []uint64) ([]*pb.AgeRating, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where rating_category = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetAgeRatings(idStr)
-}
-
-func (g *Client) GetAgeRatingsLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	ageRatings, err := g.GetAgeRatings(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(ageRatings[0].Id), nil
 }

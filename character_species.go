@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,33 +24,4 @@ func (g *Client) GetCharacterSpecies(query string) ([]*pb.CharacterSpecie, error
 	}
 
 	return data.Characterspecies, nil
-}
-
-func (g *Client) GetCharacterSpecieByID(id uint64) (*pb.CharacterSpecie, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	characterSpecies, err := g.GetCharacterSpecies(query)
-	if err != nil {
-		return nil, err
-	}
-	return characterSpecies[0], nil
-}
-
-func (g *Client) GetCharacterSpeciesByIDs(ids []uint64) ([]*pb.CharacterSpecie, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetCharacterSpecies(idStr)
-}
-
-func (g *Client) GetCharacterSpeciesLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	characterSpecies, err := g.GetCharacterSpecies(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(characterSpecies[0].Id), nil
 }

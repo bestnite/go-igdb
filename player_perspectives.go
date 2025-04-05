@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,33 +24,4 @@ func (g *Client) GetPlayerPerspectives(query string) ([]*pb.PlayerPerspective, e
 	}
 
 	return data.Playerperspectives, nil
-}
-
-func (g *Client) GetPlayerPerspectiveByID(id uint64) (*pb.PlayerPerspective, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	playerPerspectives, err := g.GetPlayerPerspectives(query)
-	if err != nil {
-		return nil, err
-	}
-	return playerPerspectives[0], nil
-}
-
-func (g *Client) GetPlayerPerspectivesByIDs(ids []uint64) ([]*pb.PlayerPerspective, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetPlayerPerspectives(idStr)
-}
-
-func (g *Client) GetPlayerPerspectivesLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	playerPerspectives, err := g.GetPlayerPerspectives(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(playerPerspectives[0].Id), nil
 }

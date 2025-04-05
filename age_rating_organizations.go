@@ -2,7 +2,6 @@ package igdb
 
 import (
 	"fmt"
-	"strings"
 
 	pb "github.com/bestnite/go-igdb/proto"
 
@@ -25,33 +24,4 @@ func (g *Client) GetAgeRatingOrganizations(query string) ([]*pb.AgeRatingOrganiz
 	}
 
 	return data.Ageratingorganizations, nil
-}
-
-func (g *Client) GetAgeRatingOrganizationByID(id uint64) (*pb.AgeRatingOrganization, error) {
-	query := fmt.Sprintf(`where id=%d; fields *;`, id)
-	ageRatingOrganizations, err := g.GetAgeRatingOrganizations(query)
-	if err != nil {
-		return nil, err
-	}
-	return ageRatingOrganizations[0], nil
-}
-
-func (g *Client) GetAgeRatingOrganizationsByIDs(ids []uint64) ([]*pb.AgeRatingOrganization, error) {
-	idStrSlice := make([]string, len(ids))
-	for i, id := range ids {
-		idStrSlice[i] = fmt.Sprintf("%d", id)
-	}
-
-	idStr := fmt.Sprintf(`where id = (%s); fields *;`, strings.Join(idStrSlice, ","))
-
-	return g.GetAgeRatingOrganizations(idStr)
-}
-
-func (g *Client) GetAgeRatingOrganizationsLength() (int, error) {
-	query := `fields *; sort id desc; limit 1;`
-	ageRatingOrganizations, err := g.GetAgeRatingOrganizations(query)
-	if err != nil {
-		return 0, err
-	}
-	return int(ageRatingOrganizations[0].Id), nil
 }
