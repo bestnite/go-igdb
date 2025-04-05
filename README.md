@@ -26,11 +26,10 @@ import (
 	"log"
 
 	"github.com/bestnite/go-igdb"
-	pb "github.com/bestnite/go-igdb/proto"
 )
 
 func Test1(c *igdb.Client) {
-	game, err := igdb.GetItemByID[pb.Game](1942, c.Games.Query)
+	game, err := igdb.GetItemByID(1942, c.Games.Query)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +37,7 @@ func Test1(c *igdb.Client) {
 }
 
 func Test2(c *igdb.Client) {
-	games, err := igdb.GetItemsByIDs[pb.Game]([]uint64{119171, 119133}, c.Games.Query)
+	games, err := igdb.GetItemsByIDs([]uint64{119171, 119133}, c.Games.Query)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,7 +45,7 @@ func Test2(c *igdb.Client) {
 }
 
 func Test3(c *igdb.Client) {
-	total, err := igdb.GetItemsLength[pb.Game](c.Games.Query)
+	total, err := igdb.GetItemsLength(c.Games.Query)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -54,7 +53,7 @@ func Test3(c *igdb.Client) {
 }
 
 func Test4(c *igdb.Client) {
-	games, err := igdb.GetItemsPagniated[pb.Game](0, 10, c.Games.Query)
+	games, err := igdb.GetItemsPagniated(0, 10, c.Games.Query)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,15 +64,15 @@ func Test4(c *igdb.Client) {
 }
 
 func Test5(c *igdb.Client) {
-	game, err := igdb.AssertSingle[pb.Game](c.Games.Query("fields name,rating; sort rating desc; limit 1;"))
+	game, err := c.Games.Query("fields name,rating; sort rating desc; limit 1;")
 	if err != nil {
 		log.Fatalf("failed to get game: %s", err)
 	}
-	log.Printf("Name of first game with highest rating: %s\n", game.Name)
+	log.Printf("Name of first game with highest rating: %s\n", game[0].Name)
 }
 
 func Test6(c *igdb.Client) {
-	games, err := igdb.AssertSlice[pb.Game](c.Games.Query("fields *; where rating > 70; limit 10;"))
+	games, err := c.Games.Query("fields *; where rating > 70; limit 10;")
 	if err != nil {
 		panic(err)
 	}
