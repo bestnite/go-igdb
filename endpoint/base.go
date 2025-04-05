@@ -68,3 +68,12 @@ func (b *BaseEndpoint[T]) GetLastOneId() (uint64, error) {
 func (b *BaseEndpoint[T]) Paginated(offset, limit uint64) ([]*T, error) {
 	return b.Query(fmt.Sprintf("offset %d; limit %d; fields *; sort id asc;", offset, limit))
 }
+
+type EntityEndpoint[T any] interface {
+	GetEndpointName() EndpointName
+	Query(string) ([]*T, error)
+	GetByID(uint64) (*T, error)
+	GetByIDs([]uint64) ([]*T, error)
+	GetLastOneId() (uint64, error)
+	Paginated(uint64, uint64) ([]*T, error)
+}
