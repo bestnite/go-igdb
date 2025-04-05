@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	pb "github/bestnite/go-igdb/proto"
+	pb "github.com/bestnite/go-igdb/proto"
 
 	"google.golang.org/protobuf/proto"
 )

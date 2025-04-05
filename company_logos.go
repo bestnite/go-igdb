@@ -2,8 +2,9 @@ package igdb
 
 import (
 	"fmt"
-	pb "github/bestnite/go-igdb/proto"
 	"strings"
+
+	pb "github.com/bestnite/go-igdb/proto"
 
 	"google.golang.org/protobuf/proto"
 )

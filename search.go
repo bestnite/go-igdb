@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	pb "github/bestnite/go-igdb/proto"
+	pb "github.com/bestnite/go-igdb/proto"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bestnite/go-flaresolverr"

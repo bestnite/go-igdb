@@ -1,4 +1,4 @@
-module github/bestnite/go-igdb
+module github.com/bestnite/go-igdb
 
 go 1.24.1
 

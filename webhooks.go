@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github/bestnite/go-igdb/endpoint"
+	"github.com/bestnite/go-igdb/endpoint"
 )
 
 func (g *igdb) ActiveWebhook(endpoint endpoint.Endpoint, secret, callbackUrl string) error {
