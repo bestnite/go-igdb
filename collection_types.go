@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetCollectionTypes(query string) ([]*pb.CollectionType, error) {
+func (g *Client) GetCollectionTypes(query string) ([]*pb.CollectionType, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/collection_types.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetCollectionTypes(query string) ([]*pb.CollectionType, error) {
 	return data.Collectiontypes, nil
 }
 
-func (g *igdb) GetCollectionTypeByID(id uint64) (*pb.CollectionType, error) {
+func (g *Client) GetCollectionTypeByID(id uint64) (*pb.CollectionType, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	collectionTypes, err := g.GetCollectionTypes(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetCollectionTypeByID(id uint64) (*pb.CollectionType, error) {
 	return collectionTypes[0], nil
 }
 
-func (g *igdb) GetCollectionTypesByIDs(ids []uint64) ([]*pb.CollectionType, error) {
+func (g *Client) GetCollectionTypesByIDs(ids []uint64) ([]*pb.CollectionType, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetCollectionTypesByIDs(ids []uint64) ([]*pb.CollectionType, erro
 	return g.GetCollectionTypes(idStr)
 }
 
-func (g *igdb) GetCollectionTypesLength() (int, error) {
+func (g *Client) GetCollectionTypesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	collectionTypes, err := g.GetCollectionTypes(query)
 	if err != nil {

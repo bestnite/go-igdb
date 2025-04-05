@@ -7,15 +7,15 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-type igdb struct {
+type Client struct {
 	clientID     string
 	token        *twitchToken
 	flaresolverr *flaresolverr.Flaresolverr
 	limiter      *rateLimiter
 }
 
-func New(clientID, clientSecret string) *igdb {
-	return &igdb{
+func New(clientID, clientSecret string) *Client {
+	return &Client{
 		clientID:     clientID,
 		limiter:      newRateLimiter(4),
 		token:        NewTwitchToken(clientID, clientSecret),
@@ -23,8 +23,8 @@ func New(clientID, clientSecret string) *igdb {
 	}
 }
 
-func NewWithFlaresolverr(clientID, clientSecret string, f *flaresolverr.Flaresolverr) *igdb {
-	return &igdb{
+func NewWithFlaresolverr(clientID, clientSecret string, f *flaresolverr.Flaresolverr) *Client {
+	return &Client{
 		clientID:     clientID,
 		limiter:      newRateLimiter(4),
 		token:        NewTwitchToken(clientID, clientSecret),
@@ -32,7 +32,7 @@ func NewWithFlaresolverr(clientID, clientSecret string, f *flaresolverr.Flaresol
 	}
 }
 
-func (g *igdb) Request(URL string, dataBody any) (*resty.Response, error) {
+func (g *Client) Request(URL string, dataBody any) (*resty.Response, error) {
 	g.limiter.wait()
 
 	t, err := g.token.getToken()
@@ -53,7 +53,7 @@ func (g *igdb) Request(URL string, dataBody any) (*resty.Response, error) {
 	return resp, nil
 }
 
-func (g *igdb) getFlaresolverr() (*flaresolverr.Flaresolverr, error) {
+func (g *Client) getFlaresolverr() (*flaresolverr.Flaresolverr, error) {
 	if g.flaresolverr == nil {
 		return nil, fmt.Errorf("flaresolverr is not initialized")
 	}

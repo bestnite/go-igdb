@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetEventNetworks(query string) ([]*pb.EventNetwork, error) {
+func (g *Client) GetEventNetworks(query string) ([]*pb.EventNetwork, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/event_networks.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetEventNetworks(query string) ([]*pb.EventNetwork, error) {
 	return data.Eventnetworks, nil
 }
 
-func (g *igdb) GetEventNetworkByID(id uint64) (*pb.EventNetwork, error) {
+func (g *Client) GetEventNetworkByID(id uint64) (*pb.EventNetwork, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	eventNetworks, err := g.GetEventNetworks(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetEventNetworkByID(id uint64) (*pb.EventNetwork, error) {
 	return eventNetworks[0], nil
 }
 
-func (g *igdb) GetEventNetworksByIDs(ids []uint64) ([]*pb.EventNetwork, error) {
+func (g *Client) GetEventNetworksByIDs(ids []uint64) ([]*pb.EventNetwork, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetEventNetworksByIDs(ids []uint64) ([]*pb.EventNetwork, error) {
 	return g.GetEventNetworks(idStr)
 }
 
-func (g *igdb) GetEventNetworksByEventID(id uint64) ([]*pb.EventNetwork, error) {
+func (g *Client) GetEventNetworksByEventID(id uint64) ([]*pb.EventNetwork, error) {
 	query := fmt.Sprintf(`where event = %d; fields *;`, id)
 	return g.GetEventNetworks(query)
 }
 
-func (g *igdb) GetEventNetworksByEventIDs(ids []uint64) ([]*pb.EventNetwork, error) {
+func (g *Client) GetEventNetworksByEventIDs(ids []uint64) ([]*pb.EventNetwork, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,12 +63,12 @@ func (g *igdb) GetEventNetworksByEventIDs(ids []uint64) ([]*pb.EventNetwork, err
 	return g.GetEventNetworks(idStr)
 }
 
-func (g *igdb) GetEventNetworksByNetworkTypeID(id uint64) ([]*pb.EventNetwork, error) {
+func (g *Client) GetEventNetworksByNetworkTypeID(id uint64) ([]*pb.EventNetwork, error) {
 	query := fmt.Sprintf(`where network_type = %d; fields *;`, id)
 	return g.GetEventNetworks(query)
 }
 
-func (g *igdb) GetEventNetworksByNetworkTypeIDs(ids []uint64) ([]*pb.EventNetwork, error) {
+func (g *Client) GetEventNetworksByNetworkTypeIDs(ids []uint64) ([]*pb.EventNetwork, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -79,7 +79,7 @@ func (g *igdb) GetEventNetworksByNetworkTypeIDs(ids []uint64) ([]*pb.EventNetwor
 	return g.GetEventNetworks(idStr)
 }
 
-func (g *igdb) GetEventNetworksLength() (int, error) {
+func (g *Client) GetEventNetworksLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	eventNetworks, err := g.GetEventNetworks(query)
 	if err != nil {

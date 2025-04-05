@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetCharacters(query string) ([]*pb.Character, error) {
+func (g *Client) GetCharacters(query string) ([]*pb.Character, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/characters.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetCharacters(query string) ([]*pb.Character, error) {
 	return data.Characters, nil
 }
 
-func (g *igdb) GetCharacterByID(id uint64) (*pb.Character, error) {
+func (g *Client) GetCharacterByID(id uint64) (*pb.Character, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	characters, err := g.GetCharacters(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetCharacterByID(id uint64) (*pb.Character, error) {
 	return characters[0], nil
 }
 
-func (g *igdb) GetCharactersByIDs(ids []uint64) ([]*pb.Character, error) {
+func (g *Client) GetCharactersByIDs(ids []uint64) ([]*pb.Character, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetCharactersByIDs(ids []uint64) ([]*pb.Character, error) {
 	return g.GetCharacters(idStr)
 }
 
-func (g *igdb) GetCharactersByCharacterGenderID(id uint64) ([]*pb.Character, error) {
+func (g *Client) GetCharactersByCharacterGenderID(id uint64) ([]*pb.Character, error) {
 	query := fmt.Sprintf(`where character_gender = %d; fields *;`, id)
 	return g.GetCharacters(query)
 }
 
-func (g *igdb) GetCharactersByCharacterGenderIDs(ids []uint64) ([]*pb.Character, error) {
+func (g *Client) GetCharactersByCharacterGenderIDs(ids []uint64) ([]*pb.Character, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,12 +63,12 @@ func (g *igdb) GetCharactersByCharacterGenderIDs(ids []uint64) ([]*pb.Character,
 	return g.GetCharacters(idStr)
 }
 
-func (g *igdb) GetCharactersByCharacterSpecieID(id uint64) ([]*pb.Character, error) {
+func (g *Client) GetCharactersByCharacterSpecieID(id uint64) ([]*pb.Character, error) {
 	query := fmt.Sprintf(`where character_species = %d; fields *;`, id)
 	return g.GetCharacters(query)
 }
 
-func (g *igdb) GetCharactersByCharacterSpecieIDs(ids []uint64) ([]*pb.Character, error) {
+func (g *Client) GetCharactersByCharacterSpecieIDs(ids []uint64) ([]*pb.Character, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -79,12 +79,12 @@ func (g *igdb) GetCharactersByCharacterSpecieIDs(ids []uint64) ([]*pb.Character,
 	return g.GetCharacters(idStr)
 }
 
-func (g *igdb) GetCharactersByMugShotID(id uint64) ([]*pb.Character, error) {
+func (g *Client) GetCharactersByMugShotID(id uint64) ([]*pb.Character, error) {
 	query := fmt.Sprintf(`where mug_shot = %d; fields *;`, id)
 	return g.GetCharacters(query)
 }
 
-func (g *igdb) GetCharactersByMugShotIDs(ids []uint64) ([]*pb.Character, error) {
+func (g *Client) GetCharactersByMugShotIDs(ids []uint64) ([]*pb.Character, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -95,7 +95,7 @@ func (g *igdb) GetCharactersByMugShotIDs(ids []uint64) ([]*pb.Character, error) 
 	return g.GetCharacters(idStr)
 }
 
-func (g *igdb) GetCharactersLength() (int, error) {
+func (g *Client) GetCharactersLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	characters, err := g.GetCharacters(query)
 	if err != nil {

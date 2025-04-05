@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetCompanyLogos(query string) ([]*pb.CompanyLogo, error) {
+func (g *Client) GetCompanyLogos(query string) ([]*pb.CompanyLogo, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/company_logos.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetCompanyLogos(query string) ([]*pb.CompanyLogo, error) {
 	return data.Companylogos, nil
 }
 
-func (g *igdb) GetCompanyLogoByID(id uint64) (*pb.CompanyLogo, error) {
+func (g *Client) GetCompanyLogoByID(id uint64) (*pb.CompanyLogo, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	companyLogos, err := g.GetCompanyLogos(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetCompanyLogoByID(id uint64) (*pb.CompanyLogo, error) {
 	return companyLogos[0], nil
 }
 
-func (g *igdb) GetCompanyLogosByIDs(ids []uint64) ([]*pb.CompanyLogo, error) {
+func (g *Client) GetCompanyLogosByIDs(ids []uint64) ([]*pb.CompanyLogo, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetCompanyLogosByIDs(ids []uint64) ([]*pb.CompanyLogo, error) {
 	return g.GetCompanyLogos(idStr)
 }
 
-func (g *igdb) GetCompanyLogosLength() (int, error) {
+func (g *Client) GetCompanyLogosLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	companyLogos, err := g.GetCompanyLogos(query)
 	if err != nil {

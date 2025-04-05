@@ -21,7 +21,7 @@ var webSearchCFCookies struct {
 	expires time.Time
 }
 
-func (g *igdb) Search(query string) ([]*pb.Search, error) {
+func (g *Client) Search(query string) ([]*pb.Search, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/search.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -39,7 +39,7 @@ func (g *igdb) Search(query string) ([]*pb.Search, error) {
 	return data.Searches, nil
 }
 
-func (g *igdb) WebSearchGames(name string) ([]*pb.Game, error) {
+func (g *Client) WebSearchGames(name string) ([]*pb.Game, error) {
 	params := url.Values{}
 	params.Add("q", name)
 	params.Add("utf8", "✓")

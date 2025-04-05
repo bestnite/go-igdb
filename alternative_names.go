@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetAlternativeNames(query string) ([]*pb.AlternativeName, error) {
+func (g *Client) GetAlternativeNames(query string) ([]*pb.AlternativeName, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/alternative_names.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetAlternativeNames(query string) ([]*pb.AlternativeName, error) 
 	return data.Alternativenames, nil
 }
 
-func (g *igdb) GetAlternativeNameByID(id uint64) (*pb.AlternativeName, error) {
+func (g *Client) GetAlternativeNameByID(id uint64) (*pb.AlternativeName, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	alternativeNames, err := g.GetAlternativeNames(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetAlternativeNameByID(id uint64) (*pb.AlternativeName, error) {
 	return alternativeNames[0], nil
 }
 
-func (g *igdb) GetAlternativeNamesByIDs(ids []uint64) ([]*pb.AlternativeName, error) {
+func (g *Client) GetAlternativeNamesByIDs(ids []uint64) ([]*pb.AlternativeName, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetAlternativeNamesByIDs(ids []uint64) ([]*pb.AlternativeName, er
 	return g.GetAlternativeNames(idStr)
 }
 
-func (g *igdb) GetAlternativeNamesByGameID(id uint64) ([]*pb.AlternativeName, error) {
+func (g *Client) GetAlternativeNamesByGameID(id uint64) ([]*pb.AlternativeName, error) {
 	query := fmt.Sprintf(`where game = %d; fields *;`, id)
 	return g.GetAlternativeNames(query)
 }
 
-func (g *igdb) GetAlternativeNamesByGameIDs(ids []uint64) ([]*pb.AlternativeName, error) {
+func (g *Client) GetAlternativeNamesByGameIDs(ids []uint64) ([]*pb.AlternativeName, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetAlternativeNamesByGameIDs(ids []uint64) ([]*pb.AlternativeName
 	return g.GetAlternativeNames(idStr)
 }
 
-func (g *igdb) GetAlternativeNamesLength() (int, error) {
+func (g *Client) GetAlternativeNamesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	alternativeNames, err := g.GetAlternativeNames(query)
 	if err != nil {

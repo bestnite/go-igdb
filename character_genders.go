@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetCharacterGenders(query string) ([]*pb.CharacterGender, error) {
+func (g *Client) GetCharacterGenders(query string) ([]*pb.CharacterGender, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/character_genders.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetCharacterGenders(query string) ([]*pb.CharacterGender, error) 
 	return data.Charactergenders, nil
 }
 
-func (g *igdb) GetCharacterGenderByID(id uint64) (*pb.CharacterGender, error) {
+func (g *Client) GetCharacterGenderByID(id uint64) (*pb.CharacterGender, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	characterGenders, err := g.GetCharacterGenders(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetCharacterGenderByID(id uint64) (*pb.CharacterGender, error) {
 	return characterGenders[0], nil
 }
 
-func (g *igdb) GetCharacterGendersByIDs(ids []uint64) ([]*pb.CharacterGender, error) {
+func (g *Client) GetCharacterGendersByIDs(ids []uint64) ([]*pb.CharacterGender, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetCharacterGendersByIDs(ids []uint64) ([]*pb.CharacterGender, er
 	return g.GetCharacterGenders(idStr)
 }
 
-func (g *igdb) GetCharacterGendersLength() (int, error) {
+func (g *Client) GetCharacterGendersLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	characterGenders, err := g.GetCharacterGenders(query)
 	if err != nil {

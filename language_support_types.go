@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetLanguageSupportTypes(query string) ([]*pb.LanguageSupportType, error) {
+func (g *Client) GetLanguageSupportTypes(query string) ([]*pb.LanguageSupportType, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/language_support_types.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetLanguageSupportTypes(query string) ([]*pb.LanguageSupportType,
 	return data.Languagesupporttypes, nil
 }
 
-func (g *igdb) GetLanguageSupportTypeByID(id uint64) (*pb.LanguageSupportType, error) {
+func (g *Client) GetLanguageSupportTypeByID(id uint64) (*pb.LanguageSupportType, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	languageSupportTypes, err := g.GetLanguageSupportTypes(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetLanguageSupportTypeByID(id uint64) (*pb.LanguageSupportType, e
 	return languageSupportTypes[0], nil
 }
 
-func (g *igdb) GetLanguageSupportTypesByIDs(ids []uint64) ([]*pb.LanguageSupportType, error) {
+func (g *Client) GetLanguageSupportTypesByIDs(ids []uint64) ([]*pb.LanguageSupportType, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetLanguageSupportTypesByIDs(ids []uint64) ([]*pb.LanguageSupport
 	return g.GetLanguageSupportTypes(idStr)
 }
 
-func (g *igdb) GetLanguageSupportTypesLength() (int, error) {
+func (g *Client) GetLanguageSupportTypesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	languageSupportTypes, err := g.GetLanguageSupportTypes(query)
 	if err != nil {

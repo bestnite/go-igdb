@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetNetworkTypes(query string) ([]*pb.NetworkType, error) {
+func (g *Client) GetNetworkTypes(query string) ([]*pb.NetworkType, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/network_types.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetNetworkTypes(query string) ([]*pb.NetworkType, error) {
 	return data.Networktypes, nil
 }
 
-func (g *igdb) GetNetworkTypeByID(id uint64) (*pb.NetworkType, error) {
+func (g *Client) GetNetworkTypeByID(id uint64) (*pb.NetworkType, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	networkTypes, err := g.GetNetworkTypes(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetNetworkTypeByID(id uint64) (*pb.NetworkType, error) {
 	return networkTypes[0], nil
 }
 
-func (g *igdb) GetNetworkTypesByIDs(ids []uint64) ([]*pb.NetworkType, error) {
+func (g *Client) GetNetworkTypesByIDs(ids []uint64) ([]*pb.NetworkType, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetNetworkTypesByIDs(ids []uint64) ([]*pb.NetworkType, error) {
 	return g.GetNetworkTypes(idStr)
 }
 
-func (g *igdb) GetNetworkTypesLength() (int, error) {
+func (g *Client) GetNetworkTypesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	networkTypes, err := g.GetNetworkTypes(query)
 	if err != nil {

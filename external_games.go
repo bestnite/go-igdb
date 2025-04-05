@@ -10,7 +10,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetExternalGames(query string) ([]*pb.ExternalGame, error) {
+func (g *Client) GetExternalGames(query string) ([]*pb.ExternalGame, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/external_games.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -28,7 +28,7 @@ func (g *igdb) GetExternalGames(query string) ([]*pb.ExternalGame, error) {
 	return data.Externalgames, nil
 }
 
-func (g *igdb) GetExternalGameByID(id uint64) (*pb.ExternalGame, error) {
+func (g *Client) GetExternalGameByID(id uint64) (*pb.ExternalGame, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	externalGames, err := g.GetExternalGames(query)
 	if err != nil {
@@ -37,7 +37,7 @@ func (g *igdb) GetExternalGameByID(id uint64) (*pb.ExternalGame, error) {
 	return externalGames[0], nil
 }
 
-func (g *igdb) GetExternalGamesByIDs(ids []uint64) ([]*pb.ExternalGame, error) {
+func (g *Client) GetExternalGamesByIDs(ids []uint64) ([]*pb.ExternalGame, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -48,7 +48,7 @@ func (g *igdb) GetExternalGamesByIDs(ids []uint64) ([]*pb.ExternalGame, error) {
 	return g.GetExternalGames(idStr)
 }
 
-func (g *igdb) GetGameIDBySteamAppID(id uint64) (uint64, error) {
+func (g *Client) GetGameIDBySteamAppID(id uint64) (uint64, error) {
 	query := fmt.Sprintf(`where game_type.id = 0 & uid = "%d"; fields game;`, id)
 	externalGames, err := g.GetExternalGames(query)
 	if err != nil {
@@ -57,7 +57,7 @@ func (g *igdb) GetGameIDBySteamAppID(id uint64) (uint64, error) {
 	return externalGames[0].Game.Id, nil
 }
 
-func (g *igdb) GetSteamIDByGameID(id uint64) (uint64, error) {
+func (g *Client) GetSteamIDByGameID(id uint64) (uint64, error) {
 	query := fmt.Sprintf(`where game = %v & game_type.id = 0; fields *;`, id)
 	externalGames, err := g.GetExternalGames(query)
 	if err != nil {
@@ -66,17 +66,17 @@ func (g *igdb) GetSteamIDByGameID(id uint64) (uint64, error) {
 	return strconv.ParseUint(externalGames[0].Uid, 10, 64)
 }
 
-func (g *igdb) GetExternalGamesByGameID(id uint64) ([]*pb.ExternalGame, error) {
+func (g *Client) GetExternalGamesByGameID(id uint64) ([]*pb.ExternalGame, error) {
 	query := fmt.Sprintf(`where game = %d; fields *;`, id)
 	return g.GetExternalGames(query)
 }
 
-func (g *igdb) GetExternalGamesByExternalGameSourceID(id uint64) ([]*pb.ExternalGame, error) {
+func (g *Client) GetExternalGamesByExternalGameSourceID(id uint64) ([]*pb.ExternalGame, error) {
 	query := fmt.Sprintf(`where external_game_source = %d; fields *;`, id)
 	return g.GetExternalGames(query)
 }
 
-func (g *igdb) GetExternalGamesByExternalGameSourceIDs(ids []uint64) ([]*pb.ExternalGame, error) {
+func (g *Client) GetExternalGamesByExternalGameSourceIDs(ids []uint64) ([]*pb.ExternalGame, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -87,12 +87,12 @@ func (g *igdb) GetExternalGamesByExternalGameSourceIDs(ids []uint64) ([]*pb.Exte
 	return g.GetExternalGames(idStr)
 }
 
-func (g *igdb) GetExternalGamesByGameReleaseFormatID(id uint64) ([]*pb.ExternalGame, error) {
+func (g *Client) GetExternalGamesByGameReleaseFormatID(id uint64) ([]*pb.ExternalGame, error) {
 	query := fmt.Sprintf(`where game_release_format = %d; fields *;`, id)
 	return g.GetExternalGames(query)
 }
 
-func (g *igdb) GetExternalGamesByGameReleaseFormatIDs(ids []uint64) ([]*pb.ExternalGame, error) {
+func (g *Client) GetExternalGamesByGameReleaseFormatIDs(ids []uint64) ([]*pb.ExternalGame, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -103,12 +103,12 @@ func (g *igdb) GetExternalGamesByGameReleaseFormatIDs(ids []uint64) ([]*pb.Exter
 	return g.GetExternalGames(idStr)
 }
 
-func (g *igdb) GetExternalGamesByPlatformVersionID(id uint64) ([]*pb.ExternalGame, error) {
+func (g *Client) GetExternalGamesByPlatformVersionID(id uint64) ([]*pb.ExternalGame, error) {
 	query := fmt.Sprintf(`where platform_version = %d; fields *;`, id)
 	return g.GetExternalGames(query)
 }
 
-func (g *igdb) GetExternalGamesByPlatformVersionIDs(ids []uint64) ([]*pb.ExternalGame, error) {
+func (g *Client) GetExternalGamesByPlatformVersionIDs(ids []uint64) ([]*pb.ExternalGame, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -119,7 +119,7 @@ func (g *igdb) GetExternalGamesByPlatformVersionIDs(ids []uint64) ([]*pb.Externa
 	return g.GetExternalGames(idStr)
 }
 
-func (g *igdb) GetExternalGamesLength() (int, error) {
+func (g *Client) GetExternalGamesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	externalGames, err := g.GetExternalGames(query)
 	if err != nil {

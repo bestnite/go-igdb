@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetReleaseDateStatuses(query string) ([]*pb.ReleaseDateStatus, error) {
+func (g *Client) GetReleaseDateStatuses(query string) ([]*pb.ReleaseDateStatus, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/release_date_statuses.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetReleaseDateStatuses(query string) ([]*pb.ReleaseDateStatus, er
 	return data.Releasedatestatuses, nil
 }
 
-func (g *igdb) GetReleaseDateStatusByID(id uint64) (*pb.ReleaseDateStatus, error) {
+func (g *Client) GetReleaseDateStatusByID(id uint64) (*pb.ReleaseDateStatus, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	releaseDateStatuses, err := g.GetReleaseDateStatuses(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetReleaseDateStatusByID(id uint64) (*pb.ReleaseDateStatus, error
 	return releaseDateStatuses[0], nil
 }
 
-func (g *igdb) GetReleaseDateStatusesByIDs(ids []uint64) ([]*pb.ReleaseDateStatus, error) {
+func (g *Client) GetReleaseDateStatusesByIDs(ids []uint64) ([]*pb.ReleaseDateStatus, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetReleaseDateStatusesByIDs(ids []uint64) ([]*pb.ReleaseDateStatu
 	return g.GetReleaseDateStatuses(idStr)
 }
 
-func (g *igdb) GetReleaseDateStatusesLength() (int, error) {
+func (g *Client) GetReleaseDateStatusesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	releaseDateStatuses, err := g.GetReleaseDateStatuses(query)
 	if err != nil {

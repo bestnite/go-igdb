@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetReleaseDates(query string) ([]*pb.ReleaseDate, error) {
+func (g *Client) GetReleaseDates(query string) ([]*pb.ReleaseDate, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/release_dates.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetReleaseDates(query string) ([]*pb.ReleaseDate, error) {
 	return data.Releasedates, nil
 }
 
-func (g *igdb) GetReleaseDateByID(id uint64) (*pb.ReleaseDate, error) {
+func (g *Client) GetReleaseDateByID(id uint64) (*pb.ReleaseDate, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	releaseDates, err := g.GetReleaseDates(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetReleaseDateByID(id uint64) (*pb.ReleaseDate, error) {
 	return releaseDates[0], nil
 }
 
-func (g *igdb) GetReleaseDatesByIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
+func (g *Client) GetReleaseDatesByIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetReleaseDatesByIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
 	return g.GetReleaseDates(idStr)
 }
 
-func (g *igdb) GetReleaseDatesByGameID(id uint64) ([]*pb.ReleaseDate, error) {
+func (g *Client) GetReleaseDatesByGameID(id uint64) ([]*pb.ReleaseDate, error) {
 	query := fmt.Sprintf(`where game = %d; fields *;`, id)
 	return g.GetReleaseDates(query)
 }
 
-func (g *igdb) GetReleaseDatesByGameIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
+func (g *Client) GetReleaseDatesByGameIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,12 +63,12 @@ func (g *igdb) GetReleaseDatesByGameIDs(ids []uint64) ([]*pb.ReleaseDate, error)
 	return g.GetReleaseDates(idStr)
 }
 
-func (g *igdb) GetReleaseDatesByPlatformID(id uint64) ([]*pb.ReleaseDate, error) {
+func (g *Client) GetReleaseDatesByPlatformID(id uint64) ([]*pb.ReleaseDate, error) {
 	query := fmt.Sprintf(`where platform = %d; fields *;`, id)
 	return g.GetReleaseDates(query)
 }
 
-func (g *igdb) GetReleaseDatesByPlatformIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
+func (g *Client) GetReleaseDatesByPlatformIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -79,12 +79,12 @@ func (g *igdb) GetReleaseDatesByPlatformIDs(ids []uint64) ([]*pb.ReleaseDate, er
 	return g.GetReleaseDates(idStr)
 }
 
-func (g *igdb) GetReleaseDatesByReleaseRegionID(id uint64) ([]*pb.ReleaseDate, error) {
+func (g *Client) GetReleaseDatesByReleaseRegionID(id uint64) ([]*pb.ReleaseDate, error) {
 	query := fmt.Sprintf(`where release_region = %d; fields *;`, id)
 	return g.GetReleaseDates(query)
 }
 
-func (g *igdb) GetReleaseDatesByReleaseRegionIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
+func (g *Client) GetReleaseDatesByReleaseRegionIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -95,12 +95,12 @@ func (g *igdb) GetReleaseDatesByReleaseRegionIDs(ids []uint64) ([]*pb.ReleaseDat
 	return g.GetReleaseDates(idStr)
 }
 
-func (g *igdb) GetReleaseDatesByStatusID(id uint64) ([]*pb.ReleaseDate, error) {
+func (g *Client) GetReleaseDatesByStatusID(id uint64) ([]*pb.ReleaseDate, error) {
 	query := fmt.Sprintf(`where status = %d; fields *;`, id)
 	return g.GetReleaseDates(query)
 }
 
-func (g *igdb) GetReleaseDatesByStatusIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
+func (g *Client) GetReleaseDatesByStatusIDs(ids []uint64) ([]*pb.ReleaseDate, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -111,7 +111,7 @@ func (g *igdb) GetReleaseDatesByStatusIDs(ids []uint64) ([]*pb.ReleaseDate, erro
 	return g.GetReleaseDates(idStr)
 }
 
-func (g *igdb) GetReleaseDatesLength() (int, error) {
+func (g *Client) GetReleaseDatesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	releaseDates, err := g.GetReleaseDates(query)
 	if err != nil {

@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetAgeRatingCategories(query string) ([]*pb.AgeRatingCategory, error) {
+func (g *Client) GetAgeRatingCategories(query string) ([]*pb.AgeRatingCategory, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/age_rating_categories.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetAgeRatingCategories(query string) ([]*pb.AgeRatingCategory, er
 	return data.Ageratingcategories, nil
 }
 
-func (g *igdb) GetAgeRatingCategoryByID(id uint64) (*pb.AgeRatingCategory, error) {
+func (g *Client) GetAgeRatingCategoryByID(id uint64) (*pb.AgeRatingCategory, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	ageRatingCategories, err := g.GetAgeRatingCategories(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetAgeRatingCategoryByID(id uint64) (*pb.AgeRatingCategory, error
 	return ageRatingCategories[0], nil
 }
 
-func (g *igdb) GetAgeRatingCategoriesByIDs(ids []uint64) ([]*pb.AgeRatingCategory, error) {
+func (g *Client) GetAgeRatingCategoriesByIDs(ids []uint64) ([]*pb.AgeRatingCategory, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetAgeRatingCategoriesByIDs(ids []uint64) ([]*pb.AgeRatingCategor
 	return g.GetAgeRatingCategories(idStr)
 }
 
-func (g *igdb) GetAgeRatingCategoriesByOrganizationID(id uint64) ([]*pb.AgeRatingCategory, error) {
+func (g *Client) GetAgeRatingCategoriesByOrganizationID(id uint64) ([]*pb.AgeRatingCategory, error) {
 	query := fmt.Sprintf(`where organization = %d; fields *;`, id)
 	return g.GetAgeRatingCategories(query)
 }
 
-func (g *igdb) GetAgeRatingCategoriesByOrganizationIDs(ids []uint64) ([]*pb.AgeRatingCategory, error) {
+func (g *Client) GetAgeRatingCategoriesByOrganizationIDs(ids []uint64) ([]*pb.AgeRatingCategory, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetAgeRatingCategoriesByOrganizationIDs(ids []uint64) ([]*pb.AgeR
 	return g.GetAgeRatingCategories(idStr)
 }
 
-func (g *igdb) GetAgeRatingCategoriesLength() (int, error) {
+func (g *Client) GetAgeRatingCategoriesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	ageRatingCategories, err := g.GetAgeRatingCategories(query)
 	if err != nil {

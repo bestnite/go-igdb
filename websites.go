@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetWebsites(query string) ([]*pb.Website, error) {
+func (g *Client) GetWebsites(query string) ([]*pb.Website, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/websites.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetWebsites(query string) ([]*pb.Website, error) {
 	return data.Websites, nil
 }
 
-func (g *igdb) GetWebsiteByID(id uint64) (*pb.Website, error) {
+func (g *Client) GetWebsiteByID(id uint64) (*pb.Website, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	websites, err := g.GetWebsites(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetWebsiteByID(id uint64) (*pb.Website, error) {
 	return websites[0], nil
 }
 
-func (g *igdb) GetWebsitesByIDs(ids []uint64) ([]*pb.Website, error) {
+func (g *Client) GetWebsitesByIDs(ids []uint64) ([]*pb.Website, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetWebsitesByIDs(ids []uint64) ([]*pb.Website, error) {
 	return g.GetWebsites(idStr)
 }
 
-func (g *igdb) GetWebsitesByGameID(id uint64) ([]*pb.Website, error) {
+func (g *Client) GetWebsitesByGameID(id uint64) ([]*pb.Website, error) {
 	query := fmt.Sprintf(`where game = %d; fields *;`, id)
 	return g.GetWebsites(query)
 }
 
-func (g *igdb) GetWebsitesByGameIDs(ids []uint64) ([]*pb.Website, error) {
+func (g *Client) GetWebsitesByGameIDs(ids []uint64) ([]*pb.Website, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,12 +63,12 @@ func (g *igdb) GetWebsitesByGameIDs(ids []uint64) ([]*pb.Website, error) {
 	return g.GetWebsites(idStr)
 }
 
-func (g *igdb) GetWebsitesByTypeID(id uint64) ([]*pb.Website, error) {
+func (g *Client) GetWebsitesByTypeID(id uint64) ([]*pb.Website, error) {
 	query := fmt.Sprintf(`where type = %d; fields *;`, id)
 	return g.GetWebsites(query)
 }
 
-func (g *igdb) GetWebsitesByTypeIDs(ids []uint64) ([]*pb.Website, error) {
+func (g *Client) GetWebsitesByTypeIDs(ids []uint64) ([]*pb.Website, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -79,7 +79,7 @@ func (g *igdb) GetWebsitesByTypeIDs(ids []uint64) ([]*pb.Website, error) {
 	return g.GetWebsites(idStr)
 }
 
-func (g *igdb) GetWebsitesLength() (int, error) {
+func (g *Client) GetWebsitesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	websites, err := g.GetWebsites(query)
 	if err != nil {

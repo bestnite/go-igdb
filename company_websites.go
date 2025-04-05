@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetCompanyWebsites(query string) ([]*pb.CompanyWebsite, error) {
+func (g *Client) GetCompanyWebsites(query string) ([]*pb.CompanyWebsite, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/company_websites.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetCompanyWebsites(query string) ([]*pb.CompanyWebsite, error) {
 	return data.Companywebsites, nil
 }
 
-func (g *igdb) GetCompanyWebsiteByID(id uint64) (*pb.CompanyWebsite, error) {
+func (g *Client) GetCompanyWebsiteByID(id uint64) (*pb.CompanyWebsite, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	companyWebsites, err := g.GetCompanyWebsites(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetCompanyWebsiteByID(id uint64) (*pb.CompanyWebsite, error) {
 	return companyWebsites[0], nil
 }
 
-func (g *igdb) GetCompanyWebsitesByIDs(ids []uint64) ([]*pb.CompanyWebsite, error) {
+func (g *Client) GetCompanyWebsitesByIDs(ids []uint64) ([]*pb.CompanyWebsite, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetCompanyWebsitesByIDs(ids []uint64) ([]*pb.CompanyWebsite, erro
 	return g.GetCompanyWebsites(idStr)
 }
 
-func (g *igdb) GetCompanyWebsitesByTypeID(id uint64) ([]*pb.CompanyWebsite, error) {
+func (g *Client) GetCompanyWebsitesByTypeID(id uint64) ([]*pb.CompanyWebsite, error) {
 	query := fmt.Sprintf(`where type = %d; fields *;`, id)
 	return g.GetCompanyWebsites(query)
 }
 
-func (g *igdb) GetCompanyWebsitesByTypeIDs(ids []uint64) ([]*pb.CompanyWebsite, error) {
+func (g *Client) GetCompanyWebsitesByTypeIDs(ids []uint64) ([]*pb.CompanyWebsite, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetCompanyWebsitesByTypeIDs(ids []uint64) ([]*pb.CompanyWebsite, 
 	return g.GetCompanyWebsites(idStr)
 }
 
-func (g *igdb) GetCompanyWebsitesLength() (int, error) {
+func (g *Client) GetCompanyWebsitesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	companyWebsites, err := g.GetCompanyWebsites(query)
 	if err != nil {

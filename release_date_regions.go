@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetReleaseDateRegions(query string) ([]*pb.ReleaseDateRegion, error) {
+func (g *Client) GetReleaseDateRegions(query string) ([]*pb.ReleaseDateRegion, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/release_date_regions.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetReleaseDateRegions(query string) ([]*pb.ReleaseDateRegion, err
 	return data.Releasedateregions, nil
 }
 
-func (g *igdb) GetReleaseDateRegionByID(id uint64) (*pb.ReleaseDateRegion, error) {
+func (g *Client) GetReleaseDateRegionByID(id uint64) (*pb.ReleaseDateRegion, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	releaseDateRegions, err := g.GetReleaseDateRegions(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetReleaseDateRegionByID(id uint64) (*pb.ReleaseDateRegion, error
 	return releaseDateRegions[0], nil
 }
 
-func (g *igdb) GetReleaseDateRegionsByIDs(ids []uint64) ([]*pb.ReleaseDateRegion, error) {
+func (g *Client) GetReleaseDateRegionsByIDs(ids []uint64) ([]*pb.ReleaseDateRegion, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetReleaseDateRegionsByIDs(ids []uint64) ([]*pb.ReleaseDateRegion
 	return g.GetReleaseDateRegions(idStr)
 }
 
-func (g *igdb) GetReleaseDateRegionsLength() (int, error) {
+func (g *Client) GetReleaseDateRegionsLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	releaseDateRegions, err := g.GetReleaseDateRegions(query)
 	if err != nil {

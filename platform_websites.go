@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetPlatformWebsites(query string) ([]*pb.PlatformWebsite, error) {
+func (g *Client) GetPlatformWebsites(query string) ([]*pb.PlatformWebsite, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/platform_websites.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetPlatformWebsites(query string) ([]*pb.PlatformWebsite, error) 
 	return data.Platformwebsites, nil
 }
 
-func (g *igdb) GetPlatformWebsiteByID(id uint64) (*pb.PlatformWebsite, error) {
+func (g *Client) GetPlatformWebsiteByID(id uint64) (*pb.PlatformWebsite, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	platformWebsites, err := g.GetPlatformWebsites(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetPlatformWebsiteByID(id uint64) (*pb.PlatformWebsite, error) {
 	return platformWebsites[0], nil
 }
 
-func (g *igdb) GetPlatformWebsitesByIDs(ids []uint64) ([]*pb.PlatformWebsite, error) {
+func (g *Client) GetPlatformWebsitesByIDs(ids []uint64) ([]*pb.PlatformWebsite, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetPlatformWebsitesByIDs(ids []uint64) ([]*pb.PlatformWebsite, er
 	return g.GetPlatformWebsites(idStr)
 }
 
-func (g *igdb) GetPlatformWebsitesLength() (int, error) {
+func (g *Client) GetPlatformWebsitesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	platformWebsites, err := g.GetPlatformWebsites(query)
 	if err != nil {

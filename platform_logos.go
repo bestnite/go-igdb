@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetPlatformLogos(query string) ([]*pb.PlatformLogo, error) {
+func (g *Client) GetPlatformLogos(query string) ([]*pb.PlatformLogo, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/platform_logos.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetPlatformLogos(query string) ([]*pb.PlatformLogo, error) {
 	return data.Platformlogos, nil
 }
 
-func (g *igdb) GetPlatformLogoByID(id uint64) (*pb.PlatformLogo, error) {
+func (g *Client) GetPlatformLogoByID(id uint64) (*pb.PlatformLogo, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	platformLogos, err := g.GetPlatformLogos(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetPlatformLogoByID(id uint64) (*pb.PlatformLogo, error) {
 	return platformLogos[0], nil
 }
 
-func (g *igdb) GetPlatformLogosByIDs(ids []uint64) ([]*pb.PlatformLogo, error) {
+func (g *Client) GetPlatformLogosByIDs(ids []uint64) ([]*pb.PlatformLogo, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetPlatformLogosByIDs(ids []uint64) ([]*pb.PlatformLogo, error) {
 	return g.GetPlatformLogos(idStr)
 }
 
-func (g *igdb) GetPlatformLogosLength() (int, error) {
+func (g *Client) GetPlatformLogosLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	platformLogos, err := g.GetPlatformLogos(query)
 	if err != nil {

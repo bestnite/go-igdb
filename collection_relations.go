@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetCollectionRelations(query string) ([]*pb.CollectionRelation, error) {
+func (g *Client) GetCollectionRelations(query string) ([]*pb.CollectionRelation, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/collection_relations.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetCollectionRelations(query string) ([]*pb.CollectionRelation, e
 	return data.Collectionrelations, nil
 }
 
-func (g *igdb) GetCollectionRelationByID(id uint64) (*pb.CollectionRelation, error) {
+func (g *Client) GetCollectionRelationByID(id uint64) (*pb.CollectionRelation, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	collectionRelations, err := g.GetCollectionRelations(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetCollectionRelationByID(id uint64) (*pb.CollectionRelation, err
 	return collectionRelations[0], nil
 }
 
-func (g *igdb) GetCollectionRelationsByIDs(ids []uint64) ([]*pb.CollectionRelation, error) {
+func (g *Client) GetCollectionRelationsByIDs(ids []uint64) ([]*pb.CollectionRelation, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetCollectionRelationsByIDs(ids []uint64) ([]*pb.CollectionRelati
 	return g.GetCollectionRelations(idStr)
 }
 
-func (g *igdb) GetCollectionRelationsByChildCollectionID(id uint64) ([]*pb.CollectionRelation, error) {
+func (g *Client) GetCollectionRelationsByChildCollectionID(id uint64) ([]*pb.CollectionRelation, error) {
 	query := fmt.Sprintf(`where child_collection = %d; fields *;`, id)
 	return g.GetCollectionRelations(query)
 }
 
-func (g *igdb) GetCollectionRelationsByChildCollectionIDs(ids []uint64) ([]*pb.CollectionRelation, error) {
+func (g *Client) GetCollectionRelationsByChildCollectionIDs(ids []uint64) ([]*pb.CollectionRelation, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,12 +63,12 @@ func (g *igdb) GetCollectionRelationsByChildCollectionIDs(ids []uint64) ([]*pb.C
 	return g.GetCollectionRelations(idStr)
 }
 
-func (g *igdb) GetCollectionRelationsByParentCollectionID(id uint64) ([]*pb.CollectionRelation, error) {
+func (g *Client) GetCollectionRelationsByParentCollectionID(id uint64) ([]*pb.CollectionRelation, error) {
 	query := fmt.Sprintf(`where parent_collection = %d; fields *;`, id)
 	return g.GetCollectionRelations(query)
 }
 
-func (g *igdb) GetCollectionRelationsByParentCollectionIDs(ids []uint64) ([]*pb.CollectionRelation, error) {
+func (g *Client) GetCollectionRelationsByParentCollectionIDs(ids []uint64) ([]*pb.CollectionRelation, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -79,12 +79,12 @@ func (g *igdb) GetCollectionRelationsByParentCollectionIDs(ids []uint64) ([]*pb.
 	return g.GetCollectionRelations(idStr)
 }
 
-func (g *igdb) GetCollectionRelationsByCollectionRelationTypeID(id uint64) ([]*pb.CollectionRelation, error) {
+func (g *Client) GetCollectionRelationsByCollectionRelationTypeID(id uint64) ([]*pb.CollectionRelation, error) {
 	query := fmt.Sprintf(`where type = %d; fields *;`, id)
 	return g.GetCollectionRelations(query)
 }
 
-func (g *igdb) GetCollectionRelationsByCollectionRelationTypeIDs(ids []uint64) ([]*pb.CollectionRelation, error) {
+func (g *Client) GetCollectionRelationsByCollectionRelationTypeIDs(ids []uint64) ([]*pb.CollectionRelation, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -95,7 +95,7 @@ func (g *igdb) GetCollectionRelationsByCollectionRelationTypeIDs(ids []uint64) (
 	return g.GetCollectionRelations(idStr)
 }
 
-func (g *igdb) GetCollectionRelationsLength() (int, error) {
+func (g *Client) GetCollectionRelationsLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	collectionRelations, err := g.GetCollectionRelations(query)
 	if err != nil {

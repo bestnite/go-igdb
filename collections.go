@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetCollections(query string) ([]*pb.Collection, error) {
+func (g *Client) GetCollections(query string) ([]*pb.Collection, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/collections.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetCollections(query string) ([]*pb.Collection, error) {
 	return data.Collections, nil
 }
 
-func (g *igdb) GetCollectionByID(id uint64) (*pb.Collection, error) {
+func (g *Client) GetCollectionByID(id uint64) (*pb.Collection, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	collections, err := g.GetCollections(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetCollectionByID(id uint64) (*pb.Collection, error) {
 	return collections[0], nil
 }
 
-func (g *igdb) GetCollectionsByIDs(ids []uint64) ([]*pb.Collection, error) {
+func (g *Client) GetCollectionsByIDs(ids []uint64) ([]*pb.Collection, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetCollectionsByIDs(ids []uint64) ([]*pb.Collection, error) {
 	return g.GetCollections(idStr)
 }
 
-func (g *igdb) GetCollectionsByCollectionTypeID(id uint64) ([]*pb.Collection, error) {
+func (g *Client) GetCollectionsByCollectionTypeID(id uint64) ([]*pb.Collection, error) {
 	query := fmt.Sprintf(`where collection_type = %d; fields *;`, id)
 	return g.GetCollections(query)
 }
 
-func (g *igdb) GetCollectionsByCollectionTypeIDs(ids []uint64) ([]*pb.Collection, error) {
+func (g *Client) GetCollectionsByCollectionTypeIDs(ids []uint64) ([]*pb.Collection, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetCollectionsByCollectionTypeIDs(ids []uint64) ([]*pb.Collection
 	return g.GetCollections(idStr)
 }
 
-func (g *igdb) GetCollectionsLength() (int, error) {
+func (g *Client) GetCollectionsLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	collections, err := g.GetCollections(query)
 	if err != nil {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func (g *igdb) GetParentGameID(id uint64) (uint64, error) {
+func (g *Client) GetParentGameID(id uint64) (uint64, error) {
 	detail, err := g.GetGameByID(id)
 	if err != nil {
 		return 0, fmt.Errorf("failed to fetch IGDB app detail for parent: %d: %w", id, err)

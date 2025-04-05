@@ -8,7 +8,7 @@ import (
 	"github.com/bestnite/go-igdb/endpoint"
 )
 
-func (g *igdb) ActiveWebhook(endpoint endpoint.Endpoint, secret, callbackUrl string) error {
+func (g *Client) ActiveWebhook(endpoint endpoint.Endpoint, secret, callbackUrl string) error {
 	dataBody := url.Values{}
 	dataBody.Set("url", callbackUrl)
 	dataBody.Set("secret", secret)

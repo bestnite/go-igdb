@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetLanguages(query string) ([]*pb.Language, error) {
+func (g *Client) GetLanguages(query string) ([]*pb.Language, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/languages.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetLanguages(query string) ([]*pb.Language, error) {
 	return data.Languages, nil
 }
 
-func (g *igdb) GetLanguageByID(id uint64) (*pb.Language, error) {
+func (g *Client) GetLanguageByID(id uint64) (*pb.Language, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	languages, err := g.GetLanguages(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetLanguageByID(id uint64) (*pb.Language, error) {
 	return languages[0], nil
 }
 
-func (g *igdb) GetLanguagesByIDs(ids []uint64) ([]*pb.Language, error) {
+func (g *Client) GetLanguagesByIDs(ids []uint64) ([]*pb.Language, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetLanguagesByIDs(ids []uint64) ([]*pb.Language, error) {
 	return g.GetLanguages(idStr)
 }
 
-func (g *igdb) GetLanguagesLength() (int, error) {
+func (g *Client) GetLanguagesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	languages, err := g.GetLanguages(query)
 	if err != nil {

@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetExternalGameSources(query string) ([]*pb.ExternalGameSource, error) {
+func (g *Client) GetExternalGameSources(query string) ([]*pb.ExternalGameSource, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/external_game_sources.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetExternalGameSources(query string) ([]*pb.ExternalGameSource, e
 	return data.Externalgamesources, nil
 }
 
-func (g *igdb) GetExternalGameSourceByID(id uint64) (*pb.ExternalGameSource, error) {
+func (g *Client) GetExternalGameSourceByID(id uint64) (*pb.ExternalGameSource, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	externalGameSources, err := g.GetExternalGameSources(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetExternalGameSourceByID(id uint64) (*pb.ExternalGameSource, err
 	return externalGameSources[0], nil
 }
 
-func (g *igdb) GetExternalGameSourcesByIDs(ids []uint64) ([]*pb.ExternalGameSource, error) {
+func (g *Client) GetExternalGameSourcesByIDs(ids []uint64) ([]*pb.ExternalGameSource, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetExternalGameSourcesByIDs(ids []uint64) ([]*pb.ExternalGameSour
 	return g.GetExternalGameSources(idStr)
 }
 
-func (g *igdb) GetExternalGameSourcesLength() (int, error) {
+func (g *Client) GetExternalGameSourcesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	externalGameSources, err := g.GetExternalGameSources(query)
 	if err != nil {

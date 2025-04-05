@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetMultiplayerModes(query string) ([]*pb.MultiplayerMode, error) {
+func (g *Client) GetMultiplayerModes(query string) ([]*pb.MultiplayerMode, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/multiplayer_modes.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetMultiplayerModes(query string) ([]*pb.MultiplayerMode, error) 
 	return data.Multiplayermodes, nil
 }
 
-func (g *igdb) GetMultiplayerModeByID(id uint64) (*pb.MultiplayerMode, error) {
+func (g *Client) GetMultiplayerModeByID(id uint64) (*pb.MultiplayerMode, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	multiplayerModes, err := g.GetMultiplayerModes(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetMultiplayerModeByID(id uint64) (*pb.MultiplayerMode, error) {
 	return multiplayerModes[0], nil
 }
 
-func (g *igdb) GetMultiplayerModesByIDs(ids []uint64) ([]*pb.MultiplayerMode, error) {
+func (g *Client) GetMultiplayerModesByIDs(ids []uint64) ([]*pb.MultiplayerMode, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetMultiplayerModesByIDs(ids []uint64) ([]*pb.MultiplayerMode, er
 	return g.GetMultiplayerModes(idStr)
 }
 
-func (g *igdb) GetMultiplayerModesByGameID(id uint64) ([]*pb.MultiplayerMode, error) {
+func (g *Client) GetMultiplayerModesByGameID(id uint64) ([]*pb.MultiplayerMode, error) {
 	query := fmt.Sprintf(`where game = %d; fields *;`, id)
 	return g.GetMultiplayerModes(query)
 }
 
-func (g *igdb) GetMultiplayerModesByGameIDs(ids []uint64) ([]*pb.MultiplayerMode, error) {
+func (g *Client) GetMultiplayerModesByGameIDs(ids []uint64) ([]*pb.MultiplayerMode, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,12 +63,12 @@ func (g *igdb) GetMultiplayerModesByGameIDs(ids []uint64) ([]*pb.MultiplayerMode
 	return g.GetMultiplayerModes(idStr)
 }
 
-func (g *igdb) GetMultiplayerModesByPlatformID(id uint64) ([]*pb.MultiplayerMode, error) {
+func (g *Client) GetMultiplayerModesByPlatformID(id uint64) ([]*pb.MultiplayerMode, error) {
 	query := fmt.Sprintf(`where platform = %d; fields *;`, id)
 	return g.GetMultiplayerModes(query)
 }
 
-func (g *igdb) GetMultiplayerModesByPlatformIDs(ids []uint64) ([]*pb.MultiplayerMode, error) {
+func (g *Client) GetMultiplayerModesByPlatformIDs(ids []uint64) ([]*pb.MultiplayerMode, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -79,7 +79,7 @@ func (g *igdb) GetMultiplayerModesByPlatformIDs(ids []uint64) ([]*pb.Multiplayer
 	return g.GetMultiplayerModes(idStr)
 }
 
-func (g *igdb) GetMultiplayerModesLength() (int, error) {
+func (g *Client) GetMultiplayerModesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	multiplayerModes, err := g.GetMultiplayerModes(query)
 	if err != nil {

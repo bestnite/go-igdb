@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetAgeRatingContentDescriptions(query string) ([]*pb.AgeRatingContentDescription, error) {
+func (g *Client) GetAgeRatingContentDescriptions(query string) ([]*pb.AgeRatingContentDescription, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/age_rating_content_descriptions.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetAgeRatingContentDescriptions(query string) ([]*pb.AgeRatingCon
 	return data.Ageratingcontentdescriptions, nil
 }
 
-func (g *igdb) GetAgeRatingContentDescriptionByID(id uint64) (*pb.AgeRatingContentDescription, error) {
+func (g *Client) GetAgeRatingContentDescriptionByID(id uint64) (*pb.AgeRatingContentDescription, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	ageRatingContentDescriptions, err := g.GetAgeRatingContentDescriptions(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetAgeRatingContentDescriptionByID(id uint64) (*pb.AgeRatingConte
 	return ageRatingContentDescriptions[0], nil
 }
 
-func (g *igdb) GetAgeRatingContentDescriptionsByIDs(ids []uint64) ([]*pb.AgeRatingContentDescription, error) {
+func (g *Client) GetAgeRatingContentDescriptionsByIDs(ids []uint64) ([]*pb.AgeRatingContentDescription, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetAgeRatingContentDescriptionsByIDs(ids []uint64) ([]*pb.AgeRati
 	return g.GetAgeRatingContentDescriptions(idStr)
 }
 
-func (g *igdb) GetAgeRatingContentDescriptionsLength() (int, error) {
+func (g *Client) GetAgeRatingContentDescriptionsLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	ageRatingContentDescriptions, err := g.GetAgeRatingContentDescriptions(query)
 	if err != nil {

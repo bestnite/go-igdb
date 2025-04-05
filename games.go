@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetGames(query string) ([]*pb.Game, error) {
+func (g *Client) GetGames(query string) ([]*pb.Game, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/games.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetGames(query string) ([]*pb.Game, error) {
 	return data.Games, nil
 }
 
-func (g *igdb) GetGameByID(id uint64) (*pb.Game, error) {
+func (g *Client) GetGameByID(id uint64) (*pb.Game, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	games, err := g.GetGames(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetGameByID(id uint64) (*pb.Game, error) {
 	return games[0], nil
 }
 
-func (g *igdb) GetGameByIDs(ids []uint64) ([]*pb.Game, error) {
+func (g *Client) GetGameByIDs(ids []uint64) ([]*pb.Game, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetGameByIDs(ids []uint64) ([]*pb.Game, error) {
 	return g.GetGames(idStr)
 }
 
-func (g *igdb) GetGameByCollectionID(id uint64) ([]*pb.Game, error) {
+func (g *Client) GetGameByCollectionID(id uint64) ([]*pb.Game, error) {
 	query := fmt.Sprintf(`where collection = %d; fields *;`, id)
 	return g.GetGames(query)
 }
 
-func (g *igdb) GetGamesByCollectionIDs(ids []uint64) ([]*pb.Game, error) {
+func (g *Client) GetGamesByCollectionIDs(ids []uint64) ([]*pb.Game, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,12 +63,12 @@ func (g *igdb) GetGamesByCollectionIDs(ids []uint64) ([]*pb.Game, error) {
 	return g.GetGames(idStr)
 }
 
-func (g *igdb) GetGameByCoverID(id uint64) ([]*pb.Game, error) {
+func (g *Client) GetGameByCoverID(id uint64) ([]*pb.Game, error) {
 	query := fmt.Sprintf(`where cover = %d; fields *;`, id)
 	return g.GetGames(query)
 }
 
-func (g *igdb) GetGamesByCoverIDs(ids []uint64) ([]*pb.Game, error) {
+func (g *Client) GetGamesByCoverIDs(ids []uint64) ([]*pb.Game, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -79,12 +79,12 @@ func (g *igdb) GetGamesByCoverIDs(ids []uint64) ([]*pb.Game, error) {
 	return g.GetGames(idStr)
 }
 
-func (g *igdb) GetGameByFranchiseID(id uint64) ([]*pb.Game, error) {
+func (g *Client) GetGameByFranchiseID(id uint64) ([]*pb.Game, error) {
 	query := fmt.Sprintf(`where franchise = %d; fields *;`, id)
 	return g.GetGames(query)
 }
 
-func (g *igdb) GetGamesByFranchiseIDs(ids []uint64) ([]*pb.Game, error) {
+func (g *Client) GetGamesByFranchiseIDs(ids []uint64) ([]*pb.Game, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -95,12 +95,12 @@ func (g *igdb) GetGamesByFranchiseIDs(ids []uint64) ([]*pb.Game, error) {
 	return g.GetGames(idStr)
 }
 
-func (g *igdb) GetGameByGameStatusID(id uint64) ([]*pb.Game, error) {
+func (g *Client) GetGameByGameStatusID(id uint64) ([]*pb.Game, error) {
 	query := fmt.Sprintf(`where game_status = %d; fields *;`, id)
 	return g.GetGames(query)
 }
 
-func (g *igdb) GetGamesByGameStatusIDs(ids []uint64) ([]*pb.Game, error) {
+func (g *Client) GetGamesByGameStatusIDs(ids []uint64) ([]*pb.Game, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -111,12 +111,12 @@ func (g *igdb) GetGamesByGameStatusIDs(ids []uint64) ([]*pb.Game, error) {
 	return g.GetGames(idStr)
 }
 
-func (g *igdb) GetGameByGameTypeID(id uint64) ([]*pb.Game, error) {
+func (g *Client) GetGameByGameTypeID(id uint64) ([]*pb.Game, error) {
 	query := fmt.Sprintf(`where game_type = %d; fields *;`, id)
 	return g.GetGames(query)
 }
 
-func (g *igdb) GetGamesByGameTypeIDs(ids []uint64) ([]*pb.Game, error) {
+func (g *Client) GetGamesByGameTypeIDs(ids []uint64) ([]*pb.Game, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -127,12 +127,12 @@ func (g *igdb) GetGamesByGameTypeIDs(ids []uint64) ([]*pb.Game, error) {
 	return g.GetGames(idStr)
 }
 
-func (g *igdb) GetGameByParentGameID(id uint64) ([]*pb.Game, error) {
+func (g *Client) GetGameByParentGameID(id uint64) ([]*pb.Game, error) {
 	query := fmt.Sprintf(`where parent_game = %d; fields *;`, id)
 	return g.GetGames(query)
 }
 
-func (g *igdb) GetGamesByParentGameIDs(ids []uint64) ([]*pb.Game, error) {
+func (g *Client) GetGamesByParentGameIDs(ids []uint64) ([]*pb.Game, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -143,12 +143,12 @@ func (g *igdb) GetGamesByParentGameIDs(ids []uint64) ([]*pb.Game, error) {
 	return g.GetGames(idStr)
 }
 
-func (g *igdb) GetGameByVersionParentGameID(id uint64) ([]*pb.Game, error) {
+func (g *Client) GetGameByVersionParentGameID(id uint64) ([]*pb.Game, error) {
 	query := fmt.Sprintf(`where version_parent = %d; fields *;`, id)
 	return g.GetGames(query)
 }
 
-func (g *igdb) GetGamesByVersionParentGameIDs(ids []uint64) ([]*pb.Game, error) {
+func (g *Client) GetGamesByVersionParentGameIDs(ids []uint64) ([]*pb.Game, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -159,7 +159,7 @@ func (g *igdb) GetGamesByVersionParentGameIDs(ids []uint64) ([]*pb.Game, error) 
 	return g.GetGames(idStr)
 }
 
-func (g *igdb) GetGamesLength() (int, error) {
+func (g *Client) GetGamesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	games, err := g.GetGames(query)
 	if err != nil {

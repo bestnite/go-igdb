@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetCompanyStatuses(query string) ([]*pb.CompanyStatus, error) {
+func (g *Client) GetCompanyStatuses(query string) ([]*pb.CompanyStatus, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/company_statuses.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetCompanyStatuses(query string) ([]*pb.CompanyStatus, error) {
 	return data.Companystatuses, nil
 }
 
-func (g *igdb) GetCompanyStatusByID(id uint64) (*pb.CompanyStatus, error) {
+func (g *Client) GetCompanyStatusByID(id uint64) (*pb.CompanyStatus, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	companyStatuses, err := g.GetCompanyStatuses(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetCompanyStatusByID(id uint64) (*pb.CompanyStatus, error) {
 	return companyStatuses[0], nil
 }
 
-func (g *igdb) GetCompanyStatusesByIDs(ids []uint64) ([]*pb.CompanyStatus, error) {
+func (g *Client) GetCompanyStatusesByIDs(ids []uint64) ([]*pb.CompanyStatus, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetCompanyStatusesByIDs(ids []uint64) ([]*pb.CompanyStatus, error
 	return g.GetCompanyStatuses(idStr)
 }
 
-func (g *igdb) GetCompanyStatusesLength() (int, error) {
+func (g *Client) GetCompanyStatusesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	companyStatuses, err := g.GetCompanyStatuses(query)
 	if err != nil {

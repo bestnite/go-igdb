@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetArtworks(query string) ([]*pb.Artwork, error) {
+func (g *Client) GetArtworks(query string) ([]*pb.Artwork, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/artworks.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetArtworks(query string) ([]*pb.Artwork, error) {
 	return data.Artworks, nil
 }
 
-func (g *igdb) GetArtworkByID(id uint64) (*pb.Artwork, error) {
+func (g *Client) GetArtworkByID(id uint64) (*pb.Artwork, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	artworks, err := g.GetArtworks(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetArtworkByID(id uint64) (*pb.Artwork, error) {
 	return artworks[0], nil
 }
 
-func (g *igdb) GetArtworksByIDs(ids []uint64) ([]*pb.Artwork, error) {
+func (g *Client) GetArtworksByIDs(ids []uint64) ([]*pb.Artwork, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetArtworksByIDs(ids []uint64) ([]*pb.Artwork, error) {
 	return g.GetArtworks(idStr)
 }
 
-func (g *igdb) GetArtworksByGameID(id uint64) ([]*pb.Artwork, error) {
+func (g *Client) GetArtworksByGameID(id uint64) ([]*pb.Artwork, error) {
 	query := fmt.Sprintf(`where game = %d; fields *;`, id)
 	return g.GetArtworks(query)
 }
 
-func (g *igdb) GetArtworksByGameIDs(ids []uint64) ([]*pb.Artwork, error) {
+func (g *Client) GetArtworksByGameIDs(ids []uint64) ([]*pb.Artwork, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetArtworksByGameIDs(ids []uint64) ([]*pb.Artwork, error) {
 	return g.GetArtworks(idStr)
 }
 
-func (g *igdb) GetArtworksLength() (int, error) {
+func (g *Client) GetArtworksLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	artworks, err := g.GetArtworks(query)
 	if err != nil {

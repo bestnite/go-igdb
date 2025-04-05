@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetGameStatuses(query string) ([]*pb.GameStatus, error) {
+func (g *Client) GetGameStatuses(query string) ([]*pb.GameStatus, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/game_statuses.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetGameStatuses(query string) ([]*pb.GameStatus, error) {
 	return data.Gamestatuses, nil
 }
 
-func (g *igdb) GetGameStatusByID(id uint64) (*pb.GameStatus, error) {
+func (g *Client) GetGameStatusByID(id uint64) (*pb.GameStatus, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	gameStatuses, err := g.GetGameStatuses(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetGameStatusByID(id uint64) (*pb.GameStatus, error) {
 	return gameStatuses[0], nil
 }
 
-func (g *igdb) GetGameStatusesByIDs(ids []uint64) ([]*pb.GameStatus, error) {
+func (g *Client) GetGameStatusesByIDs(ids []uint64) ([]*pb.GameStatus, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetGameStatusesByIDs(ids []uint64) ([]*pb.GameStatus, error) {
 	return g.GetGameStatuses(idStr)
 }
 
-func (g *igdb) GetGameStatusesLength() (int, error) {
+func (g *Client) GetGameStatusesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	gameStatuses, err := g.GetGameStatuses(query)
 	if err != nil {

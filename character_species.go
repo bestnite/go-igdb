@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetCharacterSpecies(query string) ([]*pb.CharacterSpecie, error) {
+func (g *Client) GetCharacterSpecies(query string) ([]*pb.CharacterSpecie, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/character_species.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetCharacterSpecies(query string) ([]*pb.CharacterSpecie, error) 
 	return data.Characterspecies, nil
 }
 
-func (g *igdb) GetCharacterSpecieByID(id uint64) (*pb.CharacterSpecie, error) {
+func (g *Client) GetCharacterSpecieByID(id uint64) (*pb.CharacterSpecie, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	characterSpecies, err := g.GetCharacterSpecies(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetCharacterSpecieByID(id uint64) (*pb.CharacterSpecie, error) {
 	return characterSpecies[0], nil
 }
 
-func (g *igdb) GetCharacterSpeciesByIDs(ids []uint64) ([]*pb.CharacterSpecie, error) {
+func (g *Client) GetCharacterSpeciesByIDs(ids []uint64) ([]*pb.CharacterSpecie, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetCharacterSpeciesByIDs(ids []uint64) ([]*pb.CharacterSpecie, er
 	return g.GetCharacterSpecies(idStr)
 }
 
-func (g *igdb) GetCharacterSpeciesLength() (int, error) {
+func (g *Client) GetCharacterSpeciesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	characterSpecies, err := g.GetCharacterSpecies(query)
 	if err != nil {

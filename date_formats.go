@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetDateFormats(query string) ([]*pb.DateFormat, error) {
+func (g *Client) GetDateFormats(query string) ([]*pb.DateFormat, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/date_formats.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetDateFormats(query string) ([]*pb.DateFormat, error) {
 	return data.Dateformats, nil
 }
 
-func (g *igdb) GetDateFormatByID(id uint64) (*pb.DateFormat, error) {
+func (g *Client) GetDateFormatByID(id uint64) (*pb.DateFormat, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	dateFormats, err := g.GetDateFormats(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetDateFormatByID(id uint64) (*pb.DateFormat, error) {
 	return dateFormats[0], nil
 }
 
-func (g *igdb) GetDateFormatsByIDs(ids []uint64) ([]*pb.DateFormat, error) {
+func (g *Client) GetDateFormatsByIDs(ids []uint64) ([]*pb.DateFormat, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetDateFormatsByIDs(ids []uint64) ([]*pb.DateFormat, error) {
 	return g.GetDateFormats(idStr)
 }
 
-func (g *igdb) GetDateFormatsLength() (int, error) {
+func (g *Client) GetDateFormatsLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	dateFormats, err := g.GetDateFormats(query)
 	if err != nil {

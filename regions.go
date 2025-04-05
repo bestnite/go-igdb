@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetRegions(query string) ([]*pb.Region, error) {
+func (g *Client) GetRegions(query string) ([]*pb.Region, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/regions.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetRegions(query string) ([]*pb.Region, error) {
 	return data.Regions, nil
 }
 
-func (g *igdb) GetRegionByID(id uint64) (*pb.Region, error) {
+func (g *Client) GetRegionByID(id uint64) (*pb.Region, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	regions, err := g.GetRegions(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetRegionByID(id uint64) (*pb.Region, error) {
 	return regions[0], nil
 }
 
-func (g *igdb) GetRegionsByIDs(ids []uint64) ([]*pb.Region, error) {
+func (g *Client) GetRegionsByIDs(ids []uint64) ([]*pb.Region, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetRegionsByIDs(ids []uint64) ([]*pb.Region, error) {
 	return g.GetRegions(idStr)
 }
 
-func (g *igdb) GetRegionsLength() (int, error) {
+func (g *Client) GetRegionsLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	regions, err := g.GetRegions(query)
 	if err != nil {

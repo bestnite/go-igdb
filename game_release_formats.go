@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetGameReleaseFormats(query string) ([]*pb.GameReleaseFormat, error) {
+func (g *Client) GetGameReleaseFormats(query string) ([]*pb.GameReleaseFormat, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/game_release_formats.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetGameReleaseFormats(query string) ([]*pb.GameReleaseFormat, err
 	return data.Gamereleaseformats, nil
 }
 
-func (g *igdb) GetGameReleaseFormatByID(id uint64) (*pb.GameReleaseFormat, error) {
+func (g *Client) GetGameReleaseFormatByID(id uint64) (*pb.GameReleaseFormat, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	gameReleaseFormats, err := g.GetGameReleaseFormats(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetGameReleaseFormatByID(id uint64) (*pb.GameReleaseFormat, error
 	return gameReleaseFormats[0], nil
 }
 
-func (g *igdb) GetGameReleaseFormatsByIDs(ids []uint64) ([]*pb.GameReleaseFormat, error) {
+func (g *Client) GetGameReleaseFormatsByIDs(ids []uint64) ([]*pb.GameReleaseFormat, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetGameReleaseFormatsByIDs(ids []uint64) ([]*pb.GameReleaseFormat
 	return g.GetGameReleaseFormats(idStr)
 }
 
-func (g *igdb) GetGameReleaseFormatsLength() (int, error) {
+func (g *Client) GetGameReleaseFormatsLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	gameReleaseFormats, err := g.GetGameReleaseFormats(query)
 	if err != nil {

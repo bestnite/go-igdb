@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetEvents(query string) ([]*pb.Event, error) {
+func (g *Client) GetEvents(query string) ([]*pb.Event, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/events.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetEvents(query string) ([]*pb.Event, error) {
 	return data.Events, nil
 }
 
-func (g *igdb) GetEventByID(id uint64) (*pb.Event, error) {
+func (g *Client) GetEventByID(id uint64) (*pb.Event, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	events, err := g.GetEvents(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetEventByID(id uint64) (*pb.Event, error) {
 	return events[0], nil
 }
 
-func (g *igdb) GetEventsByIDs(ids []uint64) ([]*pb.Event, error) {
+func (g *Client) GetEventsByIDs(ids []uint64) ([]*pb.Event, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetEventsByIDs(ids []uint64) ([]*pb.Event, error) {
 	return g.GetEvents(idStr)
 }
 
-func (g *igdb) GetEventsByEventLogoID(id uint64) ([]*pb.Event, error) {
+func (g *Client) GetEventsByEventLogoID(id uint64) ([]*pb.Event, error) {
 	query := fmt.Sprintf(`where event_logo = %d; fields *;`, id)
 	return g.GetEvents(query)
 }
 
-func (g *igdb) GetEventsByEventLogoIDs(ids []uint64) ([]*pb.Event, error) {
+func (g *Client) GetEventsByEventLogoIDs(ids []uint64) ([]*pb.Event, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetEventsByEventLogoIDs(ids []uint64) ([]*pb.Event, error) {
 	return g.GetEvents(idStr)
 }
 
-func (g *igdb) GetEventsLength() (int, error) {
+func (g *Client) GetEventsLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	events, err := g.GetEvents(query)
 	if err != nil {

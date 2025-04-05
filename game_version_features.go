@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetGameVersionFeatures(query string) ([]*pb.GameVersionFeature, error) {
+func (g *Client) GetGameVersionFeatures(query string) ([]*pb.GameVersionFeature, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/game_version_features.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetGameVersionFeatures(query string) ([]*pb.GameVersionFeature, e
 	return data.Gameversionfeatures, nil
 }
 
-func (g *igdb) GetGameVersionFeatureByID(id uint64) (*pb.GameVersionFeature, error) {
+func (g *Client) GetGameVersionFeatureByID(id uint64) (*pb.GameVersionFeature, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	gameVersionFeatures, err := g.GetGameVersionFeatures(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetGameVersionFeatureByID(id uint64) (*pb.GameVersionFeature, err
 	return gameVersionFeatures[0], nil
 }
 
-func (g *igdb) GetGameVersionFeaturesByIDs(ids []uint64) ([]*pb.GameVersionFeature, error) {
+func (g *Client) GetGameVersionFeaturesByIDs(ids []uint64) ([]*pb.GameVersionFeature, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetGameVersionFeaturesByIDs(ids []uint64) ([]*pb.GameVersionFeatu
 	return g.GetGameVersionFeatures(idStr)
 }
 
-func (g *igdb) GetGameVersionFeaturesLength() (int, error) {
+func (g *Client) GetGameVersionFeaturesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	gameVersionFeatures, err := g.GetGameVersionFeatures(query)
 	if err != nil {

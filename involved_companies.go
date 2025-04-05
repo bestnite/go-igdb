@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetInvolvedCompanies(query string) ([]*pb.InvolvedCompany, error) {
+func (g *Client) GetInvolvedCompanies(query string) ([]*pb.InvolvedCompany, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/involved_companies.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetInvolvedCompanies(query string) ([]*pb.InvolvedCompany, error)
 	return data.Involvedcompanies, nil
 }
 
-func (g *igdb) GetInvolvedCompanyByID(id uint64) (*pb.InvolvedCompany, error) {
+func (g *Client) GetInvolvedCompanyByID(id uint64) (*pb.InvolvedCompany, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	involvedCompanies, err := g.GetInvolvedCompanies(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetInvolvedCompanyByID(id uint64) (*pb.InvolvedCompany, error) {
 	return involvedCompanies[0], nil
 }
 
-func (g *igdb) GetInvolvedCompaniesByIDs(ids []uint64) ([]*pb.InvolvedCompany, error) {
+func (g *Client) GetInvolvedCompaniesByIDs(ids []uint64) ([]*pb.InvolvedCompany, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetInvolvedCompaniesByIDs(ids []uint64) ([]*pb.InvolvedCompany, e
 	return g.GetInvolvedCompanies(idStr)
 }
 
-func (g *igdb) GetInvolvedCompaniesByGameID(id uint64) ([]*pb.InvolvedCompany, error) {
+func (g *Client) GetInvolvedCompaniesByGameID(id uint64) ([]*pb.InvolvedCompany, error) {
 	query := fmt.Sprintf(`where game = %d; fields *;`, id)
 	return g.GetInvolvedCompanies(query)
 }
 
-func (g *igdb) GetInvolvedCompaniesByGameIDs(ids []uint64) ([]*pb.InvolvedCompany, error) {
+func (g *Client) GetInvolvedCompaniesByGameIDs(ids []uint64) ([]*pb.InvolvedCompany, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,12 +63,12 @@ func (g *igdb) GetInvolvedCompaniesByGameIDs(ids []uint64) ([]*pb.InvolvedCompan
 	return g.GetInvolvedCompanies(idStr)
 }
 
-func (g *igdb) GetInvolvedCompaniesByCompanyID(id uint64) ([]*pb.InvolvedCompany, error) {
+func (g *Client) GetInvolvedCompaniesByCompanyID(id uint64) ([]*pb.InvolvedCompany, error) {
 	query := fmt.Sprintf(`where company = %d; fields *;`, id)
 	return g.GetInvolvedCompanies(query)
 }
 
-func (g *igdb) GetInvolvedCompaniesByCompanyIDs(ids []uint64) ([]*pb.InvolvedCompany, error) {
+func (g *Client) GetInvolvedCompaniesByCompanyIDs(ids []uint64) ([]*pb.InvolvedCompany, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -79,7 +79,7 @@ func (g *igdb) GetInvolvedCompaniesByCompanyIDs(ids []uint64) ([]*pb.InvolvedCom
 	return g.GetInvolvedCompanies(idStr)
 }
 
-func (g *igdb) GetInvolvedCompaniesLength() (int, error) {
+func (g *Client) GetInvolvedCompaniesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	involvedCompanies, err := g.GetInvolvedCompanies(query)
 	if err != nil {

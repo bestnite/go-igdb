@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetGenres(query string) ([]*pb.Genre, error) {
+func (g *Client) GetGenres(query string) ([]*pb.Genre, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/genres.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetGenres(query string) ([]*pb.Genre, error) {
 	return data.Genres, nil
 }
 
-func (g *igdb) GetGenreByID(id uint64) (*pb.Genre, error) {
+func (g *Client) GetGenreByID(id uint64) (*pb.Genre, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	genres, err := g.GetGenres(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetGenreByID(id uint64) (*pb.Genre, error) {
 	return genres[0], nil
 }
 
-func (g *igdb) GetGenresByIDs(ids []uint64) ([]*pb.Genre, error) {
+func (g *Client) GetGenresByIDs(ids []uint64) ([]*pb.Genre, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetGenresByIDs(ids []uint64) ([]*pb.Genre, error) {
 	return g.GetGenres(idStr)
 }
 
-func (g *igdb) GetGenresLength() (int, error) {
+func (g *Client) GetGenresLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	genres, err := g.GetGenres(query)
 	if err != nil {

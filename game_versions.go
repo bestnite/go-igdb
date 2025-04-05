@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetGameVersions(query string) ([]*pb.GameVersion, error) {
+func (g *Client) GetGameVersions(query string) ([]*pb.GameVersion, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/game_versions.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetGameVersions(query string) ([]*pb.GameVersion, error) {
 	return data.Gameversions, nil
 }
 
-func (g *igdb) GetGameVersionByID(id uint64) (*pb.GameVersion, error) {
+func (g *Client) GetGameVersionByID(id uint64) (*pb.GameVersion, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	gameVersions, err := g.GetGameVersions(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetGameVersionByID(id uint64) (*pb.GameVersion, error) {
 	return gameVersions[0], nil
 }
 
-func (g *igdb) GetGameVersionsByIDs(ids []uint64) ([]*pb.GameVersion, error) {
+func (g *Client) GetGameVersionsByIDs(ids []uint64) ([]*pb.GameVersion, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetGameVersionsByIDs(ids []uint64) ([]*pb.GameVersion, error) {
 	return g.GetGameVersions(idStr)
 }
 
-func (g *igdb) GetGameVersionsByGameID(id uint64) ([]*pb.GameVersion, error) {
+func (g *Client) GetGameVersionsByGameID(id uint64) ([]*pb.GameVersion, error) {
 	query := fmt.Sprintf(`where game = %d; fields *;`, id)
 	return g.GetGameVersions(query)
 }
 
-func (g *igdb) GetGameVersionsByGameIDs(ids []uint64) ([]*pb.GameVersion, error) {
+func (g *Client) GetGameVersionsByGameIDs(ids []uint64) ([]*pb.GameVersion, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetGameVersionsByGameIDs(ids []uint64) ([]*pb.GameVersion, error)
 	return g.GetGameVersions(idStr)
 }
 
-func (g *igdb) GetGameVersionsLength() (int, error) {
+func (g *Client) GetGameVersionsLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	gameVersions, err := g.GetGameVersions(query)
 	if err != nil {

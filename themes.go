@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetThemes(query string) ([]*pb.Theme, error) {
+func (g *Client) GetThemes(query string) ([]*pb.Theme, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/themes.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetThemes(query string) ([]*pb.Theme, error) {
 	return data.Themes, nil
 }
 
-func (g *igdb) GetThemeByID(id uint64) (*pb.Theme, error) {
+func (g *Client) GetThemeByID(id uint64) (*pb.Theme, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	themes, err := g.GetThemes(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetThemeByID(id uint64) (*pb.Theme, error) {
 	return themes[0], nil
 }
 
-func (g *igdb) GetThemesByIDs(ids []uint64) ([]*pb.Theme, error) {
+func (g *Client) GetThemesByIDs(ids []uint64) ([]*pb.Theme, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetThemesByIDs(ids []uint64) ([]*pb.Theme, error) {
 	return g.GetThemes(idStr)
 }
 
-func (g *igdb) GetThemesLength() (int, error) {
+func (g *Client) GetThemesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	themes, err := g.GetThemes(query)
 	if err != nil {

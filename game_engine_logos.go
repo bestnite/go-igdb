@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetGameEngineLogos(query string) ([]*pb.GameEngineLogo, error) {
+func (g *Client) GetGameEngineLogos(query string) ([]*pb.GameEngineLogo, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/game_engine_logos.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetGameEngineLogos(query string) ([]*pb.GameEngineLogo, error) {
 	return data.Gameenginelogos, nil
 }
 
-func (g *igdb) GetGameEngineLogoByID(id uint64) (*pb.GameEngineLogo, error) {
+func (g *Client) GetGameEngineLogoByID(id uint64) (*pb.GameEngineLogo, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	gameEngineLogos, err := g.GetGameEngineLogos(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetGameEngineLogoByID(id uint64) (*pb.GameEngineLogo, error) {
 	return gameEngineLogos[0], nil
 }
 
-func (g *igdb) GetGameEngineLogosByIDs(ids []uint64) ([]*pb.GameEngineLogo, error) {
+func (g *Client) GetGameEngineLogosByIDs(ids []uint64) ([]*pb.GameEngineLogo, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetGameEngineLogosByIDs(ids []uint64) ([]*pb.GameEngineLogo, erro
 	return g.GetGameEngineLogos(idStr)
 }
 
-func (g *igdb) GetGameEngineLogosLength() (int, error) {
+func (g *Client) GetGameEngineLogosLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	gameEngineLogos, err := g.GetGameEngineLogos(query)
 	if err != nil {

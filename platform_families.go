@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetPlatformFamilies(query string) ([]*pb.PlatformFamily, error) {
+func (g *Client) GetPlatformFamilies(query string) ([]*pb.PlatformFamily, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/platform_families.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetPlatformFamilies(query string) ([]*pb.PlatformFamily, error) {
 	return data.Platformfamilies, nil
 }
 
-func (g *igdb) GetPlatformFamilyByID(id uint64) (*pb.PlatformFamily, error) {
+func (g *Client) GetPlatformFamilyByID(id uint64) (*pb.PlatformFamily, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	platformFamilies, err := g.GetPlatformFamilies(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetPlatformFamilyByID(id uint64) (*pb.PlatformFamily, error) {
 	return platformFamilies[0], nil
 }
 
-func (g *igdb) GetPlatformFamiliesByIDs(ids []uint64) ([]*pb.PlatformFamily, error) {
+func (g *Client) GetPlatformFamiliesByIDs(ids []uint64) ([]*pb.PlatformFamily, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetPlatformFamiliesByIDs(ids []uint64) ([]*pb.PlatformFamily, err
 	return g.GetPlatformFamilies(idStr)
 }
 
-func (g *igdb) GetPlatformFamiliesLength() (int, error) {
+func (g *Client) GetPlatformFamiliesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	platformFamilies, err := g.GetPlatformFamilies(query)
 	if err != nil {

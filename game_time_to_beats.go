@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetGameTimeToBeats(query string) ([]*pb.GameTimeToBeat, error) {
+func (g *Client) GetGameTimeToBeats(query string) ([]*pb.GameTimeToBeat, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/game_time_to_beats.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetGameTimeToBeats(query string) ([]*pb.GameTimeToBeat, error) {
 	return data.Gametimetobeats, nil
 }
 
-func (g *igdb) GetGameTimeToBeatByID(id uint64) (*pb.GameTimeToBeat, error) {
+func (g *Client) GetGameTimeToBeatByID(id uint64) (*pb.GameTimeToBeat, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	gameTimeToBeats, err := g.GetGameTimeToBeats(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetGameTimeToBeatByID(id uint64) (*pb.GameTimeToBeat, error) {
 	return gameTimeToBeats[0], nil
 }
 
-func (g *igdb) GetGameTimeToBeatsByIDs(ids []uint64) ([]*pb.GameTimeToBeat, error) {
+func (g *Client) GetGameTimeToBeatsByIDs(ids []uint64) ([]*pb.GameTimeToBeat, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetGameTimeToBeatsByIDs(ids []uint64) ([]*pb.GameTimeToBeat, erro
 	return g.GetGameTimeToBeats(idStr)
 }
 
-func (g *igdb) GetGameTimeToBeatsByGameID(id uint64) ([]*pb.GameTimeToBeat, error) {
+func (g *Client) GetGameTimeToBeatsByGameID(id uint64) ([]*pb.GameTimeToBeat, error) {
 	query := fmt.Sprintf(`where game = %d; fields *;`, id)
 	return g.GetGameTimeToBeats(query)
 }
 
-func (g *igdb) GetGameTimeToBeatsByGameIDs(ids []uint64) ([]*pb.GameTimeToBeat, error) {
+func (g *Client) GetGameTimeToBeatsByGameIDs(ids []uint64) ([]*pb.GameTimeToBeat, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetGameTimeToBeatsByGameIDs(ids []uint64) ([]*pb.GameTimeToBeat, 
 	return g.GetGameTimeToBeats(idStr)
 }
 
-func (g *igdb) GetGameTimeToBeatsLength() (int, error) {
+func (g *Client) GetGameTimeToBeatsLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	gameTimeToBeats, err := g.GetGameTimeToBeats(query)
 	if err != nil {

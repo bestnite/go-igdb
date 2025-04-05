@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetGameTypes(query string) ([]*pb.GameType, error) {
+func (g *Client) GetGameTypes(query string) ([]*pb.GameType, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/game_types.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetGameTypes(query string) ([]*pb.GameType, error) {
 	return data.Gametypes, nil
 }
 
-func (g *igdb) GetGameTypeByID(id uint64) (*pb.GameType, error) {
+func (g *Client) GetGameTypeByID(id uint64) (*pb.GameType, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	gameTypes, err := g.GetGameTypes(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetGameTypeByID(id uint64) (*pb.GameType, error) {
 	return gameTypes[0], nil
 }
 
-func (g *igdb) GetGameTypesByIDs(ids []uint64) ([]*pb.GameType, error) {
+func (g *Client) GetGameTypesByIDs(ids []uint64) ([]*pb.GameType, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetGameTypesByIDs(ids []uint64) ([]*pb.GameType, error) {
 	return g.GetGameTypes(idStr)
 }
 
-func (g *igdb) GetGameTypesLength() (int, error) {
+func (g *Client) GetGameTypesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	gameTypes, err := g.GetGameTypes(query)
 	if err != nil {

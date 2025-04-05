@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetPlatformVersionCompanies(query string) ([]*pb.PlatformVersionCompany, error) {
+func (g *Client) GetPlatformVersionCompanies(query string) ([]*pb.PlatformVersionCompany, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/platform_version_companies.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetPlatformVersionCompanies(query string) ([]*pb.PlatformVersionC
 	return data.Platformversioncompanies, nil
 }
 
-func (g *igdb) GetPlatformVersionCompanyByID(id uint64) (*pb.PlatformVersionCompany, error) {
+func (g *Client) GetPlatformVersionCompanyByID(id uint64) (*pb.PlatformVersionCompany, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	platformVersionCompanies, err := g.GetPlatformVersionCompanies(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetPlatformVersionCompanyByID(id uint64) (*pb.PlatformVersionComp
 	return platformVersionCompanies[0], nil
 }
 
-func (g *igdb) GetPlatformVersionCompaniesByIDs(ids []uint64) ([]*pb.PlatformVersionCompany, error) {
+func (g *Client) GetPlatformVersionCompaniesByIDs(ids []uint64) ([]*pb.PlatformVersionCompany, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetPlatformVersionCompaniesByIDs(ids []uint64) ([]*pb.PlatformVer
 	return g.GetPlatformVersionCompanies(idStr)
 }
 
-func (g *igdb) GetPlatformVersionCompaniesByCompanyID(id uint64) ([]*pb.PlatformVersionCompany, error) {
+func (g *Client) GetPlatformVersionCompaniesByCompanyID(id uint64) ([]*pb.PlatformVersionCompany, error) {
 	query := fmt.Sprintf(`where company = %d; fields *;`, id)
 	return g.GetPlatformVersionCompanies(query)
 }
 
-func (g *igdb) GetPlatformVersionCompaniesByCompanyIDs(ids []uint64) ([]*pb.PlatformVersionCompany, error) {
+func (g *Client) GetPlatformVersionCompaniesByCompanyIDs(ids []uint64) ([]*pb.PlatformVersionCompany, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetPlatformVersionCompaniesByCompanyIDs(ids []uint64) ([]*pb.Plat
 	return g.GetPlatformVersionCompanies(idStr)
 }
 
-func (g *igdb) GetPlatformVersionCompaniesLength() (int, error) {
+func (g *Client) GetPlatformVersionCompaniesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	platformVersionCompanies, err := g.GetPlatformVersionCompanies(query)
 	if err != nil {

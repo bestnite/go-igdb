@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetCollectionMembershipTypes(query string) ([]*pb.CollectionMembershipType, error) {
+func (g *Client) GetCollectionMembershipTypes(query string) ([]*pb.CollectionMembershipType, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/collection_membership_types.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetCollectionMembershipTypes(query string) ([]*pb.CollectionMembe
 	return data.Collectionmembershiptypes, nil
 }
 
-func (g *igdb) GetCollectionMembershipTypeByID(id uint64) (*pb.CollectionMembershipType, error) {
+func (g *Client) GetCollectionMembershipTypeByID(id uint64) (*pb.CollectionMembershipType, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	collectionMembershipTypes, err := g.GetCollectionMembershipTypes(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetCollectionMembershipTypeByID(id uint64) (*pb.CollectionMembers
 	return collectionMembershipTypes[0], nil
 }
 
-func (g *igdb) GetCollectionMembershipTypesByIDs(ids []uint64) ([]*pb.CollectionMembershipType, error) {
+func (g *Client) GetCollectionMembershipTypesByIDs(ids []uint64) ([]*pb.CollectionMembershipType, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetCollectionMembershipTypesByIDs(ids []uint64) ([]*pb.Collection
 	return g.GetCollectionMembershipTypes(idStr)
 }
 
-func (g *igdb) GetCollectionMembershipTypesByAllowedCollectionTypeID(id uint64) ([]*pb.CollectionMembershipType, error) {
+func (g *Client) GetCollectionMembershipTypesByAllowedCollectionTypeID(id uint64) ([]*pb.CollectionMembershipType, error) {
 	query := fmt.Sprintf(`where allowed_collection_type = %d; fields *;`, id)
 	return g.GetCollectionMembershipTypes(query)
 }
 
-func (g *igdb) GetCollectionMembershipTypesByAllowedCollectionTypeIDs(ids []uint64) ([]*pb.CollectionMembershipType, error) {
+func (g *Client) GetCollectionMembershipTypesByAllowedCollectionTypeIDs(ids []uint64) ([]*pb.CollectionMembershipType, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetCollectionMembershipTypesByAllowedCollectionTypeIDs(ids []uint
 	return g.GetCollectionMembershipTypes(idStr)
 }
 
-func (g *igdb) GetCollectionMembershipTypesLength() (int, error) {
+func (g *Client) GetCollectionMembershipTypesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	collectionMembershipTypes, err := g.GetCollectionMembershipTypes(query)
 	if err != nil {

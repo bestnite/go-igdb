@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetScreenshots(query string) ([]*pb.Screenshot, error) {
+func (g *Client) GetScreenshots(query string) ([]*pb.Screenshot, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/screenshots.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetScreenshots(query string) ([]*pb.Screenshot, error) {
 	return data.Screenshots, nil
 }
 
-func (g *igdb) GetScreenshotByID(id uint64) (*pb.Screenshot, error) {
+func (g *Client) GetScreenshotByID(id uint64) (*pb.Screenshot, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	screenshots, err := g.GetScreenshots(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetScreenshotByID(id uint64) (*pb.Screenshot, error) {
 	return screenshots[0], nil
 }
 
-func (g *igdb) GetScreenshotsByIDs(ids []uint64) ([]*pb.Screenshot, error) {
+func (g *Client) GetScreenshotsByIDs(ids []uint64) ([]*pb.Screenshot, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetScreenshotsByIDs(ids []uint64) ([]*pb.Screenshot, error) {
 	return g.GetScreenshots(idStr)
 }
 
-func (g *igdb) GetScreenshotsByGameID(id uint64) ([]*pb.Screenshot, error) {
+func (g *Client) GetScreenshotsByGameID(id uint64) ([]*pb.Screenshot, error) {
 	query := fmt.Sprintf(`where game = %d; fields *;`, id)
 	return g.GetScreenshots(query)
 }
 
-func (g *igdb) GetScreenshotsByGameIDs(ids []uint64) ([]*pb.Screenshot, error) {
+func (g *Client) GetScreenshotsByGameIDs(ids []uint64) ([]*pb.Screenshot, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetScreenshotsByGameIDs(ids []uint64) ([]*pb.Screenshot, error) {
 	return g.GetScreenshots(idStr)
 }
 
-func (g *igdb) GetScreenshotsLength() (int, error) {
+func (g *Client) GetScreenshotsLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	screenshots, err := g.GetScreenshots(query)
 	if err != nil {

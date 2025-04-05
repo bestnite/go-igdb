@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetGameModes(query string) ([]*pb.GameMode, error) {
+func (g *Client) GetGameModes(query string) ([]*pb.GameMode, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/game_modes.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetGameModes(query string) ([]*pb.GameMode, error) {
 	return data.Gamemodes, nil
 }
 
-func (g *igdb) GetGameModeByID(id uint64) (*pb.GameMode, error) {
+func (g *Client) GetGameModeByID(id uint64) (*pb.GameMode, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	gameModes, err := g.GetGameModes(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetGameModeByID(id uint64) (*pb.GameMode, error) {
 	return gameModes[0], nil
 }
 
-func (g *igdb) GetGameModesByIDs(ids []uint64) ([]*pb.GameMode, error) {
+func (g *Client) GetGameModesByIDs(ids []uint64) ([]*pb.GameMode, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetGameModesByIDs(ids []uint64) ([]*pb.GameMode, error) {
 	return g.GetGameModes(idStr)
 }
 
-func (g *igdb) GetGameModesLength() (int, error) {
+func (g *Client) GetGameModesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	gameModes, err := g.GetGameModes(query)
 	if err != nil {

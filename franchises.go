@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetFranchises(query string) ([]*pb.Franchise, error) {
+func (g *Client) GetFranchises(query string) ([]*pb.Franchise, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/franchises.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetFranchises(query string) ([]*pb.Franchise, error) {
 	return data.Franchises, nil
 }
 
-func (g *igdb) GetFranchiseByID(id uint64) (*pb.Franchise, error) {
+func (g *Client) GetFranchiseByID(id uint64) (*pb.Franchise, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	franchises, err := g.GetFranchises(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetFranchiseByID(id uint64) (*pb.Franchise, error) {
 	return franchises[0], nil
 }
 
-func (g *igdb) GetFranchisesByIDs(ids []uint64) ([]*pb.Franchise, error) {
+func (g *Client) GetFranchisesByIDs(ids []uint64) ([]*pb.Franchise, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,7 +47,7 @@ func (g *igdb) GetFranchisesByIDs(ids []uint64) ([]*pb.Franchise, error) {
 	return g.GetFranchises(idStr)
 }
 
-func (g *igdb) GetFranchisesLength() (int, error) {
+func (g *Client) GetFranchisesLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	franchises, err := g.GetFranchises(query)
 	if err != nil {

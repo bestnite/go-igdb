@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func (g *igdb) GetGameVideos(query string) ([]*pb.GameVideo, error) {
+func (g *Client) GetGameVideos(query string) ([]*pb.GameVideo, error) {
 	resp, err := g.Request("https://api.igdb.com/v4/game_videos.pb", query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
@@ -27,7 +27,7 @@ func (g *igdb) GetGameVideos(query string) ([]*pb.GameVideo, error) {
 	return data.Gamevideos, nil
 }
 
-func (g *igdb) GetGameVideoByID(id uint64) (*pb.GameVideo, error) {
+func (g *Client) GetGameVideoByID(id uint64) (*pb.GameVideo, error) {
 	query := fmt.Sprintf(`where id=%d; fields *;`, id)
 	gameVideos, err := g.GetGameVideos(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func (g *igdb) GetGameVideoByID(id uint64) (*pb.GameVideo, error) {
 	return gameVideos[0], nil
 }
 
-func (g *igdb) GetGameVideosByIDs(ids []uint64) ([]*pb.GameVideo, error) {
+func (g *Client) GetGameVideosByIDs(ids []uint64) ([]*pb.GameVideo, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -47,12 +47,12 @@ func (g *igdb) GetGameVideosByIDs(ids []uint64) ([]*pb.GameVideo, error) {
 	return g.GetGameVideos(idStr)
 }
 
-func (g *igdb) GetGameVideosByGameID(id uint64) ([]*pb.GameVideo, error) {
+func (g *Client) GetGameVideosByGameID(id uint64) ([]*pb.GameVideo, error) {
 	query := fmt.Sprintf(`where game = %d; fields *;`, id)
 	return g.GetGameVideos(query)
 }
 
-func (g *igdb) GetGameVideosByGameIDs(ids []uint64) ([]*pb.GameVideo, error) {
+func (g *Client) GetGameVideosByGameIDs(ids []uint64) ([]*pb.GameVideo, error) {
 	idStrSlice := make([]string, len(ids))
 	for i, id := range ids {
 		idStrSlice[i] = fmt.Sprintf("%d", id)
@@ -63,7 +63,7 @@ func (g *igdb) GetGameVideosByGameIDs(ids []uint64) ([]*pb.GameVideo, error) {
 	return g.GetGameVideos(idStr)
 }
 
-func (g *igdb) GetGameVideosLength() (int, error) {
+func (g *Client) GetGameVideosLength() (int, error) {
 	query := `fields *; sort id desc; limit 1;`
 	gameVideos, err := g.GetGameVideos(query)
 	if err != nil {
