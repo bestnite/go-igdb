@@ -93,6 +93,21 @@ func main() {
 }
 ```
 
+## Example Projects
+
+- [igdb-database](https://github.com/bestnite/igdb-database)
+
+## Dependencies
+
+- [go-resty/resty](https://github.com/go-resty/resty)
+- [google/protobuf](https://github.com/google/protobuf)
+- [bestnite/go-flaresolverr](https://github.com/bestnite/go-flaresolverr)
+- [PuerkitoBio/goquery](https://github.com/PuerkitoBio/goquery)
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
