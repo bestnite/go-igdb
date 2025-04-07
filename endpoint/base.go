@@ -72,6 +72,6 @@ type EntityEndpoint[T any] interface {
 	Query(string) ([]*T, error)
 	GetByID(uint64) (*T, error)
 	GetByIDs([]uint64) ([]*T, error)
-	GetLastOneId() (uint64, error)
+	Count() (uint64, error)
 	Paginated(uint64, uint64) ([]*T, error)
 }
