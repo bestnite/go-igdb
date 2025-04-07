@@ -25,7 +25,7 @@ func NewCollectionRelationTypes(request func(URL string, dataBody any) (*resty.R
 }
 
 func (a *CollectionRelationTypes) Query(query string) ([]*pb.CollectionRelationType, error) {
-	resp, err := a.request("https://api.igdb.com/v4/collection_relation_types.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

@@ -45,7 +45,7 @@ func Test2(c *igdb.Client) {
 }
 
 func Test3(c *igdb.Client) {
-	total, err := c.Games.GetLastOneId()
+	total, err := c.Games.Count()
 	if err != nil {
 		log.Fatal(err)
 	}

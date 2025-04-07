@@ -2,6 +2,8 @@ package endpoint
 
 import (
 	"fmt"
+	pb "github.com/bestnite/go-igdb/proto"
+	"google.golang.org/protobuf/proto"
 	"strconv"
 	"strings"
 
@@ -10,17 +12,17 @@ import (
 
 type BaseEndpoint[T any] struct {
 	request      func(URL string, dataBody any) (*resty.Response, error)
-	endpointName EndpointName
+	endpointName Name
 	queryFunc    func(string) ([]*T, error)
 }
 
-func (b *BaseEndpoint[T]) GetEndpointName() EndpointName {
+func (b *BaseEndpoint[T]) GetEndpointName() Name {
 	return b.endpointName
 }
 
 func (b *BaseEndpoint[T]) Query(query string) ([]*T, error) {
 	if b.queryFunc == nil {
-		return nil, fmt.Errorf("Query method must be implemented by specific endpoint")
+		return nil, fmt.Errorf("query method must be implemented by specific endpoint")
 	}
 	return b.queryFunc(query)
 }
@@ -47,22 +49,18 @@ func (b *BaseEndpoint[T]) GetByIDs(ids []uint64) ([]*T, error) {
 	return b.Query(fmt.Sprintf("where id = (%s); fields *;", builder.String()))
 }
 
-func (b *BaseEndpoint[T]) GetLastOneId() (uint64, error) {
-	res, err := b.Query("fields *; sort id desc; limit 1;")
+func (b *BaseEndpoint[T]) Count() (uint64, error) {
+	resp, err := b.request(fmt.Sprintf("https://api.igdb.com/v4/%s/count.pb", b.endpointName), "")
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("failed to request: %w", err)
 	}
-	if len(res) == 0 {
-		return 0, fmt.Errorf("no results")
+
+	var res pb.Count
+	if err = proto.Unmarshal(resp.Body(), &res); err != nil {
+		return 0, fmt.Errorf("failed to unmarshal: %w", err)
 	}
-	type IdGetter interface {
-		GetId() uint64
-	}
-	item, ok := any(res[0]).(IdGetter)
-	if !ok {
-		return 0, fmt.Errorf("invalid type")
-	}
-	return item.GetId(), nil
+
+	return uint64(res.Count), nil
 }
 
 func (b *BaseEndpoint[T]) Paginated(offset, limit uint64) ([]*T, error) {
@@ -70,7 +68,7 @@ func (b *BaseEndpoint[T]) Paginated(offset, limit uint64) ([]*T, error) {
 }
 
 type EntityEndpoint[T any] interface {
-	GetEndpointName() EndpointName
+	GetEndpointName() Name
 	Query(string) ([]*T, error)
 	GetByID(uint64) (*T, error)
 	GetByIDs([]uint64) ([]*T, error)

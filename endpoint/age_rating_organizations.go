@@ -25,7 +25,7 @@ func NewAgeRatingOrganizations(request func(URL string, dataBody any) (*resty.Re
 }
 
 func (a *AgeRatingOrganizations) Query(query string) ([]*pb.AgeRatingOrganization, error) {
-	resp, err := a.request("https://api.igdb.com/v4/age_rating_organizations.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

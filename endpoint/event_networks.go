@@ -25,7 +25,7 @@ func NewEventNetworks(request func(URL string, dataBody any) (*resty.Response, e
 }
 
 func (a *EventNetworks) Query(query string) ([]*pb.EventNetwork, error) {
-	resp, err := a.request("https://api.igdb.com/v4/event_networks.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

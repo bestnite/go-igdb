@@ -25,7 +25,7 @@ func NewPlatformVersionReleaseDates(request func(URL string, dataBody any) (*res
 }
 
 func (a *PlatformVersionReleaseDates) Query(query string) ([]*pb.PlatformVersionReleaseDate, error) {
-	resp, err := a.request("https://api.igdb.com/v4/platform_version_release_dates.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

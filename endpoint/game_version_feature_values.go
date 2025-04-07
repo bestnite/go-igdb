@@ -25,7 +25,7 @@ func NewGameVersionFeatureValues(request func(URL string, dataBody any) (*resty.
 }
 
 func (a *GameVersionFeatureValues) Query(query string) ([]*pb.GameVersionFeatureValue, error) {
-	resp, err := a.request("https://api.igdb.com/v4/game_version_feature_values.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

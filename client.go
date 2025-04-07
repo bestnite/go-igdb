@@ -11,7 +11,7 @@ import (
 
 type Client struct {
 	clientID     string
-	token        *twitchToken
+	token        *TwitchToken
 	flaresolverr *flaresolverr.Flaresolverr
 	limiter      *rateLimiter
 

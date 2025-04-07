@@ -23,18 +23,20 @@ var webSearchCFCookies struct {
 }
 
 type Search struct {
+	endpointName Name
 	request      func(URL string, dataBody any) (*resty.Response, error)
 	flaresolverr *flaresolverr.Flaresolverr
 }
 
 func NewSearch(request func(URL string, dataBody any) (*resty.Response, error)) *Search {
 	return &Search{
-		request: request,
+		endpointName: EPSearch,
+		request:      request,
 	}
 }
 
 func (a *Search) Search(query string) ([]*pb.Search, error) {
-	resp, err := a.request("https://api.igdb.com/v4/search.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

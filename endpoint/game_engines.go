@@ -25,7 +25,7 @@ func NewGameEngines(request func(URL string, dataBody any) (*resty.Response, err
 }
 
 func (a *GameEngines) Query(query string) ([]*pb.GameEngine, error) {
-	resp, err := a.request("https://api.igdb.com/v4/game_engines.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

@@ -18,7 +18,7 @@ func NewWebhooks(request func(URL string, dataBody any) (*resty.Response, error)
 	}
 }
 
-func (a *Webhooks) Register(endpoint EndpointName, secret, callbackUrl string) error {
+func (a *Webhooks) Register(endpoint Name, secret, callbackUrl string) error {
 	dataBody := url.Values{}
 	dataBody.Set("url", callbackUrl)
 	dataBody.Set("secret", secret)

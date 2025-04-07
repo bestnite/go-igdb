@@ -25,7 +25,7 @@ func NewArtworks(request func(URL string, dataBody any) (*resty.Response, error)
 }
 
 func (a *Artworks) Query(query string) ([]*pb.Artwork, error) {
-	resp, err := a.request("https://api.igdb.com/v4/artworks.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

@@ -25,7 +25,7 @@ func NewInvolvedCompanies(request func(URL string, dataBody any) (*resty.Respons
 }
 
 func (a *InvolvedCompanies) Query(query string) ([]*pb.InvolvedCompany, error) {
-	resp, err := a.request("https://api.igdb.com/v4/involved_companies.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

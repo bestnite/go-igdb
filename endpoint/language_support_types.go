@@ -25,7 +25,7 @@ func NewLanguageSupportTypes(request func(URL string, dataBody any) (*resty.Resp
 }
 
 func (a *LanguageSupportTypes) Query(query string) ([]*pb.LanguageSupportType, error) {
-	resp, err := a.request("https://api.igdb.com/v4/language_support_types.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

@@ -7,21 +7,21 @@ import (
 	"time"
 )
 
-type twitchToken struct {
+type TwitchToken struct {
 	clientID     string
 	clientSecret string
 	token        string
 	expires      time.Time
 }
 
-func NewTwitchToken(clientID, clientSecret string) *twitchToken {
-	return &twitchToken{
+func NewTwitchToken(clientID, clientSecret string) *TwitchToken {
+	return &TwitchToken{
 		clientID:     clientID,
 		clientSecret: clientSecret,
 	}
 }
 
-func (t *twitchToken) getToken() (string, error) {
+func (t *TwitchToken) getToken() (string, error) {
 	if t.token != "" && time.Now().Before(t.expires) {
 		return t.token, nil
 	}
@@ -34,7 +34,7 @@ func (t *twitchToken) getToken() (string, error) {
 	return token, nil
 }
 
-func (t *twitchToken) loginTwitch() (string, time.Duration, error) {
+func (t *TwitchToken) loginTwitch() (string, time.Duration, error) {
 	baseURL, _ := url.Parse("https://id.twitch.tv/oauth2/token")
 	params := url.Values{}
 	params.Add("client_id", t.clientID)

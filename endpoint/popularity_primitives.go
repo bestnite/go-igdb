@@ -25,7 +25,7 @@ func NewPopularityPrimitives(request func(URL string, dataBody any) (*resty.Resp
 }
 
 func (a *PopularityPrimitives) Query(query string) ([]*pb.PopularityPrimitive, error) {
-	resp, err := a.request("https://api.igdb.com/v4/popularity_primitives.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

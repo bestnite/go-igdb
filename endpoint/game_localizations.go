@@ -25,7 +25,7 @@ func NewGameLocalizations(request func(URL string, dataBody any) (*resty.Respons
 }
 
 func (a *GameLocalizations) Query(query string) ([]*pb.GameLocalization, error) {
-	resp, err := a.request("https://api.igdb.com/v4/game_localizations.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

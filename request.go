@@ -24,6 +24,6 @@ func request() *resty.Request {
 
 type disableLogger struct{}
 
-func (d disableLogger) Errorf(format string, v ...interface{}) {}
-func (d disableLogger) Warnf(format string, v ...interface{})  {}
-func (d disableLogger) Debugf(format string, v ...interface{}) {}
+func (d disableLogger) Errorf(string, ...interface{}) {}
+func (d disableLogger) Warnf(string, ...interface{})  {}
+func (d disableLogger) Debugf(string, ...interface{}) {}

@@ -25,7 +25,7 @@ func NewReleaseDateStatuses(request func(URL string, dataBody any) (*resty.Respo
 }
 
 func (a *ReleaseDateStatuses) Query(query string) ([]*pb.ReleaseDateStatus, error) {
-	resp, err := a.request("https://api.igdb.com/v4/release_date_statuses.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

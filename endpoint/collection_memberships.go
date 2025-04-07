@@ -25,7 +25,7 @@ func NewCollectionMemberships(request func(URL string, dataBody any) (*resty.Res
 }
 
 func (a *CollectionMemberships) Query(query string) ([]*pb.CollectionMembership, error) {
-	resp, err := a.request("https://api.igdb.com/v4/collection_memberships.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

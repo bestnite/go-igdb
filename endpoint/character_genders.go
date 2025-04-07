@@ -25,7 +25,7 @@ func NewCharacterGenders(request func(URL string, dataBody any) (*resty.Response
 }
 
 func (a *CharacterGenders) Query(query string) ([]*pb.CharacterGender, error) {
-	resp, err := a.request("https://api.igdb.com/v4/character_genders.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

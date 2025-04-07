@@ -25,7 +25,7 @@ func NewScreenshots(request func(URL string, dataBody any) (*resty.Response, err
 }
 
 func (a *Screenshots) Query(query string) ([]*pb.Screenshot, error) {
-	resp, err := a.request("https://api.igdb.com/v4/screenshots.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

@@ -25,7 +25,7 @@ func NewKeywords(request func(URL string, dataBody any) (*resty.Response, error)
 }
 
 func (a *Keywords) Query(query string) ([]*pb.Keyword, error) {
-	resp, err := a.request("https://api.igdb.com/v4/keywords.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

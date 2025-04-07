@@ -25,7 +25,7 @@ func NewRegions(request func(URL string, dataBody any) (*resty.Response, error))
 }
 
 func (a *Regions) Query(query string) ([]*pb.Region, error) {
-	resp, err := a.request("https://api.igdb.com/v4/regions.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

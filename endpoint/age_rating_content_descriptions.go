@@ -25,7 +25,7 @@ func NewAgeRatingContentDescriptions(request func(URL string, dataBody any) (*re
 }
 
 func (a *AgeRatingContentDescriptions) Query(query string) ([]*pb.AgeRatingContentDescription, error) {
-	resp, err := a.request("https://api.igdb.com/v4/age_rating_content_descriptions.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

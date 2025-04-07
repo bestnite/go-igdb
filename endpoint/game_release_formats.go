@@ -25,7 +25,7 @@ func NewGameReleaseFormats(request func(URL string, dataBody any) (*resty.Respon
 }
 
 func (a *GameReleaseFormats) Query(query string) ([]*pb.GameReleaseFormat, error) {
-	resp, err := a.request("https://api.igdb.com/v4/game_release_formats.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

@@ -25,7 +25,7 @@ func NewGameVersions(request func(URL string, dataBody any) (*resty.Response, er
 }
 
 func (a *GameVersions) Query(query string) ([]*pb.GameVersion, error) {
-	resp, err := a.request("https://api.igdb.com/v4/game_versions.pb", query)
+	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}
