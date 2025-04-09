@@ -10,7 +10,6 @@ import (
 	"time"
 
 	pb "github.com/bestnite/go-igdb/proto"
-	"github.com/go-resty/resty/v2"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bestnite/go-flaresolverr"
@@ -24,11 +23,11 @@ var webSearchCFCookies struct {
 
 type Search struct {
 	endpointName Name
-	request      func(URL string, dataBody any) (*resty.Response, error)
+	request      RequestFunc
 	flaresolverr *flaresolverr.Flaresolverr
 }
 
-func NewSearch(request func(URL string, dataBody any) (*resty.Response, error)) *Search {
+func NewSearch(request RequestFunc) *Search {
 	return &Search{
 		endpointName: EPSearch,
 		request:      request,
@@ -36,7 +35,7 @@ func NewSearch(request func(URL string, dataBody any) (*resty.Response, error)) 
 }
 
 func (a *Search) Search(query string) ([]*pb.Search, error) {
-	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

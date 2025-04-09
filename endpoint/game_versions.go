@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
-	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -13,7 +12,7 @@ type GameVersions struct {
 	BaseEndpoint[pb.GameVersion]
 }
 
-func NewGameVersions(request func(URL string, dataBody any) (*resty.Response, error)) *GameVersions {
+func NewGameVersions(request RequestFunc) *GameVersions {
 	a := &GameVersions{
 		BaseEndpoint[pb.GameVersion]{
 			endpointName: EPGameVersions,
@@ -25,7 +24,7 @@ func NewGameVersions(request func(URL string, dataBody any) (*resty.Response, er
 }
 
 func (a *GameVersions) Query(query string) ([]*pb.GameVersion, error) {
-	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

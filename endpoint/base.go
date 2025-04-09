@@ -2,16 +2,19 @@ package endpoint
 
 import (
 	"fmt"
-	pb "github.com/bestnite/go-igdb/proto"
-	"google.golang.org/protobuf/proto"
 	"strconv"
 	"strings"
+
+	pb "github.com/bestnite/go-igdb/proto"
+	"google.golang.org/protobuf/proto"
 
 	"github.com/go-resty/resty/v2"
 )
 
+type RequestFunc func(method string, URL string, dataBody any) (*resty.Response, error)
+
 type BaseEndpoint[T any] struct {
-	request      func(URL string, dataBody any) (*resty.Response, error)
+	request      RequestFunc
 	endpointName Name
 	queryFunc    func(string) ([]*T, error)
 }
@@ -50,7 +53,7 @@ func (b *BaseEndpoint[T]) GetByIDs(ids []uint64) ([]*T, error) {
 }
 
 func (b *BaseEndpoint[T]) Count() (uint64, error) {
-	resp, err := b.request(fmt.Sprintf("https://api.igdb.com/v4/%s/count.pb", b.endpointName), "")
+	resp, err := b.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s/count.pb", b.endpointName), "")
 	if err != nil {
 		return 0, fmt.Errorf("failed to request: %w", err)
 	}

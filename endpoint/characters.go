@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
-	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -13,7 +12,7 @@ type Characters struct {
 	BaseEndpoint[pb.Character]
 }
 
-func NewCharacters(request func(URL string, dataBody any) (*resty.Response, error)) *Characters {
+func NewCharacters(request RequestFunc) *Characters {
 	a := &Characters{
 		BaseEndpoint[pb.Character]{
 			endpointName: EPCharacters,
@@ -25,7 +24,7 @@ func NewCharacters(request func(URL string, dataBody any) (*resty.Response, erro
 }
 
 func (a *Characters) Query(query string) ([]*pb.Character, error) {
-	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

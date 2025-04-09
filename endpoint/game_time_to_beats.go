@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
-	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -13,7 +12,7 @@ type GameTimeToBeats struct {
 	BaseEndpoint[pb.GameTimeToBeat]
 }
 
-func NewGameTimeToBeats(request func(URL string, dataBody any) (*resty.Response, error)) *GameTimeToBeats {
+func NewGameTimeToBeats(request RequestFunc) *GameTimeToBeats {
 	a := &GameTimeToBeats{
 		BaseEndpoint[pb.GameTimeToBeat]{
 			endpointName: EPGameTimeToBeats,
@@ -25,7 +24,7 @@ func NewGameTimeToBeats(request func(URL string, dataBody any) (*resty.Response,
 }
 
 func (a *GameTimeToBeats) Query(query string) ([]*pb.GameTimeToBeat, error) {
-	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
-	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -13,7 +12,7 @@ type Themes struct {
 	BaseEndpoint[pb.Theme]
 }
 
-func NewThemes(request func(URL string, dataBody any) (*resty.Response, error)) *Themes {
+func NewThemes(request RequestFunc) *Themes {
 	a := &Themes{
 		BaseEndpoint[pb.Theme]{
 			endpointName: EPThemes,
@@ -25,7 +24,7 @@ func NewThemes(request func(URL string, dataBody any) (*resty.Response, error)) 
 }
 
 func (a *Themes) Query(query string) ([]*pb.Theme, error) {
-	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

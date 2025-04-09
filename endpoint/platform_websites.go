@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
-	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -13,7 +12,7 @@ type PlatformWebsites struct {
 	BaseEndpoint[pb.PlatformWebsite]
 }
 
-func NewPlatformWebsites(request func(URL string, dataBody any) (*resty.Response, error)) *PlatformWebsites {
+func NewPlatformWebsites(request RequestFunc) *PlatformWebsites {
 	a := &PlatformWebsites{
 		BaseEndpoint[pb.PlatformWebsite]{
 			endpointName: EPPlatformWebsites,
@@ -25,7 +24,7 @@ func NewPlatformWebsites(request func(URL string, dataBody any) (*resty.Response
 }
 
 func (a *PlatformWebsites) Query(query string) ([]*pb.PlatformWebsite, error) {
-	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

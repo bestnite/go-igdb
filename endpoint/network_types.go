@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
-	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -13,7 +12,7 @@ type NetworkTypes struct {
 	BaseEndpoint[pb.NetworkType]
 }
 
-func NewNetworkTypes(request func(URL string, dataBody any) (*resty.Response, error)) *NetworkTypes {
+func NewNetworkTypes(request RequestFunc) *NetworkTypes {
 	a := &NetworkTypes{
 		BaseEndpoint[pb.NetworkType]{
 			endpointName: EPNetworkTypes,
@@ -25,7 +24,7 @@ func NewNetworkTypes(request func(URL string, dataBody any) (*resty.Response, er
 }
 
 func (a *NetworkTypes) Query(query string) ([]*pb.NetworkType, error) {
-	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

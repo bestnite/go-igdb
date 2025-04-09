@@ -2,6 +2,7 @@ package igdb
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/bestnite/go-flaresolverr"
 	"github.com/bestnite/go-igdb/endpoint"
@@ -101,13 +102,15 @@ func New(clientID, clientSecret string) *Client {
 	return c
 }
 
+type RequestFunc func(method string, URL string, dataBody any) (*resty.Response, error)
+
 func NewWithFlaresolverr(clientID, clientSecret string, f *flaresolverr.Flaresolverr) *Client {
 	c := New(clientID, clientSecret)
 	c.flaresolverr = f
 	return c
 }
 
-func (g *Client) Request(URL string, dataBody any) (*resty.Response, error) {
+func (g *Client) Request(method string, URL string, dataBody any) (*resty.Response, error) {
 	g.limiter.wait()
 
 	t, err := g.token.getToken()
@@ -120,7 +123,7 @@ func (g *Client) Request(URL string, dataBody any) (*resty.Response, error) {
 		"Authorization": "Bearer " + t,
 		"User-Agent":    "",
 		"Content-Type":  "text/plain",
-	}).Post(URL)
+	}).Execute(strings.ToUpper(method), URL)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %s: %w", URL, err)

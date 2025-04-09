@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
-	"github.com/go-resty/resty/v2"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -13,7 +12,7 @@ type Screenshots struct {
 	BaseEndpoint[pb.Screenshot]
 }
 
-func NewScreenshots(request func(URL string, dataBody any) (*resty.Response, error)) *Screenshots {
+func NewScreenshots(request RequestFunc) *Screenshots {
 	a := &Screenshots{
 		BaseEndpoint[pb.Screenshot]{
 			endpointName: EPScreenshots,
@@ -25,7 +24,7 @@ func NewScreenshots(request func(URL string, dataBody any) (*resty.Response, err
 }
 
 func (a *Screenshots) Query(query string) ([]*pb.Screenshot, error) {
-	resp, err := a.request(fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}
