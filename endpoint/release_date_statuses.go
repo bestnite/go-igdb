@@ -35,9 +35,5 @@ func (a *ReleaseDateStatuses) Query(ctx context.Context, query string) ([]*pb.Re
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Releasedatestatuses) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Releasedatestatuses, nil
 }

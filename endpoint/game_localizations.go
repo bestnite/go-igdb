@@ -35,9 +35,5 @@ func (a *GameLocalizations) Query(ctx context.Context, query string) ([]*pb.Game
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Gamelocalizations) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Gamelocalizations, nil
 }

@@ -35,9 +35,5 @@ func (a *PlatformTypes) Query(ctx context.Context, query string) ([]*pb.Platform
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Platformtypes) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Platformtypes, nil
 }

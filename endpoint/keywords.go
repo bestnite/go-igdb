@@ -35,9 +35,5 @@ func (a *Keywords) Query(ctx context.Context, query string) ([]*pb.Keyword, erro
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Keywords) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Keywords, nil
 }

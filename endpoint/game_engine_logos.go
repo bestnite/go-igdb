@@ -35,9 +35,5 @@ func (a *GameEngineLogos) Query(ctx context.Context, query string) ([]*pb.GameEn
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Gameenginelogos) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Gameenginelogos, nil
 }

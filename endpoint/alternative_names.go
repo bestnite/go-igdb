@@ -35,9 +35,5 @@ func (a *AlternativeNames) Query(ctx context.Context, query string) ([]*pb.Alter
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Alternativenames) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Alternativenames, nil
 }

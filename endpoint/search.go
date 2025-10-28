@@ -46,10 +46,6 @@ func (a *Search) Search(ctx context.Context, query string) ([]*pb.Search, error)
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Searches) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Searches, nil
 }
 

@@ -35,9 +35,5 @@ func (a *CollectionTypes) Query(ctx context.Context, query string) ([]*pb.Collec
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Collectiontypes) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Collectiontypes, nil
 }

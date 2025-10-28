@@ -35,9 +35,5 @@ func (a *AgeRatings) Query(ctx context.Context, query string) ([]*pb.AgeRating, 
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Ageratings) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Ageratings, nil
 }

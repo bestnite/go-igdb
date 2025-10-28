@@ -35,9 +35,5 @@ func (a *Covers) Query(ctx context.Context, query string) ([]*pb.Cover, error) {
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Covers) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Covers, nil
 }

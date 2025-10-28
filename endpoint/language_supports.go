@@ -35,9 +35,5 @@ func (a *LanguageSupports) Query(ctx context.Context, query string) ([]*pb.Langu
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Languagesupports) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Languagesupports, nil
 }

@@ -35,9 +35,5 @@ func (a *EventLogos) Query(ctx context.Context, query string) ([]*pb.EventLogo, 
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Eventlogos) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Eventlogos, nil
 }

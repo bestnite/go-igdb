@@ -35,9 +35,5 @@ func (a *Regions) Query(ctx context.Context, query string) ([]*pb.Region, error)
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Regions) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Regions, nil
 }

@@ -35,9 +35,5 @@ func (a *CompanyLogos) Query(ctx context.Context, query string) ([]*pb.CompanyLo
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Companylogos) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Companylogos, nil
 }

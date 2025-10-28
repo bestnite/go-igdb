@@ -35,9 +35,5 @@ func (a *CollectionRelations) Query(ctx context.Context, query string) ([]*pb.Co
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Collectionrelations) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Collectionrelations, nil
 }

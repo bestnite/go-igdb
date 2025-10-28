@@ -35,9 +35,5 @@ func (a *MultiplayerModes) Query(ctx context.Context, query string) ([]*pb.Multi
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Multiplayermodes) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Multiplayermodes, nil
 }

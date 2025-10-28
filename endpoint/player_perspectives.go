@@ -35,9 +35,5 @@ func (a *PlayerPerspectives) Query(ctx context.Context, query string) ([]*pb.Pla
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Playerperspectives) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Playerperspectives, nil
 }

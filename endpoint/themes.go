@@ -35,9 +35,5 @@ func (a *Themes) Query(ctx context.Context, query string) ([]*pb.Theme, error) {
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Themes) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Themes, nil
 }

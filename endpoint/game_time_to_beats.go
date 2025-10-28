@@ -35,9 +35,5 @@ func (a *GameTimeToBeats) Query(ctx context.Context, query string) ([]*pb.GameTi
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Gametimetobeats) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Gametimetobeats, nil
 }

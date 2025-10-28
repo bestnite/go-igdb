@@ -35,9 +35,5 @@ func (a *CompanyWebsites) Query(ctx context.Context, query string) ([]*pb.Compan
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Companywebsites) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Companywebsites, nil
 }

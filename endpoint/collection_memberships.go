@@ -35,9 +35,5 @@ func (a *CollectionMemberships) Query(ctx context.Context, query string) ([]*pb.
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Collectionmemberships) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Collectionmemberships, nil
 }

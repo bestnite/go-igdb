@@ -35,9 +35,5 @@ func (a *CharacterMugShots) Query(ctx context.Context, query string) ([]*pb.Char
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Charactermugshots) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Charactermugshots, nil
 }

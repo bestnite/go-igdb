@@ -35,9 +35,5 @@ func (a *Artworks) Query(ctx context.Context, query string) ([]*pb.Artwork, erro
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Artworks) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Artworks, nil
 }

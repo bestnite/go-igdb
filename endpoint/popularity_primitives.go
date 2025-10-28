@@ -35,9 +35,5 @@ func (a *PopularityPrimitives) Query(ctx context.Context, query string) ([]*pb.P
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Popularityprimitives) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Popularityprimitives, nil
 }

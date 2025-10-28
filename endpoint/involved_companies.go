@@ -35,9 +35,5 @@ func (a *InvolvedCompanies) Query(ctx context.Context, query string) ([]*pb.Invo
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Involvedcompanies) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Involvedcompanies, nil
 }

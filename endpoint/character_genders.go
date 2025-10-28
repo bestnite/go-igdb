@@ -35,9 +35,5 @@ func (a *CharacterGenders) Query(ctx context.Context, query string) ([]*pb.Chara
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Charactergenders) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Charactergenders, nil
 }

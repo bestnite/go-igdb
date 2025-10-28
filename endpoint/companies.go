@@ -2,7 +2,6 @@ package endpoint
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -34,10 +33,6 @@ func (a *Companies) Query(ctx context.Context, query string) ([]*pb.Company, err
 	data := pb.CompanyResult{}
 	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
-	}
-
-	if len(data.Companies) == 0 {
-		return nil, errors.New("no results")
 	}
 
 	return data.Companies, nil

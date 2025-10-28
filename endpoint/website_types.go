@@ -35,9 +35,5 @@ func (a *WebsiteTypes) Query(ctx context.Context, query string) ([]*pb.WebsiteTy
 		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	if len(data.Websitetypes) == 0 {
-		return nil, fmt.Errorf("no results: %s", query)
-	}
-
 	return data.Websitetypes, nil
 }
