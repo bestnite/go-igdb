@@ -209,6 +209,19 @@ enum AgeRatingContentDescriptionCategoryEnum {
     CLASS_IND_ATOS_CRIMINOSOS = 85 [deprecated = true];
 }
 
+message AgeRatingContentDescriptionTypeResult {
+    repeated AgeRatingContentDescriptionType ageratingcontentdescriptiontypes = 1;
+}
+
+message AgeRatingContentDescriptionType {
+    uint64 id = 1;
+    string slug = 2; 
+    string name = 3; 
+    google.protobuf.Timestamp created_at = 4; 
+    google.protobuf.Timestamp updated_at = 5; 
+    string checksum = 6; 
+}
+
 message AgeRatingContentDescriptionV2Result {
     repeated AgeRatingContentDescriptionV2 ageratingcontentdescriptionsv2 = 1;
 }
@@ -220,6 +233,7 @@ message AgeRatingContentDescriptionV2 {
     google.protobuf.Timestamp created_at = 4; 
     google.protobuf.Timestamp updated_at = 5; 
     string checksum = 6; 
+    AgeRatingContentDescriptionType description_type = 7; 
 }
 
 message AgeRatingOrganizationResult {
@@ -260,6 +274,20 @@ message Artwork {
     string url = 7; 
     int32 width = 8; 
     string checksum = 9; 
+    ArtworkType artwork_type = 10; 
+}
+
+message ArtworkTypeResult {
+    repeated ArtworkType artworktypes = 1;
+}
+
+message ArtworkType {
+    uint64 id = 1;
+    string slug = 2; 
+    string name = 3; 
+    google.protobuf.Timestamp created_at = 4; 
+    google.protobuf.Timestamp updated_at = 5; 
+    string checksum = 6; 
 }
 
 message CharacterResult {
@@ -1342,6 +1370,7 @@ message ReleaseDate {
     ReleaseDateStatus status = 13; 
     DateFormat date_format = 14; 
     ReleaseDateRegion release_region = 15; 
+    int32 d = 16; 
 }
 
 message ReleaseDateRegionResult {
