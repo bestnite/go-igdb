@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -14,7 +15,7 @@ type NetworkTypes struct {
 
 func NewNetworkTypes(request RequestFunc) *NetworkTypes {
 	a := &NetworkTypes{
-		BaseEndpoint[pb.NetworkType]{
+		BaseEndpoint: BaseEndpoint[pb.NetworkType]{
 			endpointName: EPNetworkTypes,
 			request:      request,
 		},
@@ -23,8 +24,8 @@ func NewNetworkTypes(request RequestFunc) *NetworkTypes {
 	return a
 }
 
-func (a *NetworkTypes) Query(query string) ([]*pb.NetworkType, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *NetworkTypes) Query(ctx context.Context, query string) ([]*pb.NetworkType, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

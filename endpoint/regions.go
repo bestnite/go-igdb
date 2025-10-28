@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -14,7 +15,7 @@ type Regions struct {
 
 func NewRegions(request RequestFunc) *Regions {
 	a := &Regions{
-		BaseEndpoint[pb.Region]{
+		BaseEndpoint: BaseEndpoint[pb.Region]{
 			endpointName: EPRegions,
 			request:      request,
 		},
@@ -23,8 +24,8 @@ func NewRegions(request RequestFunc) *Regions {
 	return a
 }
 
-func (a *Regions) Query(query string) ([]*pb.Region, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *Regions) Query(ctx context.Context, query string) ([]*pb.Region, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

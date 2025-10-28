@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -14,7 +15,7 @@ type Screenshots struct {
 
 func NewScreenshots(request RequestFunc) *Screenshots {
 	a := &Screenshots{
-		BaseEndpoint[pb.Screenshot]{
+		BaseEndpoint: BaseEndpoint[pb.Screenshot]{
 			endpointName: EPScreenshots,
 			request:      request,
 		},
@@ -23,8 +24,8 @@ func NewScreenshots(request RequestFunc) *Screenshots {
 	return a
 }
 
-func (a *Screenshots) Query(query string) ([]*pb.Screenshot, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *Screenshots) Query(ctx context.Context, query string) ([]*pb.Screenshot, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

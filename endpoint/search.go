@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -34,8 +35,8 @@ func NewSearch(request RequestFunc) *Search {
 	}
 }
 
-func (a *Search) Search(query string) ([]*pb.Search, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *Search) Search(ctx context.Context, query string) ([]*pb.Search, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

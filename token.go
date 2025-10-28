@@ -1,31 +1,32 @@
 package igdb
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/url"
 	"time"
 )
 
-type TwitchToken struct {
+type twitchToken struct {
 	clientID     string
 	clientSecret string
 	token        string
 	expires      time.Time
 }
 
-func NewTwitchToken(clientID, clientSecret string) *TwitchToken {
-	return &TwitchToken{
+func newTwitchToken(clientID, clientSecret string) *twitchToken {
+	return &twitchToken{
 		clientID:     clientID,
 		clientSecret: clientSecret,
 	}
 }
 
-func (t *TwitchToken) getToken() (string, error) {
+func (t *twitchToken) GetToken(ctx context.Context) (string, error) {
 	if t.token != "" && time.Now().Before(t.expires) {
 		return t.token, nil
 	}
-	token, expires, err := t.loginTwitch()
+	token, expires, err := t.LoginTwitch(ctx)
 	if err != nil {
 		return "", fmt.Errorf("failed to login twitch: %w", err)
 	}
@@ -34,7 +35,7 @@ func (t *TwitchToken) getToken() (string, error) {
 	return token, nil
 }
 
-func (t *TwitchToken) loginTwitch() (string, time.Duration, error) {
+func (t *twitchToken) LoginTwitch(ctx context.Context) (string, time.Duration, error) {
 	baseURL, _ := url.Parse("https://id.twitch.tv/oauth2/token")
 	params := url.Values{}
 	params.Add("client_id", t.clientID)
@@ -42,7 +43,7 @@ func (t *TwitchToken) loginTwitch() (string, time.Duration, error) {
 	params.Add("grant_type", "client_credentials")
 	baseURL.RawQuery = params.Encode()
 
-	resp, err := request().SetHeader("User-Agent", "").Post(baseURL.String())
+	resp, err := NewRestyClient().R().SetContext(ctx).SetHeader("User-Agent", "").Post(baseURL.String())
 	if err != nil {
 		return "", 0, fmt.Errorf("failed to make request: %s: %w", baseURL.String(), err)
 	}

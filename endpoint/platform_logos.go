@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -14,7 +15,7 @@ type PlatformLogos struct {
 
 func NewPlatformLogos(request RequestFunc) *PlatformLogos {
 	a := &PlatformLogos{
-		BaseEndpoint[pb.PlatformLogo]{
+		BaseEndpoint: BaseEndpoint[pb.PlatformLogo]{
 			endpointName: EPPlatformLogos,
 			request:      request,
 		},
@@ -23,8 +24,8 @@ func NewPlatformLogos(request RequestFunc) *PlatformLogos {
 	return a
 }
 
-func (a *PlatformLogos) Query(query string) ([]*pb.PlatformLogo, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *PlatformLogos) Query(ctx context.Context, query string) ([]*pb.PlatformLogo, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

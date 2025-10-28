@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -14,7 +15,7 @@ type PlayerPerspectives struct {
 
 func NewPlayerPerspectives(request RequestFunc) *PlayerPerspectives {
 	a := &PlayerPerspectives{
-		BaseEndpoint[pb.PlayerPerspective]{
+		BaseEndpoint: BaseEndpoint[pb.PlayerPerspective]{
 			endpointName: EPPlayerPerspectives,
 			request:      request,
 		},
@@ -23,8 +24,8 @@ func NewPlayerPerspectives(request RequestFunc) *PlayerPerspectives {
 	return a
 }
 
-func (a *PlayerPerspectives) Query(query string) ([]*pb.PlayerPerspective, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *PlayerPerspectives) Query(ctx context.Context, query string) ([]*pb.PlayerPerspective, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

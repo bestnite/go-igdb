@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -14,7 +15,7 @@ type PlatformWebsites struct {
 
 func NewPlatformWebsites(request RequestFunc) *PlatformWebsites {
 	a := &PlatformWebsites{
-		BaseEndpoint[pb.PlatformWebsite]{
+		BaseEndpoint: BaseEndpoint[pb.PlatformWebsite]{
 			endpointName: EPPlatformWebsites,
 			request:      request,
 		},
@@ -23,8 +24,8 @@ func NewPlatformWebsites(request RequestFunc) *PlatformWebsites {
 	return a
 }
 
-func (a *PlatformWebsites) Query(query string) ([]*pb.PlatformWebsite, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *PlatformWebsites) Query(ctx context.Context, query string) ([]*pb.PlatformWebsite, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

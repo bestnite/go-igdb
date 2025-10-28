@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -14,7 +15,7 @@ type Themes struct {
 
 func NewThemes(request RequestFunc) *Themes {
 	a := &Themes{
-		BaseEndpoint[pb.Theme]{
+		BaseEndpoint: BaseEndpoint[pb.Theme]{
 			endpointName: EPThemes,
 			request:      request,
 		},
@@ -23,8 +24,8 @@ func NewThemes(request RequestFunc) *Themes {
 	return a
 }
 
-func (a *Themes) Query(query string) ([]*pb.Theme, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *Themes) Query(ctx context.Context, query string) ([]*pb.Theme, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -14,7 +15,7 @@ type LanguageSupports struct {
 
 func NewLanguageSupports(request RequestFunc) *LanguageSupports {
 	a := &LanguageSupports{
-		BaseEndpoint[pb.LanguageSupport]{
+		BaseEndpoint: BaseEndpoint[pb.LanguageSupport]{
 			endpointName: EPLanguageSupports,
 			request:      request,
 		},
@@ -23,8 +24,8 @@ func NewLanguageSupports(request RequestFunc) *LanguageSupports {
 	return a
 }
 
-func (a *LanguageSupports) Query(query string) ([]*pb.LanguageSupport, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *LanguageSupports) Query(ctx context.Context, query string) ([]*pb.LanguageSupport, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

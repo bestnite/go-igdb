@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -14,7 +15,7 @@ type ReleaseDateRegions struct {
 
 func NewReleaseDateRegions(request RequestFunc) *ReleaseDateRegions {
 	a := &ReleaseDateRegions{
-		BaseEndpoint[pb.ReleaseDateRegion]{
+		BaseEndpoint: BaseEndpoint[pb.ReleaseDateRegion]{
 			endpointName: EPReleaseDateRegions,
 			request:      request,
 		},
@@ -23,8 +24,8 @@ func NewReleaseDateRegions(request RequestFunc) *ReleaseDateRegions {
 	return a
 }
 
-func (a *ReleaseDateRegions) Query(query string) ([]*pb.ReleaseDateRegion, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *ReleaseDateRegions) Query(ctx context.Context, query string) ([]*pb.ReleaseDateRegion, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

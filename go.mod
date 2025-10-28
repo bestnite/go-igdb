@@ -6,6 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.10.2
 	github.com/bestnite/go-flaresolverr v0.0.0-20250404141941-4644c2e66727
 	github.com/go-resty/resty/v2 v2.16.5
+	golang.org/x/time v0.14.0
 	google.golang.org/protobuf v1.36.6
 )
 

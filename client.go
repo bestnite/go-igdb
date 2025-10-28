@@ -1,20 +1,23 @@
 package igdb
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"github.com/bestnite/go-flaresolverr"
 	"github.com/bestnite/go-igdb/endpoint"
+	"golang.org/x/time/rate"
 
 	"github.com/go-resty/resty/v2"
 )
 
 type Client struct {
 	clientID     string
-	token        *TwitchToken
+	token        *twitchToken
 	flaresolverr *flaresolverr.Flaresolverr
-	limiter      *rateLimiter
+	restyClient  *resty.Client
+	limiter      *rate.Limiter
 
 	AgeRatingCategories            *endpoint.AgeRatingCategories
 	AgeRatingContentDescriptions   *endpoint.AgeRatingContentDescriptions
@@ -92,11 +95,11 @@ type Client struct {
 func New(clientID, clientSecret string) *Client {
 	c := &Client{
 		clientID:     clientID,
-		limiter:      newRateLimiter(4),
-		token:        NewTwitchToken(clientID, clientSecret),
+		restyClient:  NewRestyClient(),
+		token:        newTwitchToken(clientID, clientSecret),
 		flaresolverr: nil,
+		limiter:      rate.NewLimiter(rate.Limit(4), 4),
 	}
-
 	registerAllEndpoints(c)
 
 	return c
@@ -110,20 +113,27 @@ func NewWithFlaresolverr(clientID, clientSecret string, f *flaresolverr.Flaresol
 	return c
 }
 
-func (g *Client) Request(method string, URL string, dataBody any) (*resty.Response, error) {
-	g.limiter.wait()
+func (g *Client) Request(ctx context.Context, method string, URL string, dataBody any) (*resty.Response, error) {
+	err := g.limiter.Wait(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get rate limiter token: %w", err)
+	}
 
-	t, err := g.token.getToken()
+	t, err := g.token.GetToken(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get twitch token: %w", err)
 	}
 
-	resp, err := request().SetBody(dataBody).SetHeaders(map[string]string{
+	resp, err := g.restyClient.R().SetContext(ctx).SetBody(dataBody).SetHeaders(map[string]string{
 		"Client-ID":     g.clientID,
 		"Authorization": "Bearer " + t,
 		"User-Agent":    "",
 		"Content-Type":  "text/plain",
 	}).Execute(strings.ToUpper(method), URL)
+
+	if resp.StatusCode() != 200 {
+		return nil, fmt.Errorf("failed to request, expected 200 but got: %v", resp.StatusCode())
+	}
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %s: %w", URL, err)

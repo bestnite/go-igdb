@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -23,8 +24,8 @@ func NewExternalGames(request RequestFunc) *ExternalGames {
 	return a
 }
 
-func (a *ExternalGames) Query(query string) ([]*pb.ExternalGame, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *ExternalGames) Query(ctx context.Context, query string) ([]*pb.ExternalGame, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

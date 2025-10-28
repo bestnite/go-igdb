@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -14,7 +15,7 @@ type PlatformFamilies struct {
 
 func NewPlatformFamilies(request RequestFunc) *PlatformFamilies {
 	a := &PlatformFamilies{
-		BaseEndpoint[pb.PlatformFamily]{
+		BaseEndpoint: BaseEndpoint[pb.PlatformFamily]{
 			endpointName: EPPlatformFamilies,
 			request:      request,
 		},
@@ -23,8 +24,8 @@ func NewPlatformFamilies(request RequestFunc) *PlatformFamilies {
 	return a
 }
 
-func (a *PlatformFamilies) Query(query string) ([]*pb.PlatformFamily, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *PlatformFamilies) Query(ctx context.Context, query string) ([]*pb.PlatformFamily, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

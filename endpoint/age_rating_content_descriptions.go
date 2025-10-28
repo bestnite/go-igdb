@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -23,8 +24,8 @@ func NewAgeRatingContentDescriptions(request RequestFunc) *AgeRatingContentDescr
 	return a
 }
 
-func (a *AgeRatingContentDescriptions) Query(query string) ([]*pb.AgeRatingContentDescription, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *AgeRatingContentDescriptions) Query(ctx context.Context, query string) ([]*pb.AgeRatingContentDescription, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

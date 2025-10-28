@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -24,8 +25,8 @@ func NewCompanies(request RequestFunc) *Companies {
 	return a
 }
 
-func (a *Companies) Query(query string) ([]*pb.Company, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *Companies) Query(ctx context.Context, query string) ([]*pb.Company, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

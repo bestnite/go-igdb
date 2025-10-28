@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 	"strings"
@@ -11,27 +12,27 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-type RequestFunc func(method string, URL string, dataBody any) (*resty.Response, error)
+type RequestFunc func(ctx context.Context, method string, URL string, dataBody any) (*resty.Response, error)
 
 type BaseEndpoint[T any] struct {
 	request      RequestFunc
 	endpointName Name
-	queryFunc    func(string) ([]*T, error)
+	queryFunc    func(context.Context, string) ([]*T, error)
 }
 
 func (b *BaseEndpoint[T]) GetEndpointName() Name {
 	return b.endpointName
 }
 
-func (b *BaseEndpoint[T]) Query(query string) ([]*T, error) {
+func (b *BaseEndpoint[T]) Query(ctx context.Context, query string) ([]*T, error) {
 	if b.queryFunc == nil {
 		return nil, fmt.Errorf("query method must be implemented by specific endpoint")
 	}
-	return b.queryFunc(query)
+	return b.queryFunc(ctx, query)
 }
 
-func (b *BaseEndpoint[T]) GetByID(id uint64) (*T, error) {
-	res, err := b.Query(fmt.Sprintf("where id = %d; fields *;", id))
+func (b *BaseEndpoint[T]) GetByID(ctx context.Context, id uint64) (*T, error) {
+	res, err := b.Query(ctx, fmt.Sprintf("where id = %d; fields *;", id))
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +42,7 @@ func (b *BaseEndpoint[T]) GetByID(id uint64) (*T, error) {
 	return res[0], nil
 }
 
-func (b *BaseEndpoint[T]) GetByIDs(ids []uint64) ([]*T, error) {
+func (b *BaseEndpoint[T]) GetByIDs(ctx context.Context, ids []uint64) ([]*T, error) {
 	if len(ids) == 0 {
 		return nil, fmt.Errorf("ids cant be empty")
 	}
@@ -59,7 +60,7 @@ func (b *BaseEndpoint[T]) GetByIDs(ids []uint64) ([]*T, error) {
 			}
 			builder.WriteString(strconv.FormatUint(v, 10))
 		}
-		batchRes, err := b.Query(fmt.Sprintf("where id = (%s); fields *; limit 500;", builder.String()))
+		batchRes, err := b.Query(ctx, fmt.Sprintf("where id = (%s); fields *; limit 500;", builder.String()))
 		if err != nil {
 			return nil, err
 		}
@@ -68,8 +69,8 @@ func (b *BaseEndpoint[T]) GetByIDs(ids []uint64) ([]*T, error) {
 	return res, nil
 }
 
-func (b *BaseEndpoint[T]) Count() (uint64, error) {
-	resp, err := b.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s/count.pb", b.endpointName), "")
+func (b *BaseEndpoint[T]) Count(ctx context.Context) (uint64, error) {
+	resp, err := b.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s/count.pb", b.endpointName), "")
 	if err != nil {
 		return 0, fmt.Errorf("failed to request: %w", err)
 	}
@@ -82,15 +83,15 @@ func (b *BaseEndpoint[T]) Count() (uint64, error) {
 	return uint64(res.Count), nil
 }
 
-func (b *BaseEndpoint[T]) Paginated(offset, limit uint64) ([]*T, error) {
-	return b.Query(fmt.Sprintf("offset %d; limit %d; fields *; sort id asc;", offset, limit))
+func (b *BaseEndpoint[T]) Paginated(ctx context.Context, offset, limit uint64) ([]*T, error) {
+	return b.Query(ctx, fmt.Sprintf("offset %d; limit %d; fields *; sort id asc;", offset, limit))
 }
 
 type EntityEndpoint[T any] interface {
 	GetEndpointName() Name
-	Query(string) ([]*T, error)
-	GetByID(uint64) (*T, error)
-	GetByIDs([]uint64) ([]*T, error)
-	Count() (uint64, error)
-	Paginated(uint64, uint64) ([]*T, error)
+	Query(context.Context, string) ([]*T, error)
+	GetByID(context.Context, uint64) (*T, error)
+	GetByIDs(context.Context, []uint64) ([]*T, error)
+	Count(context.Context) (uint64, error)
+	Paginated(context.Context, uint64, uint64) ([]*T, error)
 }

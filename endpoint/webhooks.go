@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -37,13 +38,13 @@ type WebhookResponse struct {
 	UpdatedAt   string `json:"updated_at"`
 }
 
-func (a *Webhooks) Register(endpoint Name, secret, callbackUrl string, method WebhookMethod) (*WebhookResponse, error) {
+func (a *Webhooks) Register(ctx context.Context, endpoint Name, secret, callbackUrl string, method WebhookMethod) (*WebhookResponse, error) {
 	dataBody := url.Values{}
 	dataBody.Set("url", callbackUrl)
 	dataBody.Set("secret", secret)
 	dataBody.Set("method", string(method))
 
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s/webhooks/", endpoint), dataBody.Encode())
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s/webhooks/", endpoint), dataBody.Encode())
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to make request: %s: %w", callbackUrl, err)
@@ -61,8 +62,8 @@ func (a *Webhooks) Register(endpoint Name, secret, callbackUrl string, method We
 	return &data, fmt.Errorf("failed to activate webhook: %s: %s", callbackUrl, resp.String())
 }
 
-func (a *Webhooks) Unregister(webhookId uint64) error {
-	resp, err := a.request("DELETE", fmt.Sprintf("https://api.igdb.com/v4/webhooks/%v", webhookId), "")
+func (a *Webhooks) Unregister(ctx context.Context, webhookId uint64) error {
+	resp, err := a.request(ctx, "DELETE", fmt.Sprintf("https://api.igdb.com/v4/webhooks/%v", webhookId), "")
 	if err != nil {
 		return fmt.Errorf("failed to make request: %w", err)
 	}
@@ -74,8 +75,8 @@ func (a *Webhooks) Unregister(webhookId uint64) error {
 	return fmt.Errorf("failed to unregister webhook: %s", resp.String())
 }
 
-func (a *Webhooks) List() ([]*WebhookResponse, error) {
-	resp, err := a.request("GET", "https://api.igdb.com/v4/webhooks/", "")
+func (a *Webhooks) List(ctx context.Context) ([]*WebhookResponse, error) {
+	resp, err := a.request(ctx, "GET", "https://api.igdb.com/v4/webhooks/", "")
 	if err != nil {
 		return nil, fmt.Errorf("failed to make request: %w", err)
 	}
@@ -88,8 +89,8 @@ func (a *Webhooks) List() ([]*WebhookResponse, error) {
 	return data, nil
 }
 
-func (a *Webhooks) Get(webhookId uint64) (*WebhookResponse, error) {
-	resp, err := a.request("GET", fmt.Sprintf("https://api.igdb.com/v4/webhooks/%v", webhookId), "")
+func (a *Webhooks) Get(ctx context.Context, webhookId uint64) (*WebhookResponse, error) {
+	resp, err := a.request(ctx, "GET", fmt.Sprintf("https://api.igdb.com/v4/webhooks/%v", webhookId), "")
 	if err != nil {
 		return nil, fmt.Errorf("failed to make request: %w", err)
 	}

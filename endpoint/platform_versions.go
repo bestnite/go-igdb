@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -14,7 +15,7 @@ type PlatformVersions struct {
 
 func NewPlatformVersions(request RequestFunc) *PlatformVersions {
 	a := &PlatformVersions{
-		BaseEndpoint[pb.PlatformVersion]{
+		BaseEndpoint: BaseEndpoint[pb.PlatformVersion]{
 			endpointName: EPPlatformVersions,
 			request:      request,
 		},
@@ -23,8 +24,8 @@ func NewPlatformVersions(request RequestFunc) *PlatformVersions {
 	return a
 }
 
-func (a *PlatformVersions) Query(query string) ([]*pb.PlatformVersion, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *PlatformVersions) Query(ctx context.Context, query string) ([]*pb.PlatformVersion, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}

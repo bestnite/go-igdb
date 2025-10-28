@@ -1,6 +1,7 @@
 package endpoint
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/bestnite/go-igdb/proto"
@@ -23,8 +24,8 @@ func NewCollectionRelationTypes(request RequestFunc) *CollectionRelationTypes {
 	return a
 }
 
-func (a *CollectionRelationTypes) Query(query string) ([]*pb.CollectionRelationType, error) {
-	resp, err := a.request("POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
+func (a *CollectionRelationTypes) Query(ctx context.Context, query string) ([]*pb.CollectionRelationType, error) {
+	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to request: %w", err)
 	}
