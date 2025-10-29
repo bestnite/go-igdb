@@ -14,7 +14,7 @@ A Go client library for the IGDB (Internet Game Database) API v4. This library p
 ## Installation
 
 ```bash
-go get github.com/bestnite/go-igdb
+go get git.nite07.com/nite/go-igdb
 ```
 
 ## Quick Start
@@ -25,7 +25,7 @@ package main
 import (
 	"log"
 
-	"github.com/bestnite/go-igdb"
+	"git.nite07.com/nite/go-igdb"
 )
 
 func Test1(c *igdb.Client) {

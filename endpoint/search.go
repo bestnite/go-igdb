@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	pb "github.com/bestnite/go-igdb/proto"
+	pb "git.nite07.com/nite/go-igdb/proto"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bestnite/go-flaresolverr"

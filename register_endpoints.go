@@ -1,7 +1,7 @@
 package igdb
 
 import (
-	"github.com/bestnite/go-igdb/endpoint"
+	"git.nite07.com/nite/go-igdb/endpoint"
 )
 
 func registerAllEndpoints(c *Client) {

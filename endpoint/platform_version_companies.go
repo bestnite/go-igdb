@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/bestnite/go-igdb/proto"
+	pb "git.nite07.com/nite/go-igdb/proto"
 
 	"google.golang.org/protobuf/proto"
 )
