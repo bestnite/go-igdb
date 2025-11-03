@@ -113,7 +113,7 @@ func NewWithFlaresolverr(clientID, clientSecret string, f *flaresolverr.Flaresol
 	return c
 }
 
-func (g *Client) Request(ctx context.Context, method string, URL string, dataBody any) (*resty.Response, error) {
+func (g *Client) Request(ctx context.Context, method string, requestURL string, dataBody any) (*resty.Response, error) {
 	err := g.limiter.Wait(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get rate limiter token: %w", err)
@@ -129,14 +129,14 @@ func (g *Client) Request(ctx context.Context, method string, URL string, dataBod
 		"Authorization": "Bearer " + t,
 		"User-Agent":    "",
 		"Content-Type":  "text/plain",
-	}).Execute(strings.ToUpper(method), URL)
+	}).Execute(strings.ToUpper(method), requestURL)
 
 	if resp.StatusCode() != 200 {
 		return nil, fmt.Errorf("failed to request, expected 200 but got: %v", resp.StatusCode())
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to request: %s: %w", URL, err)
+		return nil, fmt.Errorf("failed to request: %s: %w", requestURL, err)
 	}
 	return resp, nil
 }

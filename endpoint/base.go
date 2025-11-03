@@ -2,6 +2,7 @@ package endpoint
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -32,6 +33,9 @@ func (b *BaseEndpoint[T]) Query(ctx context.Context, query string) ([]*T, error)
 }
 
 func (b *BaseEndpoint[T]) GetByID(ctx context.Context, id uint64) (*T, error) {
+	if id == 0 {
+		return nil, errors.New("id cant be 0")
+	}
 	res, err := b.Query(ctx, fmt.Sprintf("where id = %d; fields *;", id))
 	if err != nil {
 		return nil, err
@@ -44,7 +48,7 @@ func (b *BaseEndpoint[T]) GetByID(ctx context.Context, id uint64) (*T, error) {
 
 func (b *BaseEndpoint[T]) GetByIDs(ctx context.Context, ids []uint64) ([]*T, error) {
 	if len(ids) == 0 {
-		return nil, fmt.Errorf("ids cant be empty")
+		return []*T{}, nil
 	}
 	batches := make([][]uint64, 0)
 	for i := 0; i < len(ids); i += 500 {
@@ -80,7 +84,11 @@ func (b *BaseEndpoint[T]) Count(ctx context.Context) (uint64, error) {
 		return 0, fmt.Errorf("failed to unmarshal: %w", err)
 	}
 
-	return uint64(res.Count), nil
+	if res.Count > 0 {
+		return uint64(res.Count), nil
+	} else {
+		return 0, fmt.Errorf("failed to count, count should larger than 0, but got %v", res.Count)
+	}
 }
 
 func (b *BaseEndpoint[T]) Paginated(ctx context.Context, offset, limit uint64) ([]*T, error) {
