@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"git.nite07.com/nite/go-flaresolverr"
 	"git.nite07.com/nite/go-igdb/endpoint"
-	"github.com/bestnite/go-flaresolverr"
 	"golang.org/x/time/rate"
 
 	"github.com/go-resty/resty/v2"
