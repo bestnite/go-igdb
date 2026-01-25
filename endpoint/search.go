@@ -19,6 +19,7 @@ import (
 
 var webSearchCFCookies struct {
 	cookies []*http.Cookie
+	ua      string
 	expires time.Time
 }
 
@@ -74,16 +75,15 @@ func (a *Search) WebSearchGameIDs(name string) ([]uint64, error) {
 			return nil, fmt.Errorf("failed to web search: %s: %w", name, err)
 		}
 		webSearchCFCookies.cookies = resp.Solution.Cookies
+		webSearchCFCookies.ua = resp.Solution.UserAgent
 		webSearchCFCookies.expires = time.Now().Add(3 * time.Hour)
 		respBody = strings.NewReader(resp.Solution.Response)
 	} else if time.Now().Before(webSearchCFCookies.expires) {
-		resp, err := f.SimulateGet(Url, &flaresolverr.SimulateOptions{
-			HttpCookies: webSearchCFCookies.cookies,
-		})
+		resp, err := f.SimulateGet(Url, webSearchCFCookies.ua, webSearchCFCookies.cookies)
 		if err != nil {
 			return nil, fmt.Errorf("failed to search IGDB ID: %s: %w", name, err)
 		}
-		respBody = strings.NewReader(resp.Body)
+		respBody = resp.Body
 	}
 
 	doc, err := goquery.NewDocumentFromReader(respBody)
