@@ -3,7 +3,7 @@ module git.nite07.com/nite/go-igdb
 go 1.24.1
 
 require (
-	git.nite07.com/nite/go-flaresolverr v1.0.3
+	git.nite07.com/nite/go-flaresolverr v1.0.4-0.20260125200826-e2ef035c3999
 	github.com/PuerkitoBio/goquery v1.11.0
 	github.com/go-resty/resty/v2 v2.17.1
 	golang.org/x/time v0.14.0
