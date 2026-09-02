@@ -1,12 +1,7 @@
 package endpoint
 
 import (
-	"context"
-	"fmt"
-
 	pb "git.nite07.com/nite/go-igdb/proto"
-
-	"google.golang.org/protobuf/proto"
 )
 
 type PlatformVersions struct {
@@ -15,25 +10,11 @@ type PlatformVersions struct {
 
 func NewPlatformVersions(request RequestFunc) *PlatformVersions {
 	a := &PlatformVersions{
-		BaseEndpoint: BaseEndpoint[pb.PlatformVersion]{
+		BaseEndpoint[pb.PlatformVersion]{
 			endpointName: EPPlatformVersions,
 			request:      request,
 		},
 	}
-	a.queryFunc = a.Query
+	a.queryFunc = a.queryPB(func(r *pb.PlatformVersionResult) []*pb.PlatformVersion { return r.Platformversions })
 	return a
-}
-
-func (a *PlatformVersions) Query(ctx context.Context, query string) ([]*pb.PlatformVersion, error) {
-	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to request: %w", err)
-	}
-
-	data := pb.PlatformVersionResult{}
-	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal: %w", err)
-	}
-
-	return data.Platformversions, nil
 }

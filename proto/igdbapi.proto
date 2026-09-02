@@ -29,7 +29,7 @@ message AgeRatingResult {
 message AgeRating {
     uint64 id = 1;
     AgeRatingCategoryEnum category = 2 [deprecated = true]; 
-    repeated AgeRatingContentDescription content_descriptions = 3; 
+    repeated AgeRatingContentDescription content_descriptions = 3 [deprecated = true]; 
     AgeRatingRatingEnum rating = 4 [deprecated = true]; 
     string rating_cover_url = 5; 
     string synopsis = 6; 
@@ -274,7 +274,8 @@ message Artwork {
     string url = 7; 
     int32 width = 8; 
     string checksum = 9; 
-    ArtworkType artwork_type = 10; 
+    ArtworkType artwork_type = 10 [deprecated = true]; 
+    ImageType image_type = 11; 
 }
 
 message ArtworkTypeResult {
@@ -484,6 +485,8 @@ message Company {
     CompanyStatus status = 20; 
     DateFormat start_date_format = 21; 
     DateFormat change_date_format = 22; 
+    CompanySize company_size = 23; 
+    repeated CompanyTypeHistory company_type_histories = 24; 
 }
 
 
@@ -513,6 +516,18 @@ message CompanyLogo {
     string checksum = 8; 
 }
 
+message CompanySizeResult {
+    repeated CompanySize companysizes = 1;
+}
+
+message CompanySize {
+    uint64 id = 1;
+    string name = 2; 
+    google.protobuf.Timestamp created_at = 3; 
+    google.protobuf.Timestamp updated_at = 4; 
+    string checksum = 5; 
+}
+
 message CompanyStatusResult {
     repeated CompanyStatus companystatuses = 1;
 }
@@ -523,6 +538,32 @@ message CompanyStatus {
     google.protobuf.Timestamp created_at = 3; 
     google.protobuf.Timestamp updated_at = 4; 
     string checksum = 5; 
+}
+
+message CompanyTypeResult {
+    repeated CompanyType companytypes = 1;
+}
+
+message CompanyType {
+    uint64 id = 1;
+    string name = 2; 
+    google.protobuf.Timestamp created_at = 3; 
+    google.protobuf.Timestamp updated_at = 4; 
+    string checksum = 5; 
+}
+
+message CompanyTypeHistoryResult {
+    repeated CompanyTypeHistory companytypehistories = 1;
+}
+
+message CompanyTypeHistory {
+    uint64 id = 1;
+    Company company = 2; 
+    CompanyType company_type = 3; 
+    Company parent_company = 4; 
+    google.protobuf.Timestamp created_at = 5; 
+    google.protobuf.Timestamp updated_at = 6; 
+    string checksum = 7; 
 }
 
 message CompanyWebsiteResult {
@@ -561,6 +602,32 @@ enum WebsiteCategoryEnum {
     WEBSITE_BLUESKY = 19 [deprecated = true];
 }
 
+message ContentSafetyRatingResult {
+    repeated ContentSafetyRating contentsafetyratings = 1;
+}
+
+message ContentSafetyRating {
+    uint64 id = 1;
+    string name = 2; 
+    google.protobuf.Timestamp created_at = 3; 
+    google.protobuf.Timestamp updated_at = 4; 
+    string checksum = 5; 
+}
+
+message ContentSafetyRatingDimensionResult {
+    repeated ContentSafetyRatingDimension contentsafetyratingdimensions = 1;
+}
+
+message ContentSafetyRatingDimension {
+    uint64 id = 1;
+    ContentSafetyRating content_safety_rating = 2; 
+    int32 value = 3; 
+    string description = 4; 
+    google.protobuf.Timestamp created_at = 5; 
+    google.protobuf.Timestamp updated_at = 6; 
+    string checksum = 7; 
+}
+
 message CoverResult {
     repeated Cover covers = 1;
 }
@@ -576,6 +643,7 @@ message Cover {
     int32 width = 8; 
     string checksum = 9; 
     GameLocalization game_localization = 10; 
+    ImageType image_type = 11; 
 }
 
 message DateFormatResult {
@@ -588,6 +656,19 @@ message DateFormat {
     google.protobuf.Timestamp created_at = 3; 
     google.protobuf.Timestamp updated_at = 4; 
     string checksum = 5; 
+}
+
+message EntityTypeResult {
+    repeated EntityType entitytypes = 1;
+}
+
+message EntityType {
+    uint64 id = 1;
+    string name = 2; 
+    string description = 3; 
+    google.protobuf.Timestamp created_at = 4; 
+    google.protobuf.Timestamp updated_at = 5; 
+    string checksum = 6; 
 }
 
 message EventResult {
@@ -823,6 +904,20 @@ enum GameStatusEnum {
     DELISTED = 8 [deprecated = true];
 }
 
+message GameContentSafetyRatingResult {
+    repeated GameContentSafetyRating gamecontentsafetyratings = 1;
+}
+
+message GameContentSafetyRating {
+    uint64 id = 1;
+    Game game = 2; 
+    ContentSafetyRatingDimension content_safety_rating_dimension = 3; 
+    ContentSafetyRating content_safety_rating = 4; 
+    google.protobuf.Timestamp created_at = 5; 
+    google.protobuf.Timestamp updated_at = 6; 
+    string checksum = 7; 
+}
+
 message GameEngineResult {
     repeated GameEngine gameengines = 1;
 }
@@ -1018,6 +1113,18 @@ message Genre {
     string checksum = 7; 
 }
 
+message ImageTypeResult {
+    repeated ImageType imagetypes = 1;
+}
+
+message ImageType {
+    uint64 id = 1;
+    string name = 2; 
+    google.protobuf.Timestamp created_at = 3; 
+    google.protobuf.Timestamp updated_at = 4; 
+    string checksum = 5; 
+}
+
 message InvolvedCompanyResult {
     repeated InvolvedCompany involvedcompanies = 1;
 }
@@ -1087,6 +1194,23 @@ message LanguageSupportType {
     google.protobuf.Timestamp created_at = 3; 
     google.protobuf.Timestamp updated_at = 4; 
     string checksum = 5; 
+}
+
+message LogoResult {
+    repeated Logo logos = 1;
+}
+
+message Logo {
+    uint64 id = 1;
+    bool alpha_channel = 2; 
+    bool animated = 3; 
+    Game game = 4; 
+    int32 height = 5; 
+    string image_id = 6; 
+    string url = 7; 
+    int32 width = 8; 
+    string checksum = 9; 
+    ImageType image_type = 10; 
 }
 
 message MultiplayerModeResult {
@@ -1396,6 +1520,33 @@ message ReleaseDateStatus {
     google.protobuf.Timestamp created_at = 4; 
     google.protobuf.Timestamp updated_at = 5; 
     string checksum = 6; 
+}
+
+message ReportResult {
+    repeated Report reports = 1;
+}
+
+message Report {
+    uint64 id = 1;
+    int32 source_item_id = 2; 
+    int32 target_item_id = 3; 
+    ReportType report_type = 4; 
+    EntityType entity_type = 5; 
+    google.protobuf.Timestamp created_at = 6; 
+    google.protobuf.Timestamp updated_at = 7; 
+    string checksum = 8; 
+}
+
+message ReportTypeResult {
+    repeated ReportType reporttypes = 1;
+}
+
+message ReportType {
+    uint64 id = 1;
+    string name = 2; 
+    google.protobuf.Timestamp created_at = 3; 
+    google.protobuf.Timestamp updated_at = 4; 
+    string checksum = 5; 
 }
 
 message ScreenshotResult {

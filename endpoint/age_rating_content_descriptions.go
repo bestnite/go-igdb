@@ -1,12 +1,7 @@
 package endpoint
 
 import (
-	"context"
-	"fmt"
-
 	pb "git.nite07.com/nite/go-igdb/proto"
-
-	"google.golang.org/protobuf/proto"
 )
 
 type AgeRatingContentDescriptions struct {
@@ -20,20 +15,8 @@ func NewAgeRatingContentDescriptions(request RequestFunc) *AgeRatingContentDescr
 			request:      request,
 		},
 	}
-	a.queryFunc = a.Query
+	a.queryFunc = a.queryPB(func(r *pb.AgeRatingContentDescriptionResult) []*pb.AgeRatingContentDescription {
+		return r.Ageratingcontentdescriptions
+	})
 	return a
-}
-
-func (a *AgeRatingContentDescriptions) Query(ctx context.Context, query string) ([]*pb.AgeRatingContentDescription, error) {
-	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to request: %w", err)
-	}
-
-	data := pb.AgeRatingContentDescriptionResult{}
-	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal: %w", err)
-	}
-
-	return data.Ageratingcontentdescriptions, nil
 }

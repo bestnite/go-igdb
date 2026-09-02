@@ -1,12 +1,7 @@
 package endpoint
 
 import (
-	"context"
-	"fmt"
-
 	pb "git.nite07.com/nite/go-igdb/proto"
-
-	"google.golang.org/protobuf/proto"
 )
 
 type PlatformFamilies struct {
@@ -15,25 +10,11 @@ type PlatformFamilies struct {
 
 func NewPlatformFamilies(request RequestFunc) *PlatformFamilies {
 	a := &PlatformFamilies{
-		BaseEndpoint: BaseEndpoint[pb.PlatformFamily]{
+		BaseEndpoint[pb.PlatformFamily]{
 			endpointName: EPPlatformFamilies,
 			request:      request,
 		},
 	}
-	a.queryFunc = a.Query
+	a.queryFunc = a.queryPB(func(r *pb.PlatformFamilyResult) []*pb.PlatformFamily { return r.Platformfamilies })
 	return a
-}
-
-func (a *PlatformFamilies) Query(ctx context.Context, query string) ([]*pb.PlatformFamily, error) {
-	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to request: %w", err)
-	}
-
-	data := pb.PlatformFamilyResult{}
-	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal: %w", err)
-	}
-
-	return data.Platformfamilies, nil
 }

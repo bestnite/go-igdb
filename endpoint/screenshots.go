@@ -1,12 +1,7 @@
 package endpoint
 
 import (
-	"context"
-	"fmt"
-
 	pb "git.nite07.com/nite/go-igdb/proto"
-
-	"google.golang.org/protobuf/proto"
 )
 
 type Screenshots struct {
@@ -15,25 +10,11 @@ type Screenshots struct {
 
 func NewScreenshots(request RequestFunc) *Screenshots {
 	a := &Screenshots{
-		BaseEndpoint: BaseEndpoint[pb.Screenshot]{
+		BaseEndpoint[pb.Screenshot]{
 			endpointName: EPScreenshots,
 			request:      request,
 		},
 	}
-	a.queryFunc = a.Query
+	a.queryFunc = a.queryPB(func(r *pb.ScreenshotResult) []*pb.Screenshot { return r.Screenshots })
 	return a
-}
-
-func (a *Screenshots) Query(ctx context.Context, query string) ([]*pb.Screenshot, error) {
-	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to request: %w", err)
-	}
-
-	data := pb.ScreenshotResult{}
-	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal: %w", err)
-	}
-
-	return data.Screenshots, nil
 }

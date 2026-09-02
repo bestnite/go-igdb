@@ -1,12 +1,7 @@
 package endpoint
 
 import (
-	"context"
-	"fmt"
-
 	pb "git.nite07.com/nite/go-igdb/proto"
-
-	"google.golang.org/protobuf/proto"
 )
 
 type Franchises struct {
@@ -15,25 +10,11 @@ type Franchises struct {
 
 func NewFranchises(request RequestFunc) *Franchises {
 	a := &Franchises{
-		BaseEndpoint: BaseEndpoint[pb.Franchise]{
+		BaseEndpoint[pb.Franchise]{
 			endpointName: EPFranchises,
 			request:      request,
 		},
 	}
-	a.queryFunc = a.Query
+	a.queryFunc = a.queryPB(func(r *pb.FranchiseResult) []*pb.Franchise { return r.Franchises })
 	return a
-}
-
-func (a *Franchises) Query(ctx context.Context, query string) ([]*pb.Franchise, error) {
-	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to request: %w", err)
-	}
-
-	data := pb.FranchiseResult{}
-	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal: %w", err)
-	}
-
-	return data.Franchises, nil
 }

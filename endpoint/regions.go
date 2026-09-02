@@ -1,12 +1,7 @@
 package endpoint
 
 import (
-	"context"
-	"fmt"
-
 	pb "git.nite07.com/nite/go-igdb/proto"
-
-	"google.golang.org/protobuf/proto"
 )
 
 type Regions struct {
@@ -15,25 +10,11 @@ type Regions struct {
 
 func NewRegions(request RequestFunc) *Regions {
 	a := &Regions{
-		BaseEndpoint: BaseEndpoint[pb.Region]{
+		BaseEndpoint[pb.Region]{
 			endpointName: EPRegions,
 			request:      request,
 		},
 	}
-	a.queryFunc = a.Query
+	a.queryFunc = a.queryPB(func(r *pb.RegionResult) []*pb.Region { return r.Regions })
 	return a
-}
-
-func (a *Regions) Query(ctx context.Context, query string) ([]*pb.Region, error) {
-	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to request: %w", err)
-	}
-
-	data := pb.RegionResult{}
-	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal: %w", err)
-	}
-
-	return data.Regions, nil
 }

@@ -1,12 +1,7 @@
 package endpoint
 
 import (
-	"context"
-	"fmt"
-
 	pb "git.nite07.com/nite/go-igdb/proto"
-
-	"google.golang.org/protobuf/proto"
 )
 
 type CharacterGenders struct {
@@ -20,20 +15,6 @@ func NewCharacterGenders(request RequestFunc) *CharacterGenders {
 			request:      request,
 		},
 	}
-	a.queryFunc = a.Query
+	a.queryFunc = a.queryPB(func(r *pb.CharacterGenderResult) []*pb.CharacterGender { return r.Charactergenders })
 	return a
-}
-
-func (a *CharacterGenders) Query(ctx context.Context, query string) ([]*pb.CharacterGender, error) {
-	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to request: %w", err)
-	}
-
-	data := pb.CharacterGenderResult{}
-	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal: %w", err)
-	}
-
-	return data.Charactergenders, nil
 }

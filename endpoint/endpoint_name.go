@@ -23,9 +23,13 @@ var (
 	EPCompanies                      Name = "companies"
 	EPCompanyLogos                   Name = "company_logos"
 	EPCompanyStatuses                Name = "company_statuses"
+	EPCompanySizes                   Name = "company_sizes"
+	EPCompanyTypes                   Name = "company_types"
+	EPCompanyTypeHistories           Name = "company_type_histories"
 	EPCompanyWebsites                Name = "company_websites"
 	EPCovers                         Name = "covers"
 	EPDateFormats                    Name = "date_formats"
+	EPEntityTypes                    Name = "entity_types"
 	EPEventLogos                     Name = "event_logos"
 	EPEventNetworks                  Name = "event_networks"
 	EPEvents                         Name = "events"
@@ -46,6 +50,7 @@ var (
 	EPGameVersions                   Name = "game_versions"
 	EPGameVideos                     Name = "game_videos"
 	EPGenres                         Name = "genres"
+	EPImageTypes                     Name = "image_types"
 	EPInvolvedCompanies              Name = "involved_companies"
 	EPKeywords                       Name = "keywords"
 	EPLanguages                      Name = "languages"
@@ -65,6 +70,8 @@ var (
 	EPPopularityPrimitives           Name = "popularity_primitives"
 	EPPopularityTypes                Name = "popularity_types"
 	EPRegions                        Name = "regions"
+	EPReports                        Name = "reports"
+	EPReportTypes                    Name = "report_types"
 	EPReleaseDateRegions             Name = "release_date_regions"
 	EPReleaseDates                   Name = "release_dates"
 	EPReleaseDateStatuses            Name = "release_date_statuses"
@@ -97,9 +104,13 @@ var AllNames = []Name{
 	EPCompanies,
 	EPCompanyLogos,
 	EPCompanyStatuses,
+	EPCompanySizes,
+	EPCompanyTypes,
+	EPCompanyTypeHistories,
 	EPCompanyWebsites,
 	EPCovers,
 	EPDateFormats,
+	EPEntityTypes,
 	EPEventLogos,
 	EPEventNetworks,
 	EPEvents,
@@ -120,6 +131,7 @@ var AllNames = []Name{
 	EPGameVersions,
 	EPGameVideos,
 	EPGenres,
+	EPImageTypes,
 	EPInvolvedCompanies,
 	EPKeywords,
 	EPLanguages,
@@ -139,6 +151,8 @@ var AllNames = []Name{
 	EPPopularityPrimitives,
 	EPPopularityTypes,
 	EPRegions,
+	EPReports,
+	EPReportTypes,
 	EPReleaseDateRegions,
 	EPReleaseDates,
 	EPReleaseDateStatuses,

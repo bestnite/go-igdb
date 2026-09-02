@@ -1,12 +1,7 @@
 package endpoint
 
 import (
-	"context"
-	"fmt"
-
 	pb "git.nite07.com/nite/go-igdb/proto"
-
-	"google.golang.org/protobuf/proto"
 )
 
 type NetworkTypes struct {
@@ -15,25 +10,11 @@ type NetworkTypes struct {
 
 func NewNetworkTypes(request RequestFunc) *NetworkTypes {
 	a := &NetworkTypes{
-		BaseEndpoint: BaseEndpoint[pb.NetworkType]{
+		BaseEndpoint[pb.NetworkType]{
 			endpointName: EPNetworkTypes,
 			request:      request,
 		},
 	}
-	a.queryFunc = a.Query
+	a.queryFunc = a.queryPB(func(r *pb.NetworkTypeResult) []*pb.NetworkType { return r.Networktypes })
 	return a
-}
-
-func (a *NetworkTypes) Query(ctx context.Context, query string) ([]*pb.NetworkType, error) {
-	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to request: %w", err)
-	}
-
-	data := pb.NetworkTypeResult{}
-	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal: %w", err)
-	}
-
-	return data.Networktypes, nil
 }

@@ -45,11 +45,19 @@ func registerAllEndpoints(c *Client) {
 
 	c.CompanyStatuses = endpoint.NewCompanyStatuses(c.Request)
 
+	c.CompanySizes = endpoint.NewCompanySizes(c.Request)
+
+	c.CompanyTypes = endpoint.NewCompanyTypes(c.Request)
+
+	c.CompanyTypeHistories = endpoint.NewCompanyTypeHistories(c.Request)
+
 	c.CompanyWebsites = endpoint.NewCompanyWebsites(c.Request)
 
 	c.Covers = endpoint.NewCovers(c.Request)
 
 	c.DateFormats = endpoint.NewDateFormats(c.Request)
+
+	c.EntityTypes = endpoint.NewEntityTypes(c.Request)
 
 	c.EventLogos = endpoint.NewEventLogos(c.Request)
 
@@ -91,6 +99,8 @@ func registerAllEndpoints(c *Client) {
 
 	c.Genres = endpoint.NewGenres(c.Request)
 
+	c.ImageTypes = endpoint.NewImageTypes(c.Request)
+
 	c.InvolvedCompanies = endpoint.NewInvolvedCompanies(c.Request)
 
 	c.Keywords = endpoint.NewKeywords(c.Request)
@@ -128,6 +138,10 @@ func registerAllEndpoints(c *Client) {
 	c.PopularityTypes = endpoint.NewPopularityTypes(c.Request)
 
 	c.Regions = endpoint.NewRegions(c.Request)
+
+	c.Reports = endpoint.NewReports(c.Request)
+
+	c.ReportTypes = endpoint.NewReportTypes(c.Request)
 
 	c.ReleaseDateRegions = endpoint.NewReleaseDateRegions(c.Request)
 

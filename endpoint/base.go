@@ -95,6 +95,29 @@ func (b *BaseEndpoint[T]) Paginated(ctx context.Context, offset, limit uint64) (
 	return b.Query(ctx, fmt.Sprintf("offset %d; limit %d; fields *; sort id asc;", offset, limit))
 }
 
+// queryPB 是 Go 1.27 泛型方法：发起 protobuf 查询并把各 endpoint 的
+// XxxResult 解包为实体切片。R 为 Result 结构体类型，P 为其指针（须实现
+// proto.Message），两者均可从 extract 闭包推断；extract 负责取出实体
+// 字段（如 r.Companies）。
+func (b *BaseEndpoint[T]) queryPB[R any, P interface {
+	*R
+	proto.Message
+}](extract func(P) []*T) func(context.Context, string) ([]*T, error) {
+	return func(ctx context.Context, query string) ([]*T, error) {
+		resp, err := b.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", b.endpointName), query)
+		if err != nil {
+			return nil, fmt.Errorf("failed to request: %w", err)
+		}
+
+		data := P(new(R))
+		if err = proto.Unmarshal(resp.Body(), data); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal: %w", err)
+		}
+
+		return extract(data), nil
+	}
+}
+
 type EntityEndpoint[T any] interface {
 	GetEndpointName() Name
 	Query(context.Context, string) ([]*T, error)

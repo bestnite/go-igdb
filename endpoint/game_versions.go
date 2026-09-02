@@ -1,12 +1,7 @@
 package endpoint
 
 import (
-	"context"
-	"fmt"
-
 	pb "git.nite07.com/nite/go-igdb/proto"
-
-	"google.golang.org/protobuf/proto"
 )
 
 type GameVersions struct {
@@ -15,25 +10,11 @@ type GameVersions struct {
 
 func NewGameVersions(request RequestFunc) *GameVersions {
 	a := &GameVersions{
-		BaseEndpoint: BaseEndpoint[pb.GameVersion]{
+		BaseEndpoint[pb.GameVersion]{
 			endpointName: EPGameVersions,
 			request:      request,
 		},
 	}
-	a.queryFunc = a.Query
+	a.queryFunc = a.queryPB(func(r *pb.GameVersionResult) []*pb.GameVersion { return r.Gameversions })
 	return a
-}
-
-func (a *GameVersions) Query(ctx context.Context, query string) ([]*pb.GameVersion, error) {
-	resp, err := a.request(ctx, "POST", fmt.Sprintf("https://api.igdb.com/v4/%s.pb", a.endpointName), query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to request: %w", err)
-	}
-
-	data := pb.GameVersionResult{}
-	if err = proto.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal: %w", err)
-	}
-
-	return data.Gameversions, nil
 }

@@ -39,9 +39,13 @@ type Client struct {
 	Companies                      *endpoint.Companies
 	CompanyLogos                   *endpoint.CompanyLogos
 	CompanyStatuses                *endpoint.CompanyStatuses
+	CompanySizes                   *endpoint.CompanySizes
+	CompanyTypes                   *endpoint.CompanyTypes
+	CompanyTypeHistories           *endpoint.CompanyTypeHistories
 	CompanyWebsites                *endpoint.CompanyWebsites
 	Covers                         *endpoint.Covers
 	DateFormats                    *endpoint.DateFormats
+	EntityTypes                    *endpoint.EntityTypes
 	EventLogos                     *endpoint.EventLogos
 	EventNetworks                  *endpoint.EventNetworks
 	Events                         *endpoint.Events
@@ -62,6 +66,7 @@ type Client struct {
 	GameVersions                   *endpoint.GameVersions
 	GameVideos                     *endpoint.GameVideos
 	Genres                         *endpoint.Genres
+	ImageTypes                     *endpoint.ImageTypes
 	InvolvedCompanies              *endpoint.InvolvedCompanies
 	Keywords                       *endpoint.Keywords
 	Languages                      *endpoint.Languages
@@ -81,6 +86,8 @@ type Client struct {
 	PopularityPrimitives           *endpoint.PopularityPrimitives
 	PopularityTypes                *endpoint.PopularityTypes
 	Regions                        *endpoint.Regions
+	Reports                        *endpoint.Reports
+	ReportTypes                    *endpoint.ReportTypes
 	ReleaseDateRegions             *endpoint.ReleaseDateRegions
 	ReleaseDates                   *endpoint.ReleaseDates
 	ReleaseDateStatuses            *endpoint.ReleaseDateStatuses
