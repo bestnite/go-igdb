@@ -26,50 +26,43 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	igdb "git.nite07.com/nite/go-igdb"
-	"git.nite07.com/nite/go-igdb/endpoint"
 )
 
-// 每 4 个请求限速 4 req/s,超出的自动排队等待
-// 限流 4 req/s(IGDB 上限),超出部分自动等待
 func main() {
-	// Client ID / Secret 来自 Twitch Developer Portal
-	// Twitch 开发者后台申请,库内自动获取并刷新 OAuth token
+	// Client ID / Secret come from the Twitch Developer Portal;
+	// the library fetches and refreshes the OAuth token automatically
 	client := igdb.New("your-client-id", "your-client-secret")
 
 	ctx := context.Background()
 
-	// GetByID: 按 ID 查单个游戏
-	// Get a single game by ID
+	// GetByID: fetch a single game by ID
 	game, err := client.Games.GetByID(ctx, 1942)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Game %d: %s\n", 1942, game.Name)
 
-	// GetByIDs: 批量查询,自动按 500 个一批分批请求
-	// Batch query by IDs (auto-batched, 500 per request)
+	// GetByIDs: batch query (auto-batched, 500 IDs per request)
 	games, err := client.Games.GetByIDs(ctx, []uint64{119171, 119133})
 	if err != nil {
 		log.Fatal(err)
 	}
 	for _, g := range games {
-		log.Printf("游戏 %d:%s\n", g.Id, g.Name)
+		log.Printf("Game %d: %s\n", g.Id, g.Name)
 	}
 
-	// Count: 该端点下的记录总数
-	// Total number of records on the endpoint
+	// Count: total number of records on the endpoint
 	total, err := client.Games.Count(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Total games: %d\n", total)
 
-	// Paginated: 按 offset/limit 翻页,等价于 "offset 0; limit 10; fields *; sort id asc;"
-	// Paginated fetch, equivalent to "offset 0; limit 10; fields *; sort id asc;"
+	// Paginated: offset/limit pagination,
+	// equivalent to "offset 0; limit 10; fields *; sort id asc;"
 	page, err := client.Games.Paginated(ctx, 0, 10)
 	if err != nil {
 		log.Fatal(err)
@@ -78,15 +71,13 @@ func main() {
 		log.Println(g.Name)
 	}
 
-	// Query: 直接写 APICalypse 查询语句,最灵活的方式
-	// Raw APICalypse query for full flexibility
+	// Query: raw APICalypse query, the most flexible option
 	top, err := client.Games.Query(ctx, "fields name,rating; sort rating desc; limit 1;")
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Highest rated: %s\n", top[0].Name)
 
-	// Query + where: 过滤条件
 	// Query with a where filter
 	filtered, err := client.Games.Query(ctx, "fields name; where rating > 70; limit 10;")
 	if err != nil {
@@ -96,16 +87,15 @@ func main() {
 		log.Println(g.Name)
 	}
 
-	// 每个端点都是同一套泛型 API,例如按封面 ID 查封面
-	// Every endpoint shares the same generic API
+	// Every endpoint shares the same generic API, e.g. covers by ID
 	cover, err := client.Covers.GetByID(ctx, 65586)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Cover image_id: %s\n", cover.ImageId)
 
-	// 搜索端点支持 IGDB 的 search 指令,按名称相关度排序
-	// The Search endpoint supports IGDB's `search` directive
+	// The Search endpoint supports IGDB's `search` directive,
+	// results are ranked by name similarity
 	results, err := client.Search.Query(ctx, `search "zelda"; fields name,game; limit 5;`)
 	if err != nil {
 		log.Fatal(err)
@@ -114,16 +104,13 @@ func main() {
 		log.Printf("Result: %s (game %d)\n", s.Name, s.Game.GetId())
 	}
 
-	// Webhooks 端点是独立 API(注册/注销回调),不属于查询型端点
-	// The Webhooks endpoint has its own dedicated API
+	// The Webhooks endpoint has its own dedicated API (register/unregister),
+	// it is not a query-style endpoint
 	webhooks, err := client.Webhooks.List(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Registered webhooks: %d\n", len(webhooks))
-
-	_ = endpoint.EPGames // 所有端点常量见 endpoint/endpoint_name.go
-	_ = client
 }
 ```
 
