@@ -9,7 +9,6 @@ A Go client library for the IGDB (Internet Game Database) API v4. This library p
 - Rate limiting support
 - Automatic token management for Twitch authentication
 - Retry mechanism for failed requests
-- Optional FlareSolverr integration for handling Cloudflare protection
 
 ## Installation
 
@@ -93,15 +92,10 @@ func main() {
 }
 ```
 
-## Example Projects
-
-- [igdb-database](https://github.com/bestnite/igdb-database)
-
 ## Dependencies
 
 - [go-resty/resty](https://github.com/go-resty/resty)
 - [google/protobuf](https://github.com/google/protobuf)
-- [bestnite/go-flaresolverr](https://github.com/bestnite/go-flaresolverr)
 - [PuerkitoBio/goquery](https://github.com/PuerkitoBio/goquery)
 
 ## Contributing

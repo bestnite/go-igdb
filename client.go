@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	"git.nite07.com/nite/go-flaresolverr"
 	"git.nite07.com/nite/go-igdb/endpoint"
 	"golang.org/x/time/rate"
 
@@ -13,11 +12,10 @@ import (
 )
 
 type Client struct {
-	clientID     string
-	token        *twitchToken
-	flaresolverr *flaresolverr.Flaresolverr
-	restyClient  *resty.Client
-	limiter      *rate.Limiter
+	clientID    string
+	token       *twitchToken
+	restyClient *resty.Client
+	limiter     *rate.Limiter
 
 	AgeRatingCategories            *endpoint.AgeRatingCategories
 	AgeRatingContentDescriptions   *endpoint.AgeRatingContentDescriptions
@@ -101,11 +99,10 @@ type Client struct {
 
 func New(clientID, clientSecret string) *Client {
 	c := &Client{
-		clientID:     clientID,
-		restyClient:  NewRestyClient(),
-		token:        newTwitchToken(clientID, clientSecret),
-		flaresolverr: nil,
-		limiter:      rate.NewLimiter(rate.Limit(4), 4),
+		clientID:    clientID,
+		restyClient: NewRestyClient(),
+		token:       newTwitchToken(clientID, clientSecret),
+		limiter:     rate.NewLimiter(rate.Limit(4), 4),
 	}
 	registerAllEndpoints(c)
 
@@ -113,12 +110,6 @@ func New(clientID, clientSecret string) *Client {
 }
 
 type RequestFunc func(method string, URL string, dataBody any) (*resty.Response, error)
-
-func NewWithFlaresolverr(clientID, clientSecret string, f *flaresolverr.Flaresolverr) *Client {
-	c := New(clientID, clientSecret)
-	c.flaresolverr = f
-	return c
-}
 
 func (g *Client) Request(ctx context.Context, method string, requestURL string, dataBody any) (*resty.Response, error) {
 	err := g.limiter.Wait(ctx)
